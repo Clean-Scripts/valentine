@@ -68,8 +68,7 @@
             overflow: hidden;
             border: 0.3125rem solid #ff99cc;
             margin: 1.25rem auto;
-            position: relative;
-            min-height: 500px;
+            position: relative; /* Added for No button positioning */
         }
 
         .hidden {
@@ -219,7 +218,6 @@
             position: relative;
             min-height: 9.375rem;
             flex-wrap: wrap;
-            width: 100%;
         }
 
         .btn {
@@ -267,6 +265,7 @@
             -ms-user-select: none;
             touch-action: none;
             will-change: transform;
+            pointer-events: auto;
         }
 
         .btn-no:hover {
@@ -649,19 +648,13 @@
             margin-top: 0.625rem;
         }
 
-        .no-button-area {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 99;
-        }
-
         .no-button-wrapper {
             position: absolute;
-            pointer-events: auto;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 99;
+            pointer-events: none;
         }
 
         @media (max-width: 768px) {
@@ -883,10 +876,11 @@
             <!-- Main buttons (initially shown) -->
             <div class="button-container" id="main-buttons">
                 <button class="btn btn-yes" id="yes-btn">YES! <i class="fas fa-heart"></i></button>
+                <!-- No button will be positioned absolutely within the panel -->
+                <div class="no-button-wrapper" id="no-button-wrapper">
+                    <button class="btn btn-no" id="no-btn">No</button>
+                </div>
             </div>
-            
-            <!-- No button area inside the panel -->
-            <div class="no-button-area" id="no-button-area"></div>
             
             <div class="counter" id="counter">Questions asked: 0</div>
         </div>
@@ -1060,6 +1054,8 @@
         const responseTitle = document.getElementById('response-title');
         const proposalMessage = document.getElementById('proposal-message');
         const yesBtn = document.getElementById('yes-btn');
+        const noBtn = document.getElementById('no-btn');
+        const noButtonWrapper = document.getElementById('no-button-wrapper');
         const questionContainer = document.getElementById('question-container');
         const questionText = document.getElementById('question-text');
         const questionYesBtn = document.getElementById('question-yes-btn');
@@ -1068,8 +1064,6 @@
         const counter = document.getElementById('counter');
         const loveFill = document.getElementById('love-fill');
         const lovePercentage = document.getElementById('love-percentage');
-        const noButtonArea = document.getElementById('no-button-area');
-        const responsePanel = document.getElementById('response-screen');
         
         // Success screen elements
         const questionsAnswered = document.getElementById('questions-answered');
@@ -1103,13 +1097,132 @@
         let loveMeter = 0;
         let hasShownAds = false;
         let uploadedImage = null;
-        let noButton = null;
-        let isNoButtonActive = false;
-        let cursorPosition = { x: 0, y: 0 };
-        let lastButtonPosition = { x: 0, y: 0 };
-        let buttonMoveInterval = null;
-        let panelBounds = { top: 0, left: 0, right: 0, bottom: 0 };
+        let isNoButtonMoving = false;
+        let mouseX = 0;
+        let mouseY = 0;
+        let panelRect = null;
         
+        // 100+ Creative questions to make user say YES
+        const creativeQuestions = [
+            "Do you believe in love at first sight?",
+            "Would you like to go on a romantic date with me?",
+            "Do you think we'd make a great couple?",
+            "Would you like to be the reason for my smile every day?",
+            "Can I be your favorite hello and hardest goodbye?",
+            "Would you like to create beautiful memories together?",
+            "Do you want to be the peanut butter to my jelly?",
+            "Would you like to be my happily ever after?",
+            "Can I be the one who makes your heart skip a beat?",
+            "Do you want to be my sunshine on a cloudy day?",
+            "Would you like to be my partner in crime for life?",
+            "Can we write our own love story together?",
+            "Do you believe we're meant to be?",
+            "Would you like to be my forever Valentine?",
+            "Can I be the luckiest person to have you?",
+            "Do you want to be the missing piece to my puzzle?",
+            "Would you like to be my always and forever?",
+            "Can we make this Valentine's Day unforgettable?",
+            "Do you want to be the one I come home to?",
+            "Would you like to be my favorite thought every day?",
+            "Can I be the one who cherishes you always?",
+            "Do you want to be my reason to celebrate every day?",
+            "Would you like to be my today, tomorrow, and always?",
+            "Can we build something beautiful together?",
+            "Do you believe in us?",
+            "Would you like to be my perfect match?",
+            "Can I be the one who makes your heart full?",
+            "Do you want to be my sweet escape?",
+            "Would you like to be my favorite adventure?",
+            "Can we make magic together?",
+            "Do you want to be my happy place?",
+            "Would you like to be my dream come true?",
+            "Can I be the one who loves you unconditionally?",
+            "Do you want to be my constant?",
+            "Would you like to be my greatest chapter?",
+            "Can we create our own fairytale?",
+            "Do you believe we can make it work?",
+            "Would you like to be my partner in everything?",
+            "Can I be the one who supports your dreams?",
+            "Do you want to be my safe haven?",
+            "Would you like to be my favorite notification?",
+            "Can we build a future together?",
+            "Do you want to be my home?",
+            "Would you like to be my favorite love song?",
+            "Can I be the one who makes you feel special?",
+            "Do you want to be my forever and a day?",
+            "Would you like to be my better half?",
+            "Can we make each other better?",
+            "Do you believe we can conquer the world together?",
+            "Would you like to be my always?",
+            "Can I be the one who makes you laugh every day?",
+            "Do you want to be my favorite person?",
+            "Would you like to be my heart's desire?",
+            "Can we make this the best Valentine's ever?",
+            "Do you want to be my once in a lifetime?",
+            "Would you like to be my everything?",
+            "Can I be the one who treasures you?",
+            "Do you want to be my perfect plus one?",
+            "Would you like to be my forever favorite?",
+            "Can we make memories that last a lifetime?",
+            "Do you believe we're better together?",
+            "Would you like to be my special someone?",
+            "Can I be the one who makes your world brighter?",
+            "Do you want to be my happy ending?",
+            "Would you like to be my greatest blessing?",
+            "Can we create our own happily ever after?",
+            "Do you want to be my soulmate?",
+            "Would you like to be my one and only?",
+            "Can I be the one who understands you completely?",
+            "Do you want to be my favorite decision?",
+            "Would you like to be my greatest joy?",
+            "Can we make every day feel like Valentine's?",
+            "Do you believe we can make it last forever?",
+            "Would you like to be my partner for life?",
+            "Can I be the one who makes your heart sing?",
+            "Do you want to be my forever love?",
+            "Would you like to be my perfect match?",
+            "Can we build something lasting together?",
+            "Do you want to be my anchor?",
+            "Would you like to be my inspiration?",
+            "Can I be the one who makes you feel loved?",
+            "Do you want to be my happily ever after?",
+            "Would you like to be my forever and always?",
+            "Can we make this the beginning of something beautiful?",
+            "Do you believe we can create magic?",
+            "Would you like to be my partner in love?",
+            "Can I be the one who makes you feel complete?",
+            "Do you want to be my greatest adventure?",
+            "Would you like to be my favorite memory in the making?",
+            "Can we make this Valentine's Day the start of our story?",
+            "Do you want to be my today and tomorrow?",
+            "Would you like to be my heart's keeper?",
+            "Can I be the one who makes you believe in love?",
+            "Do you want to be my perfect harmony?",
+            "Would you like to be my always and forever?",
+            "Can we make each moment count?",
+            "Do you believe we can make it work beautifully?",
+            "Would you like to be my favorite chapter?",
+            "Can I be the one who makes your dreams come true?",
+            "Do you want to be my greatest love story?",
+            "Would you like to be my forever Valentine?",
+            "Can we make this the best decision ever?",
+            "Do you want to be my happily ever now?",
+            "Would you like to be my perfect beginning?",
+            "Can I be the one who makes your heart dance?",
+            "Do you want to be my everything and more?",
+            "Would you like to be my once in a lifetime love?",
+            "Can we make this Valentine's Day unforgettable?"
+        ];
+
+        // Relationship display names
+        const relationshipNames = {
+            'crush': 'Crush',
+            'partner': 'Partner',
+            'spouse': 'Spouse',
+            'friend': 'Friend',
+            'secret': 'Secret Admirer'
+        };
+
         // Initialize the page
         function init() {
             // Check if we're in creator mode or responder mode
@@ -1125,6 +1238,12 @@
                 showCreatorScreen();
             }
             
+            // Initialize event listeners
+            initEventListeners();
+        }
+        
+        // Initialize all event listeners
+        function initEventListeners() {
             // Generate button click
             generateBtn.addEventListener('click', createProposal);
             
@@ -1139,6 +1258,9 @@
             
             // Yes button (main response)
             yesBtn.addEventListener('click', handleYesClick);
+            
+            // No button (main response)
+            noBtn.addEventListener('click', handleNoClick);
             
             // Question Yes button
             questionYesBtn.addEventListener('click', handleQuestionYes);
@@ -1160,65 +1282,123 @@
             // Image upload handler
             imageUploadInput.addEventListener('change', handleImageUpload);
             
-            // Track cursor position for No button movement
-            document.addEventListener('mousemove', updateCursorPosition);
-            document.addEventListener('touchmove', (e) => {
-                if (e.touches[0]) {
-                    const touch = e.touches[0];
-                    updateCursorPosition({ clientX: touch.clientX, clientY: touch.clientY });
-                    e.preventDefault();
-                }
-            }, { passive: false });
-            
-            // Prevent context menu on No button
-            document.addEventListener('contextmenu', (e) => {
-                if (e.target.classList.contains('btn-no')) {
-                    e.preventDefault();
-                }
-            });
-            
-            // Handle window resize
-            window.addEventListener('resize', updatePanelBounds);
-            
-            // NO AUTO ADS - Only show when process completes
+            // Track mouse movement for No button escape
+            document.addEventListener('mousemove', handleMouseMove);
+            document.addEventListener('touchmove', handleTouchMove, { passive: false });
         }
         
-        // Update cursor position
-        function updateCursorPosition(e) {
-            cursorPosition.x = e.clientX;
-            cursorPosition.y = e.clientY;
+        // Handle mouse move for No button escape
+        function handleMouseMove(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
             
-            // If No button is active, check if cursor is close
-            if (isNoButtonActive && noButton) {
-                const buttonRect = noButton.getBoundingClientRect();
-                const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-                const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-                
-                const distance = Math.sqrt(
-                    Math.pow(cursorPosition.x - buttonCenterX, 2) + 
-                    Math.pow(cursorPosition.y - buttonCenterY, 2)
-                );
-                
-                // If cursor is within 100px, move button away
-                if (distance < 100) {
-                    moveNoButtonAwayFromCursor();
-                }
+            if (responseScreen && !responseScreen.classList.contains('hidden') && !questionContainer.classList.contains('hidden')) {
+                moveNoButtonAwayFromMouse();
             }
         }
         
-        // Update panel bounds
-        function updatePanelBounds() {
-            if (responsePanel && !responsePanel.classList.contains('hidden')) {
-                const panelRect = responsePanel.getBoundingClientRect();
-                panelBounds = {
-                    top: panelRect.top + 20,
-                    left: panelRect.left + 20,
-                    right: panelRect.right - 20,
-                    bottom: panelRect.bottom - 20,
-                    width: panelRect.width - 40,
-                    height: panelRect.height - 40
-                };
+        // Handle touch move for mobile
+        function handleTouchMove(e) {
+            if (e.touches[0]) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+                
+                if (responseScreen && !responseScreen.classList.contains('hidden') && !questionContainer.classList.contains('hidden')) {
+                    moveNoButtonAwayFromMouse();
+                }
             }
+            e.preventDefault();
+        }
+        
+        // Move No button away from mouse
+        function moveNoButtonAwayFromMouse() {
+            if (!noBtn || !panelRect) return;
+            
+            const buttonRect = noBtn.getBoundingClientRect();
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+            
+            // Calculate distance from mouse
+            const distance = Math.sqrt(
+                Math.pow(mouseX - buttonCenterX, 2) + 
+                Math.pow(mouseY - buttonCenterY, 2)
+            );
+            
+            // If cursor is within 100px of button, move it away
+            if (distance < 100) {
+                // Calculate escape direction (opposite from mouse)
+                const dx = buttonCenterX - mouseX;
+                const dy = buttonCenterY - mouseY;
+                
+                // Normalize direction
+                const length = Math.sqrt(dx * dx + dy * dy);
+                const directionX = dx / length;
+                const directionY = dy / length;
+                
+                // Calculate new position within panel bounds
+                const buttonWidth = noBtn.offsetWidth;
+                const buttonHeight = noBtn.offsetHeight;
+                const margin = 20;
+                
+                // Get current button position relative to panel
+                const currentLeft = parseInt(noButtonWrapper.style.left) || 0;
+                const currentTop = parseInt(noButtonWrapper.style.top) || 0;
+                
+                // Calculate new position (move 50px away)
+                let newLeft = currentLeft + directionX * 50;
+                let newTop = currentTop + directionY * 50;
+                
+                // Keep within panel bounds
+                newLeft = Math.max(margin, Math.min(newLeft, panelRect.width - buttonWidth - margin));
+                newTop = Math.max(margin, Math.min(newTop, panelRect.height - buttonHeight - margin));
+                
+                // Apply new position
+                noButtonWrapper.style.transition = 'all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                noButtonWrapper.style.left = `${newLeft}px`;
+                noButtonWrapper.style.top = `${newTop}px`;
+            }
+        }
+        
+        // Show creator screen
+        function showCreatorScreen() {
+            creatorScreen.classList.remove('hidden');
+            shareScreen.classList.add('hidden');
+            responseScreen.classList.add('hidden');
+            successScreen.classList.add('hidden');
+            trackingScreen.classList.add('hidden');
+        }
+        
+        // Show response screen (Person B)
+        function showResponseScreen() {
+            creatorScreen.classList.add('hidden');
+            shareScreen.classList.add('hidden');
+            responseScreen.classList.remove('hidden');
+            successScreen.classList.add('hidden');
+            trackingScreen.classList.add('hidden');
+            
+            responseStartTime = new Date();
+            updateLoveMeter(0);
+            
+            // Get panel dimensions for No button movement
+            panelRect = responseScreen.getBoundingClientRect();
+            
+            // Initialize No button position
+            initNoButtonPosition();
+        }
+        
+        // Initialize No button position
+        function initNoButtonPosition() {
+            if (!noBtn || !noButtonWrapper) return;
+            
+            const buttonWidth = noBtn.offsetWidth;
+            const buttonHeight = noBtn.offsetHeight;
+            
+            // Start position (to the right of Yes button)
+            const startX = panelRect.width / 2 + 100;
+            const startY = panelRect.height / 2;
+            
+            noButtonWrapper.style.left = `${startX}px`;
+            noButtonWrapper.style.top = `${startY}px`;
         }
         
         // Handle image upload
@@ -1269,232 +1449,9 @@
                 
                 imagePreviewContainer.appendChild(img);
                 imagePreviewContainer.appendChild(removeBtn);
-                
-                // Update response image if we're on response screen
-                if (responseScreen && !responseScreen.classList.contains('hidden')) {
-                    document.getElementById('response-heart-img').src = uploadedImage;
-                }
             };
             
             reader.readAsDataURL(file);
-        }
-        
-        // Show creator screen
-        function showCreatorScreen() {
-            creatorScreen.classList.remove('hidden');
-            shareScreen.classList.add('hidden');
-            responseScreen.classList.add('hidden');
-            successScreen.classList.add('hidden');
-            trackingScreen.classList.add('hidden');
-        }
-        
-        // Show response screen (Person B)
-        function showResponseScreen() {
-            creatorScreen.classList.add('hidden');
-            shareScreen.classList.add('hidden');
-            responseScreen.classList.remove('hidden');
-            successScreen.classList.add('hidden');
-            trackingScreen.classList.add('hidden');
-            
-            responseStartTime = new Date();
-            updateLoveMeter(0);
-            
-            // Update panel bounds
-            updatePanelBounds();
-            
-            // Create floating No button INSIDE the panel
-            createNoButton();
-            
-            // Start button movement tracking
-            startNoButtonTracking();
-        }
-        
-        // Create floating No button INSIDE the panel
-        function createNoButton() {
-            // Clear existing button
-            noButtonArea.innerHTML = '';
-            
-            // Create wrapper for better positioning
-            const wrapper = document.createElement('div');
-            wrapper.className = 'no-button-wrapper';
-            
-            // Create No button
-            noButton = document.createElement('button');
-            noButton.className = 'btn btn-no';
-            noButton.innerHTML = 'No';
-            noButton.id = 'no-btn';
-            
-            // Add event listeners
-            noButton.addEventListener('click', handleNoClick);
-            noButton.addEventListener('touchstart', handleNoClick, { passive: false });
-            
-            // Prevent default touch behaviors
-            noButton.addEventListener('touchmove', (e) => {
-                e.preventDefault();
-            }, { passive: false });
-            
-            wrapper.appendChild(noButton);
-            noButtonArea.appendChild(wrapper);
-            
-            // Set initial position (near Yes button but not too close)
-            setInitialNoButtonPosition();
-            isNoButtonActive = true;
-        }
-        
-        // Set initial No button position
-        function setInitialNoButtonPosition() {
-            if (!noButton) return;
-            
-            // Get Yes button position
-            const yesBtnRect = yesBtn.getBoundingClientRect();
-            const panelRect = responsePanel.getBoundingClientRect();
-            
-            // Calculate position to the right of Yes button, inside panel
-            let initialX = yesBtnRect.right + 50 - panelRect.left;
-            let initialY = yesBtnRect.top - panelRect.top;
-            
-            // Ensure button stays inside panel bounds
-            const buttonWidth = 150;
-            const buttonHeight = 70;
-            
-            if (initialX + buttonWidth > panelBounds.width) {
-                initialX = panelBounds.width - buttonWidth - 20;
-            }
-            
-            if (initialY + buttonHeight > panelBounds.height) {
-                initialY = panelBounds.height - buttonHeight - 20;
-            }
-            
-            if (initialX < 20) initialX = 20;
-            if (initialY < 20) initialY = 20;
-            
-            // Store last position
-            lastButtonPosition = { x: initialX, y: initialY };
-            
-            // Apply position
-            const wrapper = noButton.parentElement;
-            wrapper.style.left = `${initialX}px`;
-            wrapper.style.top = `${initialY}px`;
-        }
-        
-        // Start No button movement tracking
-        function startNoButtonTracking() {
-            if (buttonMoveInterval) {
-                clearInterval(buttonMoveInterval);
-            }
-            
-            buttonMoveInterval = setInterval(() => {
-                if (isNoButtonActive && !questionContainer.classList.contains('hidden')) {
-                    // Continuous checking for cursor proximity
-                    checkCursorProximity();
-                }
-            }, 50); // Check every 50ms for smooth movement
-        }
-        
-        // Check cursor proximity and move button if needed
-        function checkCursorProximity() {
-            if (!noButton || !cursorPosition.x || !cursorPosition.y) return;
-            
-            const buttonRect = noButton.getBoundingClientRect();
-            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-            
-            // Calculate distance from cursor
-            const distance = Math.sqrt(
-                Math.pow(cursorPosition.x - buttonCenterX, 2) + 
-                Math.pow(cursorPosition.y - buttonCenterY, 2)
-            );
-            
-            // If cursor is too close (within 150px), move button away
-            if (distance < 150) {
-                moveNoButtonAwayFromCursor();
-            }
-        }
-        
-        // Move No button away from cursor
-        function moveNoButtonAwayFromCursor() {
-            if (!noButton || !cursorPosition.x || !cursorPosition.y) return;
-            
-            const buttonRect = noButton.getBoundingClientRect();
-            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-            
-            // Calculate escape direction (opposite from cursor)
-            let dx = buttonCenterX - cursorPosition.x;
-            let dy = buttonCenterY - cursorPosition.y;
-            
-            // Normalize direction
-            const length = Math.sqrt(dx * dx + dy * dy);
-            if (length === 0) {
-                dx = 1;
-                dy = 1;
-            } else {
-                dx = dx / length;
-                dy = dy / length;
-            }
-            
-            // Calculate new position (move 120px away)
-            let newX = buttonRect.left + dx * 120;
-            let newY = buttonRect.top + dy * 120;
-            
-            // Convert to relative position within panel
-            const panelRect = responsePanel.getBoundingClientRect();
-            let relativeX = newX - panelRect.left;
-            let relativeY = newY - panelRect.top;
-            
-            // Ensure button stays within panel bounds
-            const buttonWidth = buttonRect.width;
-            const buttonHeight = buttonRect.height;
-            const margin = 10;
-            
-            // Check boundaries
-            if (relativeX < margin) relativeX = margin;
-            if (relativeY < margin) relativeY = margin;
-            if (relativeX + buttonWidth > panelBounds.width - margin) {
-                relativeX = panelBounds.width - buttonWidth - margin;
-            }
-            if (relativeY + buttonHeight > panelBounds.height - margin) {
-                relativeY = panelBounds.height - buttonHeight - margin;
-            }
-            
-            // Avoid Yes button area (keep at least 50px away)
-            const yesBtnRect = yesBtn.getBoundingClientRect();
-            const yesBtnCenterX = yesBtnRect.left + yesBtnRect.width / 2 - panelRect.left;
-            const yesBtnCenterY = yesBtnRect.top + yesBtnRect.height / 2 - panelRect.top;
-            
-            const distanceToYes = Math.sqrt(
-                Math.pow(relativeX + buttonWidth/2 - yesBtnCenterX, 2) + 
-                Math.pow(relativeY + buttonHeight/2 - yesBtnCenterY, 2)
-            );
-            
-            if (distanceToYes < 100) {
-                // Move further away from Yes button
-                const angle = Math.atan2(
-                    relativeY + buttonHeight/2 - yesBtnCenterY,
-                    relativeX + buttonWidth/2 - yesBtnCenterX
-                );
-                relativeX = yesBtnCenterX + Math.cos(angle) * 100 - buttonWidth/2;
-                relativeY = yesBtnCenterY + Math.sin(angle) * 100 - buttonHeight/2;
-                
-                // Re-check boundaries
-                if (relativeX < margin) relativeX = margin;
-                if (relativeY < margin) relativeY = margin;
-                if (relativeX + buttonWidth > panelBounds.width - margin) {
-                    relativeX = panelBounds.width - buttonWidth - margin;
-                }
-                if (relativeY + buttonHeight > panelBounds.height - margin) {
-                    relativeY = panelBounds.height - buttonHeight - margin;
-                }
-            }
-            
-            // Store last position
-            lastButtonPosition = { x: relativeX, y: relativeY };
-            
-            // Apply new position with smooth animation
-            const wrapper = noButton.parentElement;
-            wrapper.style.transition = 'all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            wrapper.style.left = `${relativeX}px`;
-            wrapper.style.top = `${relativeY}px`;
         }
         
         // Load proposal data
@@ -1589,86 +1546,134 @@ Can't wait to see your response! 💝`;
             shareScreen.classList.remove('hidden');
         }
         
-        // Handle No click (Person B)
-        function handleNoClick(e) {
-            e.preventDefault();
-            e.stopPropagation();
+        // Copy proposal link - FIXED
+        function copyProposalLink() {
+            const linkText = proposalLink.textContent;
             
-            questionsAsked++;
-            counter.textContent = `Questions asked: ${questionsAsked}`;
+            // Create a temporary textarea element
+            const textArea = document.createElement('textarea');
+            textArea.value = linkText;
+            textArea.style.position = 'fixed';
+            textArea.style.left = '-999999px';
+            textArea.style.top = '-999999px';
+            document.body.appendChild(textArea);
+            textArea.focus();
+            textArea.select();
             
-            // Move No button away
-            moveNoButtonAwayFromCursor();
-            
-            // Show creative question
-            showCreativeQuestion();
-            
-            // Update love meter (increase by 2% for each question)
-            loveMeter = Math.min(loveMeter + 2, 100);
-            updateLoveMeter(loveMeter);
-            
-            return false;
-        }
-        
-        // Rest of the functions remain the same as before...
-        // [Previous code for createProposal, copyProposalLink, shareViaWhatsApp, trackResponse, etc.]
-        // ... (keeping all the other functions exactly as they were in the previous working version)
-        
-        // Show creative question
-        function showCreativeQuestion() {
-            if (currentQuestionIndex >= creativeQuestions.length) {
-                currentQuestionIndex = 0; // Loop back to beginning
+            try {
+                const successful = document.execCommand('copy');
+                if (successful) {
+                    const originalText = copyLinkBtn.innerHTML;
+                    copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                    copyLinkBtn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
+                    copyLinkBtn.style.borderColor = '#25D366';
+                    
+                    setTimeout(() => {
+                        copyLinkBtn.innerHTML = originalText;
+                        copyLinkBtn.style.background = 'linear-gradient(135deg, #3366ff, #0033cc)';
+                        copyLinkBtn.style.borderColor = '#3366ff';
+                    }, 2000);
+                } else {
+                    alert('Failed to copy link. Please try again.');
+                }
+            } catch (err) {
+                console.error('Failed to copy: ', err);
+                alert('Failed to copy link. Please try again.');
             }
             
-            questionText.textContent = creativeQuestions[currentQuestionIndex];
-            questionContainer.classList.remove('hidden');
-            mainButtons.classList.add('hidden');
-            
-            currentQuestionIndex++;
+            document.body.removeChild(textArea);
         }
         
-        // Handle question Yes click (to "no" in question)
-        function handleQuestionYes() {
-            // User insists on saying no, ask another question
-            questionsAsked++;
-            counter.textContent = `Questions asked: ${questionsAsked}`;
+        // Share via WhatsApp - FIXED
+        function shareViaWhatsApp() {
+            if (!proposalData) {
+                alert('No proposal data found. Please create a proposal first.');
+                return;
+            }
             
-            // Show next question
-            showCreativeQuestion();
+            const phone = proposalData.valentinePhone || '';
+            const message = whatsappMessage.value;
+            const encodedMessage = encodeURIComponent(message);
             
-            // Move No button
-            moveNoButtonAwayFromCursor();
+            let whatsappUrl;
+            if (phone) {
+                // Direct message to Valentine's WhatsApp
+                const cleanPhone = phone.replace(/\D/g, '');
+                whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
+            } else {
+                // Generic share
+                whatsappUrl = `https://wa.me/?text=${encodedMessage}`;
+            }
             
-            // Update love meter
-            loveMeter = Math.min(loveMeter + 2, 100);
-            updateLoveMeter(loveMeter);
+            window.open(whatsappUrl, '_blank');
         }
         
-        // Handle question No click (to "actually, no" in question)
-        function handleQuestionNo() {
-            // User is reconsidering, show main buttons again
-            questionContainer.classList.add('hidden');
-            mainButtons.classList.remove('hidden');
+        // Track response
+        function trackResponse() {
+            if (!proposalData) {
+                alert('No proposal data found. Please create a proposal first.');
+                return;
+            }
             
-            // Update love meter (bigger increase for reconsidering)
-            loveMeter = Math.min(loveMeter + 10, 100);
-            updateLoveMeter(loveMeter);
+            const proposalId = proposalData.id;
+            const storedData = localStorage.getItem(`proposal_${proposalId}`);
+            
+            if (storedData) {
+                const data = JSON.parse(storedData);
+                
+                if (data.response) {
+                    // Response has been received
+                    shareStatus.textContent = 'Response received!';
+                    shareStatus.style.color = '#25D366';
+                    
+                    // Show tracking screen
+                    shareScreen.classList.add('hidden');
+                    trackingScreen.classList.remove('hidden');
+                    
+                    // Update tracking screen
+                    updateTrackingScreen(data);
+                    
+                    // Show ads AFTER process completion
+                    if (!hasShownAds) {
+                        showAds();
+                        hasShownAds = true;
+                    }
+                } else {
+                    // Still waiting
+                    alert(`Still waiting for ${data.valentineName}'s response. Share the link again if needed!`);
+                }
+            }
         }
         
-        // Update love meter
-        function updateLoveMeter(percentage) {
-            loveFill.style.width = `${percentage}%`;
-            lovePercentage.textContent = `${percentage}%`;
+        // Update tracking screen
+        function updateTrackingScreen(data) {
+            trackValentineName.textContent = data.valentineName;
+            trackResponseTime.textContent = new Date(data.response.timestamp).toLocaleString();
+            trackQuestions.textContent = data.response.questionsAnswered || 0;
+            trackLove.textContent = `${data.response.lovePercentage || 100}%`;
+            
+            const message = `🎉 *VALENTINE'S RESPONSE RECEIVED!* 🎉
+
+Great news! ${data.valentineName} has responded to your Valentine's proposal!
+
+💖 *Response:* YES! They will be your Valentine! 💝
+
+📊 *Response Details:*
+• Questions Answered: ${data.response.questionsAnswered || 0}
+• Love Percentage: ${data.response.lovePercentage || 100}%
+• Decision Time: ${data.response.decisionTime || 'A few moments'}
+• Response Time: ${new Date(data.response.timestamp).toLocaleString()}
+
+🎯 *Next Steps:*
+Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
+
+💌 Created with Valentine's Proposal Creator`;
+
+            trackWhatsappMessage.textContent = message;
         }
         
         // Handle Yes click (Person B)
         function handleYesClick() {
-            // Stop button movement
-            if (buttonMoveInterval) {
-                clearInterval(buttonMoveInterval);
-                buttonMoveInterval = null;
-            }
-            
             // Show celebration
             celebrate();
             
@@ -1719,6 +1724,95 @@ Can't wait to see your response! 💝`;
             }
         }
         
+        // Handle No click (Person B)
+        function handleNoClick(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            questionsAsked++;
+            counter.textContent = `Questions asked: ${questionsAsked}`;
+            
+            // Move No button to random position within panel
+            moveNoButtonRandomly();
+            
+            // Show creative question
+            showCreativeQuestion();
+            
+            // Update love meter (increase by 2% for each question)
+            loveMeter = Math.min(loveMeter + 2, 100);
+            updateLoveMeter(loveMeter);
+            
+            return false;
+        }
+        
+        // Move No button randomly within panel
+        function moveNoButtonRandomly() {
+            if (!noBtn || !noButtonWrapper || !panelRect) return;
+            
+            const buttonWidth = noBtn.offsetWidth;
+            const buttonHeight = noBtn.offsetHeight;
+            const margin = 20;
+            
+            // Calculate random position within panel bounds
+            const maxX = panelRect.width - buttonWidth - margin;
+            const maxY = panelRect.height - buttonHeight - margin;
+            
+            const randomX = Math.max(margin, Math.random() * maxX);
+            const randomY = Math.max(margin, Math.random() * maxY);
+            
+            // Apply new position
+            noButtonWrapper.style.transition = 'all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            noButtonWrapper.style.left = `${randomX}px`;
+            noButtonWrapper.style.top = `${randomY}px`;
+        }
+        
+        // Show creative question
+        function showCreativeQuestion() {
+            if (currentQuestionIndex >= creativeQuestions.length) {
+                currentQuestionIndex = 0; // Loop back to beginning
+            }
+            
+            questionText.textContent = creativeQuestions[currentQuestionIndex];
+            questionContainer.classList.remove('hidden');
+            mainButtons.classList.add('hidden');
+            
+            currentQuestionIndex++;
+        }
+        
+        // Handle question Yes click (to "no" in question)
+        function handleQuestionYes() {
+            // User insists on saying no, ask another question
+            questionsAsked++;
+            counter.textContent = `Questions asked: ${questionsAsked}`;
+            
+            // Show next question
+            showCreativeQuestion();
+            
+            // Move No button
+            moveNoButtonRandomly();
+            
+            // Update love meter
+            loveMeter = Math.min(loveMeter + 2, 100);
+            updateLoveMeter(loveMeter);
+        }
+        
+        // Handle question No click (to "actually, no" in question)
+        function handleQuestionNo() {
+            // User is reconsidering, show main buttons again
+            questionContainer.classList.add('hidden');
+            mainButtons.classList.remove('hidden');
+            
+            // Update love meter (bigger increase for reconsidering)
+            loveMeter = Math.min(loveMeter + 10, 100);
+            updateLoveMeter(loveMeter);
+        }
+        
+        // Update love meter
+        function updateLoveMeter(percentage) {
+            loveFill.style.width = `${percentage}%`;
+            lovePercentage.textContent = `${percentage}%`;
+        }
+        
         // Generate response WhatsApp message
         function generateResponseWhatsAppMessage() {
             const creatorName = proposalData ? proposalData.creatorName : 'Your Valentine';
@@ -1751,7 +1845,10 @@ Plan something special for Valentine's Day! Make it memorable!
         
         // Send response to creator
         function sendResponseToCreator() {
-            if (!proposalData) return;
+            if (!proposalData) {
+                alert('No proposal data found.');
+                return;
+            }
             
             const phone = proposalData.creatorPhone;
             const message = generateResponseWhatsAppMessage();
@@ -1790,6 +1887,9 @@ Plan something special for Valentine's Day! Make it memorable!
             proposalData = null;
             responseData = null;
             hasShownAds = false;
+            questionsAsked = 0;
+            loveMeter = 0;
+            currentQuestionIndex = 0;
             
             // Hide ads
             zomatoAd.style.display = 'none';
