@@ -4,325 +4,267 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be My Valentine? 💝</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
-        :root { --base-font-size: 16px; }
-        @media (max-width: 768px) { :root { --base-font-size: 14px; } }
-        html { font-size: var(--base-font-size); }
-
+        
         body {
             font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #ff0066, #ff6699, #ff99cc);
+            background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
             min-height: 100vh;
-            overflow-x: hidden;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1.25rem;
-            color: #33001a;
+            padding: 20px;
+            overflow: hidden;
         }
 
-        .container { max-width: 62.5rem; width: 100%; text-align: center; position: relative; }
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
         .panel {
-            background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem;
-            padding: 3.125rem 2.5rem;
-            box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
-            backdrop-filter: blur(10px);
-            border: 0.3125rem solid #ff99cc;
-            margin: 1.25rem auto;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            width: 100%;
+            max-width: 550px;
+            text-align: center;
             position: relative;
-            min-height: 600px; /* Added height to ensure room for the escaping button */
+            min-height: 550px;
+            transition: all 0.5s ease;
         }
 
         .hidden { display: none !important; }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 6vw, 4rem); color: #ff0066; margin-bottom: 1.5625rem; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #d63384; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
         
-        .input-group { margin: 1.25rem 0; text-align: left; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: #660033; }
-        input, textarea, select {
-            width: 100%; padding: 1rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1rem;
-        }
+        .input-wrapper { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-weight: 600; color: #444; margin-bottom: 8px; font-size: 0.9rem; }
+        
+        /* Fixed Phone Styling */
+        .phone-container { display: flex; align-items: center; background: #fff; border: 2px solid #ff99cc; border-radius: 15px; padding: 0 15px; }
+        .prefix { font-weight: bold; color: #d63384; border-right: 1px solid #ccc; padding-right: 10px; }
+        .phone-container input { border: none !important; padding: 12px 10px; width: 100%; font-size: 1rem; outline: none; }
 
-        .heart-icon { color: #ff0066; font-size: 4rem; animation: heartbeat 1.2s infinite; }
-        @keyframes heartbeat { 0% {transform: scale(1);} 50% {transform: scale(1.1);} 100% {transform: scale(1);} }
-
-        /* BUTTONS */
-        .button-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin-top: 3rem;
-            min-height: 150px;
-            position: relative; /* Context for absolute No button */
+        input[type="text"] {
+            width: 100%; padding: 12px 20px; border: 2px solid #ff99cc; border-radius: 15px; font-size: 1rem; outline: none; transition: 0.3s;
         }
+        input:focus { border-color: #d63384; box-shadow: 0 0 10px rgba(214, 51, 132, 0.2); }
 
         .btn {
-            padding: 1rem 2.5rem; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 3.75rem;
-            cursor: pointer; transition: transform 0.2s; box-shadow: 0 0.5rem 1rem rgba(0,0,0,0.1);
-            display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            padding: 15px 35px; border-radius: 50px; border: none; font-weight: 700; font-size: 1.1rem;
+            cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
+        .btn-main { background: linear-gradient(135deg, #ff0066, #ff6699); color: white; width: 100%; justify-content: center; }
+        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 0, 102, 0.3); }
 
-        .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; z-index: 100; }
-        
-        .btn-no {
-            background: #cccccc; color: #333; position: absolute; z-index: 50;
-            transition: none; /* We handle transition in JS for speed control */
+        /* Response Logic */
+        .btn-yes { background: #28a745; color: white; z-index: 100; position: relative; }
+        .btn-no { background: #dc3545; color: white; position: absolute; z-index: 50; transition: none; }
+
+        /* Floating Hearts */
+        .heart { position: absolute; color: rgba(255, 255, 255, 0.5); pointer-events: none; animation: float 6s linear infinite; z-index: -1; }
+        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
+
+        /* Ads */
+        .ad-popup {
+            position: fixed; bottom: 20px; left: 20px; background: white; border-radius: 20px;
+            padding: 20px; border: 3px solid #d63384; z-index: 1000; display: none;
+            max-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUp 0.5s ease;
         }
+        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
+        .close-ad { position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 1.2rem; }
 
-        /* ADS */
-        .ad-container {
-            position: fixed; bottom: 1.25rem; right: 1.25rem; background: white;
-            padding: 1rem; border-radius: 1rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            border: 3px solid #ff0066; max-width: 280px; z-index: 1001; display: none;
-        }
-        .close-ad { position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 1.5rem; color: #999; border: none; background: none; }
-
-        .share-link {
-            background: #f8f8f8; padding: 1rem; border-radius: 0.5rem; border: 2px dashed #ff0066;
-            margin: 1rem 0; word-break: break-all; font-family: monospace;
-        }
-
-        .creative-text { font-style: italic; color: #660033; margin: 1rem 0; padding: 0.5rem; background: #ffeeee; border-radius: 10px; }
-        .difficulty-level { display: inline-block; padding: 0.2rem 1rem; background: #ff9900; color: white; border-radius: 20px; font-weight: bold; }
+        .stat-badge { background: #fce4ec; color: #d81b60; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin: 5px; display: inline-block; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="panel" id="creator-screen">
-            <i class="fas fa-heart heart-icon"></i>
-            <h1>Create Proposal</h1>
-            <div class="input-group">
-                <label>Your Name</label>
-                <input type="text" id="creator-name" placeholder="Nishant Jaiswal">
-            </div>
-            <div class="input-group">
-                <label>Your WhatsApp (e.g., 919876543210)</label>
-                <input type="tel" id="creator-phone" placeholder="91...">
-            </div>
-            <div class="input-group">
-                <label>Valentine's Name</label>
-                <input type="text" id="valentine-name" placeholder="Special Someone">
-            </div>
-            <button class="btn btn-yes" style="width:100%" onclick="generateProposal()">Generate & Share Link <i class="fas fa-magic"></i></button>
+    <div id="hearts-container"></div>
+
+    <div class="panel" id="creator-box">
+        <h1>Create Love</h1>
+        <p style="margin-bottom: 25px; color: #666;">Craft a magical proposal link!</p>
+        
+        <div class="input-wrapper">
+            <label>Your Name</label>
+            <input type="text" id="c-name" placeholder="Enter your name">
+        </div>
+        
+        <div class="input-wrapper">
+            <label>Valentine's Name</label>
+            <input type="text" id="v-name" placeholder="Enter their name">
         </div>
 
-        <div class="panel hidden" id="share-screen">
-            <h1>Share the Love!</h1>
-            <p>Copy this link and send it to <span id="display-v-name"></span></p>
-            <div class="share-link" id="proposal-link"></div>
-            <div style="display:flex; gap:10px; justify-content:center;">
-                <button class="btn" style="background:#3366ff; color:white" onclick="copyToClipboard()">Copy <i class="fas fa-copy"></i></button>
-                <button class="btn" style="background:#25D366; color:white" onclick="shareToWhatsApp()">WhatsApp <i class="fab fa-whatsapp"></i></button>
+        <div class="input-wrapper">
+            <label>WhatsApp Number (to receive response)</label>
+            <div class="phone-container">
+                <span class="prefix">+91</span>
+                <input type="text" id="c-phone" placeholder="XXXXX XXXXX" maxlength="11">
             </div>
         </div>
 
-        <div class="panel hidden" id="response-screen">
-            <h1 id="proposal-title">Valentine's Question</h1>
-            <p id="personal-msg">Will you be my Valentine?</p>
-            
-            <div class="creative-text" id="creative-text">Try to click "No"... if you can! 😉</div>
-            <div class="difficulty-level" id="difficulty-level">Difficulty: Easy</div>
+        <button class="btn btn-main" onclick="generateLink()">Create Magical Link <i class="fas fa-sparkles"></i></button>
+    </div>
 
-            <div class="button-container" id="main-area">
-                <button class="btn btn-yes" id="yes-btn" onclick="handleYes()">YES! ❤️</button>
-                <button class="btn btn-no" id="no-btn">No</button>
-            </div>
-            <div id="counter" style="font-weight:bold; color:#ff0066; margin-top:20px;">No attempts: 0</div>
-        </div>
-
-        <div class="panel hidden" id="success-screen">
-            <h1>It's a YES! 💖</h1>
-            <p>You've made them the happiest person alive.</p>
-            <div id="stats-display" style="text-align:left; background:#fff0f5; padding:1rem; border-radius:15px; margin:1rem 0;"></div>
-            <button class="btn" style="background:#25D366; color:white; width:100%" onclick="sendFinalResponse()">Send Confirmation to Partner <i class="fab fa-whatsapp"></i></button>
+    <div class="panel hidden" id="share-box">
+        <h1>Link Ready! 💌</h1>
+        <p>Send this to <span id="span-v-name" style="color:#d63384; font-weight:bold;"></span></p>
+        <div id="link-url" style="background:#f8f9fa; padding:15px; border-radius:15px; margin:20px 0; font-size:0.8rem; border:1px dashed #d63384; word-break:break-all;"></div>
+        <div style="display:flex; gap:10px;">
+            <button class="btn btn-main" style="background:#007bff;" onclick="copyLink()">Copy <i class="fas fa-copy"></i></button>
+            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">WhatsApp <i class="fab fa-whatsapp"></i></button>
         </div>
     </div>
 
-    <div class="ad-container" id="zomato-ad">
-        <button class="close-ad" onclick="closeAd('zomato-ad')">×</button>
-        <div style="color:#ff0066; font-weight:bold; margin-bottom:5px;"><i class="fas fa-utensils"></i> EasyGo Indore Special</div>
-        <div style="font-size:0.9rem;">Perfect proposal deserves a perfect meal. Order Momos from EasyGo on Zomato now!</div>
-        <a href="https://www.zomato.com" target="_blank" style="display:inline-block; margin-top:10px; color:#ff0066; font-weight:bold;">Order Now →</a>
+    <div class="panel hidden" id="response-box">
+        <h1 id="v-header">Will You?</h1>
+        <p id="v-subtext" style="font-size: 1.2rem; color: #555;"></p>
+        
+        <div id="game-area" style="height: 250px; position: relative; margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 40px;">
+            <button class="btn btn-yes" onclick="sayYes()">YES! ❤️</button>
+            <button class="btn btn-no" id="no-btn">No</button>
+        </div>
+        
+        <div id="no-counter" class="stat-badge">Attempts to say No: 0</div>
+    </div>
+
+    <div class="panel hidden" id="success-box">
+        <h1>Accepted! 💖</h1>
+        <p>You've made me very happy today!</p>
+        <div id="final-stats" style="margin: 20px 0;"></div>
+        <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Confirm to Partner <i class="fab fa-whatsapp"></i></button>
+    </div>
+
+    <div id="ad-box" class="ad-popup">
+        <span class="close-ad" onclick="closeAd()">×</span>
+        <h3 style="color:#d63384; font-size:1rem; margin-bottom:5px;">Valentine's Hunger?</h3>
+        <p style="font-size:0.8rem; color:#666;">Treat your Valentine to EasyGo's best Momos! Use Zomato.</p>
+        <a href="https://zomato.com" target="_blank" style="color:#d63384; font-size:0.8rem; font-weight:bold;">View Menu</a>
     </div>
 
     <script>
-        // --- DATA & STATE ---
         let noCount = 0;
         let speed = 0.5;
-        let proposalData = {};
+        let pData = {};
         let startTime = null;
 
-        const creativeMessages = [
-            "Nice try! But no.", "The button is faster than your heart!",
-            "Catch me if you can!", "Error 404: 'No' not found.",
-            "Are you even trying?", "Wait, did you really want to say no?",
-            "I'm slippery like a fish!", "Give up, just say YES."
-        ];
-
-        // --- CORE LOGIC ---
-
-        function generateProposal() {
-            const cName = document.getElementById('creator-name').value;
-            const phone = document.getElementById('creator-phone').value;
-            const vName = document.getElementById('valentine-name').value;
-
-            if(!cName || !phone || !vName) return alert("Please fill all fields!");
-
-            proposalData = { cName, phone, vName, id: Date.now() };
-            const blob = btoa(JSON.stringify(proposalData));
-            const url = window.location.origin + window.location.pathname + "?prop=" + blob;
-
-            document.getElementById('proposal-link').innerText = url;
-            document.getElementById('display-v-name').innerText = vName;
-            
-            document.getElementById('creator-screen').classList.add('hidden');
-            document.getElementById('share-screen').classList.remove('hidden');
-
-            // Random Ad Chance
-            if(Math.random() > 0.5) showAd();
-        }
-
-        function copyToClipboard() {
-            const link = document.getElementById('proposal-link').innerText;
-            navigator.clipboard.writeText(link);
-            alert("Link copied!");
-        }
-
-        function shareToWhatsApp() {
-            const link = document.getElementById('proposal-link').innerText;
-            const text = `Hey! I have a very special question for you. Please open this: ${link}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }
-
-        // --- THE "NO" BUTTON ESCAPE ENGINE ---
-        const noBtn = document.getElementById('no-btn');
-        const panel = document.getElementById('response-screen');
-        const yesBtn = document.getElementById('yes-btn');
-
-        document.addEventListener('mousemove', (e) => {
-            if(panel.classList.contains('hidden')) return;
-
-            const btnRect = noBtn.getBoundingClientRect();
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
-
-            // Distance calculation
-            const dx = mouseX - (btnRect.left + btnRect.width/2);
-            const dy = mouseY - (btnRect.top + btnRect.height/2);
-            const distance = Math.sqrt(dx*dx + dy*dy);
-
-            // Escape Trigger
-            if (distance < 120) {
-                escapeNo();
-            }
+        // --- PHONE INPUT LOCK ---
+        document.getElementById('c-phone').addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '');
         });
 
-        function escapeNo() {
-            const pRect = panel.getBoundingClientRect();
-            const bRect = noBtn.getBoundingClientRect();
-            const yRect = yesBtn.getBoundingClientRect();
+        // --- BACKGROUND HEARTS ---
+        function createHearts() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('i');
+            heart.classList.add('fas', 'fa-heart', 'heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
+        }
+        setInterval(createHearts, 300);
 
-            // Padding from edges
-            const pad = 30;
-            const maxX = pRect.width - bRect.width - pad;
-            const maxY = pRect.height - bRect.height - pad;
+        // --- CORE FUNCTIONS ---
+        function generateLink() {
+            const name = document.getElementById('c-name').value;
+            const vName = document.getElementById('v-name').value;
+            const phone = document.getElementById('c-phone').value;
 
-            let newX, newY;
-            let overlapping = true;
+            if(!name || !vName || phone.length !== 10) return alert("Enter valid names and a 10-digit number!");
 
-            // Loop to ensure we don't land on the YES button
-            while(overlapping) {
-                newX = Math.random() * (maxX - pad) + pad;
-                newY = Math.random() * (maxY - pad) + pad;
+            pData = { n: name, v: vName, p: "91"+phone };
+            const encoded = btoa(JSON.stringify(pData));
+            const url = window.location.origin + window.location.pathname + "?q=" + encoded;
 
-                // Relative coordinates for YES button
-                const yesRelX = yRect.left - pRect.left;
-                const yesRelY = yRect.top - pRect.top;
+            document.getElementById('link-url').innerText = url;
+            document.getElementById('span-v-name').innerText = vName;
+            document.getElementById('creator-box').classList.add('hidden');
+            document.getElementById('share-box').classList.remove('hidden');
 
-                // Overlap Check
-                const buffer = 20;
-                overlapping = !(newX + bRect.width + buffer < yesRelX || 
-                                newX > yesRelX + yRect.width + buffer || 
-                                newY + bRect.height + buffer < yesRelY || 
-                                newY > yesRelY + yRect.height + buffer);
-            }
-
-            // Apply position and increase speed based on clicks
-            noBtn.style.transition = `all ${speed}s cubic-bezier(0.175, 0.885, 0.32, 1.275)`;
-            noBtn.style.left = `${newX}px`;
-            noBtn.style.top = `${newY}px`;
+            if(Math.random() > 0.6) showAd();
         }
 
-        noBtn.addEventListener('mouseover', escapeNo);
+        function copyLink() {
+            navigator.clipboard.writeText(document.getElementById('link-url').innerText);
+            alert("Link Copied!");
+        }
+
+        function shareWA() {
+            const link = document.getElementById('link-url').innerText;
+            window.open(`https://wa.me/?text=Hey! I have a special question for you: ${encodeURIComponent(link)}`, '_blank');
+        }
+
+        // --- NO BUTTON ESCAPE ---
+        const noBtn = document.getElementById('no-btn');
+        const box = document.getElementById('response-box');
+
+        function moveNo() {
+            const bRect = box.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            const maxX = bRect.width - btnRect.width - 40;
+            const maxY = bRect.height - btnRect.height - 100;
+
+            const x = Math.random() * maxX + 20;
+            const y = Math.random() * maxY + 20;
+
+            noBtn.style.transition = `all ${speed}s ease`;
+            noBtn.style.left = x + "px";
+            noBtn.style.top = y + "px";
+        }
+
+        noBtn.addEventListener('mouseover', moveNo);
         noBtn.addEventListener('click', () => {
             noCount++;
-            speed = Math.max(0.1, speed - 0.05); // Faster every time
-            document.getElementById('counter').innerText = `No attempts: ${noCount}`;
-            document.getElementById('creative-text').innerText = creativeMessages[Math.floor(Math.random()*creativeMessages.length)];
-            
-            // Difficulty text update
-            if(noCount > 10) {
-                document.getElementById('difficulty-level').innerText = "Difficulty: GOD MODE";
-                document.getElementById('difficulty-level').style.background = "red";
-            } else if(noCount > 5) {
-                document.getElementById('difficulty-level').innerText = "Difficulty: Hard";
-            }
-            escapeNo();
+            speed = Math.max(0.1, speed - 0.05);
+            document.getElementById('no-counter').innerText = `Attempts to say No: ${noCount}`;
+            moveNo();
         });
 
-        // --- SUCCESS & FEEDBACK ---
-
-        function handleYes() {
+        function sayYes() {
             const duration = Math.floor((Date.now() - startTime) / 1000);
-            document.getElementById('response-screen').classList.add('hidden');
-            document.getElementById('success-screen').classList.remove('hidden');
-            
-            document.getElementById('stats-display').innerHTML = `
-                <b>Attempts to click 'No':</b> ${noCount}<br>
-                <b>Time taken to decide:</b> ${duration} seconds<br>
-                <b>Status:</b> Completely in Love ❤️
+            document.getElementById('response-box').classList.add('hidden');
+            document.getElementById('success-box').classList.remove('hidden');
+            document.getElementById('final-stats').innerHTML = `
+                <div class="stat-badge">No Missed: ${noCount}</div>
+                <div class="stat-badge">Think Time: ${duration}s</div>
             `;
-
-            // Final Ad Show
             showAd();
         }
 
-        function sendFinalResponse() {
-            const text = `Hey ${proposalData.cName}! I just answered your Valentine proposal... and I said YES! 💖 (I tried to click No ${noCount} times but I couldn't! 😂)`;
-            window.open(`https://wa.me/${proposalData.phone}?text=${encodeURIComponent(text)}`, '_blank');
+        function confirmPartner() {
+            const text = `YES! I accept your Valentine's proposal! ❤️ (I missed the No button ${noCount} times!)`;
+            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // --- UTILS ---
-        function showAd() {
-            document.getElementById('zomato-ad').style.display = 'block';
-        }
-        function closeAd(id) {
-            document.getElementById(id).style.display = 'none';
-        }
+        function showAd() { document.getElementById('ad-box').style.display = 'block'; }
+        function closeAd() { document.getElementById('ad-box').style.display = 'none'; }
 
+        // --- LOAD ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
-            const p = params.get('prop');
-            if(p) {
-                proposalData = JSON.parse(atob(p));
-                document.getElementById('creator-screen').classList.add('hidden');
-                document.getElementById('response-screen').classList.remove('hidden');
-                document.getElementById('proposal-title').innerText = `Hey ${proposalData.vName}!`;
-                document.getElementById('personal-msg').innerText = `${proposalData.cName} is asking: Will you be my Valentine?`;
+            const q = params.get('q');
+            if(q) {
+                pData = JSON.parse(atob(q));
+                document.getElementById('creator-box').classList.add('hidden');
+                document.getElementById('response-box').classList.remove('hidden');
+                document.getElementById('v-header').innerText = `Hey ${pData.v}!`;
+                document.getElementById('v-subtext').innerText = `${pData.n} is waiting for your answer...`;
                 startTime = Date.now();
-                
-                // Initial No Button position
-                noBtn.style.left = '70%';
-                noBtn.style.top = '50%';
+                moveNo();
             }
         };
     </script>
