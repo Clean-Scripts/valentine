@@ -196,6 +196,8 @@
             position: absolute;
             transition: all 0.3s ease;
             z-index: 99;
+            left: 50%;
+            transform: translateX(50px);
         }
 
         .btn-no:hover {
@@ -417,6 +419,7 @@
             max-width: 300px;
             z-index: 1001;
             animation: slideInRight 0.8s ease;
+            display: none; /* Hidden by default */
         }
 
         @keyframes slideInRight {
@@ -483,6 +486,7 @@
             border: 2px solid #25D366;
             max-width: 280px;
             z-index: 1001;
+            display: none; /* Hidden by default */
         }
 
         .owner-ad-header {
@@ -585,8 +589,8 @@
             .btn { padding: 18px 35px; font-size: 1.4rem; }
             .panel { padding: 30px 20px; }
             .question-text { font-size: 1.8rem; }
-            .ad-container { display: none; }
-            .owner-ad { display: none; }
+            .ad-container { max-width: 250px; }
+            .owner-ad { max-width: 250px; }
         }
     </style>
 </head>
@@ -937,6 +941,7 @@
         let proposalData = null;
         let responseData = null;
         let loveMeter = 0;
+        let hasShownAds = false; // Track if ads have been shown
         
         // 100+ Creative questions to make user say YES
         const creativeQuestions = [
@@ -1112,11 +1117,7 @@
             // Initialize No button movement
             initNoButtonMovement();
             
-            // Show ads after 5 seconds
-            setTimeout(() => {
-                zomatoAd.style.display = 'block';
-                ownerAd.style.display = 'block';
-            }, 5000);
+            // NO AUTO ADS - Only show when process completes
         }
         
         // Show creator screen
@@ -1138,6 +1139,17 @@
             
             responseStartTime = new Date();
             updateLoveMeter(0);
+            
+            // Initialize No button position
+            resetNoButtonPosition();
+        }
+        
+        // Reset No button to initial position
+        function resetNoButtonPosition() {
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = '50%';
+            noBtn.style.top = '0';
+            noBtn.style.transform = 'translateX(100px)';
         }
         
         // Load proposal data
@@ -1278,6 +1290,12 @@ Can't wait to see your response! 💝`;
                     
                     // Update tracking screen
                     updateTrackingScreen(data);
+                    
+                    // Show ads AFTER process completion
+                    if (!hasShownAds) {
+                        showAds();
+                        hasShownAds = true;
+                    }
                 } else {
                     // Still waiting
                     alert(`Still waiting for ${data.valentineName}'s response. Share the link again if needed!`);
@@ -1326,7 +1344,7 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
                 decision: 'yes',
                 timestamp: new Date().toISOString(),
                 questionsAnswered: questionsAsked,
-                lovePercentage: 100,
+                lovePercentage: Math.min(loveMeter + 30, 100), // Bonus for saying yes
                 decisionTime: decisionTimeStr
             };
             
@@ -1340,7 +1358,7 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             // Update success screen
             questionsAnswered.textContent = questionsAsked;
             decisionTime.textContent = decisionTimeStr;
-            finalLovePercentage.textContent = '100%';
+            finalLovePercentage.textContent = `${Math.min(loveMeter + 30, 100)}%`;
             responseToName.textContent = proposalData ? proposalData.creatorName : 'Creator';
             responseTime.textContent = new Date().toLocaleString();
             
@@ -1351,6 +1369,12 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             // Switch to success screen
             responseScreen.classList.add('hidden');
             successScreen.classList.remove('hidden');
+            
+            // Show ads AFTER process completion
+            if (!hasShownAds) {
+                showAds();
+                hasShownAds = true;
+            }
         }
         
         // Handle No click (Person B)
@@ -1364,8 +1388,8 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             // Show creative question
             showCreativeQuestion();
             
-            // Update love meter (increase by 1% for each question)
-            loveMeter = Math.min(loveMeter + 1, 100);
+            // Update love meter (increase by 2% for each question)
+            loveMeter = Math.min(loveMeter + 2, 100);
             updateLoveMeter(loveMeter);
         }
         
@@ -1395,7 +1419,7 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             moveNoButtonRandomly();
             
             // Update love meter
-            loveMeter = Math.min(loveMeter + 1, 100);
+            loveMeter = Math.min(loveMeter + 2, 100);
             updateLoveMeter(loveMeter);
         }
         
@@ -1406,7 +1430,7 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             mainButtons.classList.remove('hidden');
             
             // Update love meter (bigger increase for reconsidering)
-            loveMeter = Math.min(loveMeter + 5, 100);
+            loveMeter = Math.min(loveMeter + 10, 100);
             updateLoveMeter(loveMeter);
         }
         
@@ -1482,7 +1506,7 @@ ${responderName} has accepted your Valentine's proposal!
 💌 *Response Details:*
 • Decision: YES! 💝
 • Questions Considered: ${questionsAsked}
-• Love Percentage: 100%
+• Love Percentage: ${Math.min(loveMeter + 30, 100)}%
 • Decision Time: ${formatTime(new Date() - responseStartTime)}
 • Response Time: ${new Date().toLocaleString()}
 
@@ -1527,6 +1551,12 @@ Plan something special for Valentine's Day! Make it memorable!
             // Show creator screen
             trackingScreen.classList.add('hidden');
             creatorScreen.classList.remove('hidden');
+        }
+        
+        // Show ads
+        function showAds() {
+            zomatoAd.style.display = 'block';
+            ownerAd.style.display = 'block';
         }
         
         // Format time
@@ -1595,7 +1625,7 @@ Plan something special for Valentine's Day! Make it memorable!
             heart.style.textAlign = 'center';
             heart.style.lineHeight = '1';
             
-            celebrateContainer.appendChild(heart);
+            document.getElementById('celebrate-container').appendChild(heart);
             
             // Animate
             const animation = heart.animate([
@@ -1631,7 +1661,7 @@ Plan something special for Valentine's Day! Make it memorable!
             confetti.style.top = `-20px`;
             confetti.style.transform = `rotate(${rotation}deg)`;
             
-            celebrateContainer.appendChild(confetti);
+            document.getElementById('celebrate-container').appendChild(confetti);
             
             // Animate
             const animation = confetti.animate([
