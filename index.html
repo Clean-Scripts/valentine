@@ -15,11 +15,8 @@
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
             min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            overflow: hidden;
+            display: flex; align-items: center; justify-content: center;
+            padding: 20px; overflow: hidden;
         }
 
         @keyframes gradient {
@@ -29,199 +26,197 @@
         }
 
         .panel {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(15px);
             border-radius: 30px;
             padding: 40px;
             box-shadow: 0 25px 50px rgba(0,0,0,0.2);
             border: 2px solid rgba(255, 255, 255, 0.3);
-            width: 100%;
-            max-width: 550px;
-            text-align: center;
-            position: relative;
-            min-height: 550px;
-            transition: all 0.5s ease;
+            width: 100%; max-width: 550px;
+            text-align: center; position: relative;
+            min-height: 600px; transition: all 0.5s ease;
+            z-index: 10;
         }
 
         .hidden { display: none !important; }
 
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: #d63384; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #d63384; margin-bottom: 15px; }
         
+        /* Input Styling */
         .input-wrapper { margin-bottom: 20px; text-align: left; }
-        label { display: block; font-weight: 600; color: #444; margin-bottom: 8px; font-size: 0.9rem; }
-        
-        /* Fixed Phone Styling */
+        label { display: block; font-weight: 600; color: #444; margin-bottom: 8px; }
         .phone-container { display: flex; align-items: center; background: #fff; border: 2px solid #ff99cc; border-radius: 15px; padding: 0 15px; }
         .prefix { font-weight: bold; color: #d63384; border-right: 1px solid #ccc; padding-right: 10px; }
-        .phone-container input { border: none !important; padding: 12px 10px; width: 100%; font-size: 1rem; outline: none; }
-
-        input[type="text"] {
-            width: 100%; padding: 12px 20px; border: 2px solid #ff99cc; border-radius: 15px; font-size: 1rem; outline: none; transition: 0.3s;
-        }
-        input:focus { border-color: #d63384; box-shadow: 0 0 10px rgba(214, 51, 132, 0.2); }
+        .phone-container input { border: none !important; padding: 12px 10px; width: 100%; outline: none; }
+        input[type="text"] { width: 100%; padding: 12px 20px; border: 2px solid #ff99cc; border-radius: 15px; outline: none; }
 
         .btn {
-            padding: 15px 35px; border-radius: 50px; border: none; font-weight: 700; font-size: 1.1rem;
+            padding: 15px 35px; border-radius: 50px; border: none; font-weight: 700;
             cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .btn-main { background: linear-gradient(135deg, #ff0066, #ff6699); color: white; width: 100%; justify-content: center; }
-        .btn-main:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(255, 0, 102, 0.3); }
 
-        /* Response Logic */
-        .btn-yes { background: #28a745; color: white; z-index: 100; position: relative; }
-        .btn-no { background: #dc3545; color: white; position: absolute; z-index: 50; transition: none; }
+        /* Game Mechanics */
+        .btn-yes { background: #28a745; color: white; z-index: 100; position: relative; font-size: 1.2rem; }
+        .btn-no { background: #dc3545; color: white; position: absolute; z-index: 50; transition: none; white-space: nowrap; }
 
-        /* Floating Hearts */
-        .heart { position: absolute; color: rgba(255, 255, 255, 0.5); pointer-events: none; animation: float 6s linear infinite; z-index: -1; }
-        @keyframes float { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; } }
-
-        /* Ads */
-        .ad-popup {
-            position: fixed; bottom: 20px; left: 20px; background: white; border-radius: 20px;
-            padding: 20px; border: 3px solid #d63384; z-index: 1000; display: none;
-            max-width: 280px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUp 0.5s ease;
+        /* Questions Box */
+        #question-box {
+            font-style: italic; color: #d63384; margin-top: 15px; min-height: 60px;
+            font-weight: 600; padding: 10px; background: rgba(255, 192, 203, 0.2); border-radius: 15px;
         }
-        @keyframes slideUp { from { transform: translateY(100px); } to { transform: translateY(0); } }
-        .close-ad { position: absolute; top: 5px; right: 10px; cursor: pointer; font-size: 1.2rem; }
 
-        .stat-badge { background: #fce4ec; color: #d81b60; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; margin: 5px; display: inline-block; }
+        /* Music Toggle */
+        .music-control {
+            position: fixed; top: 20px; right: 20px; width: 50px; height: 50px;
+            background: white; border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            z-index: 1000; border: 2px solid #ff0066; color: #ff0066;
+        }
+
+        .ad-popup {
+            position: fixed; bottom: 20px; right: 20px; background: white; border-radius: 20px;
+            padding: 20px; border: 3px solid #d63384; z-index: 1000; display: none;
+            max-width: 260px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .close-ad { position: absolute; top: 5px; right: 10px; cursor: pointer; }
+
+        /* Pulse animation for Music */
+        .pulse { animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
     </style>
 </head>
 <body>
 
-    <div id="hearts-container"></div>
+    <audio id="bg-music" loop>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="music-control pulse" id="music-toggle" onclick="toggleMusic()">
+        <i class="fas fa-music" id="music-icon"></i>
+    </div>
 
     <div class="panel" id="creator-box">
-        <h1>Create Love</h1>
-        <p style="margin-bottom: 25px; color: #666;">Craft a magical proposal link!</p>
-        
+        <h1>Create Proposal</h1>
+        <div class="input-wrapper"><label>Your Name</label><input type="text" id="c-name" placeholder="Name"></div>
+        <div class="input-wrapper"><label>Valentine's Name</label><input type="text" id="v-name" placeholder="Name"></div>
         <div class="input-wrapper">
-            <label>Your Name</label>
-            <input type="text" id="c-name" placeholder="Enter your name">
+            <label>WhatsApp Number</label>
+            <div class="phone-container"><span class="prefix">+91</span><input type="text" id="c-phone" maxlength="10"></div>
         </div>
-        
-        <div class="input-wrapper">
-            <label>Valentine's Name</label>
-            <input type="text" id="v-name" placeholder="Enter their name">
-        </div>
-
-        <div class="input-wrapper">
-            <label>WhatsApp Number (to receive response)</label>
-            <div class="phone-container">
-                <span class="prefix">+91</span>
-                <input type="text" id="c-phone" placeholder="XXXXX XXXXX" maxlength="11">
-            </div>
-        </div>
-
-        <button class="btn btn-main" onclick="generateLink()">Create Magical Link <i class="fas fa-sparkles"></i></button>
+        <button class="btn btn-main" onclick="generateLink()">Generate Link <i class="fas fa-magic"></i></button>
     </div>
 
     <div class="panel hidden" id="share-box">
         <h1>Link Ready! 💌</h1>
-        <p>Send this to <span id="span-v-name" style="color:#d63384; font-weight:bold;"></span></p>
-        <div id="link-url" style="background:#f8f9fa; padding:15px; border-radius:15px; margin:20px 0; font-size:0.8rem; border:1px dashed #d63384; word-break:break-all;"></div>
-        <div style="display:flex; gap:10px;">
-            <button class="btn btn-main" style="background:#007bff;" onclick="copyLink()">Copy <i class="fas fa-copy"></i></button>
-            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">WhatsApp <i class="fab fa-whatsapp"></i></button>
-        </div>
+        <div id="link-url" style="background:#f8f9fa; padding:15px; border-radius:15px; margin:20px 0; border:1px dashed #d63384; word-break:break-all;"></div>
+        <button class="btn btn-main" onclick="copyLink()">Copy & Share <i class="fas fa-copy"></i></button>
     </div>
 
     <div class="panel hidden" id="response-box">
         <h1 id="v-header">Will You?</h1>
-        <p id="v-subtext" style="font-size: 1.2rem; color: #555;"></p>
+        <div id="question-box">Are you sure you want to say no?</div>
         
-        <div id="game-area" style="height: 250px; position: relative; margin-top: 30px; display: flex; align-items: center; justify-content: center; gap: 40px;">
-            <button class="btn btn-yes" onclick="sayYes()">YES! ❤️</button>
+        <div id="game-area" style="height: 300px; position: relative; margin-top: 20px;">
+            <button class="btn btn-yes" id="yes-btn" onclick="sayYes()">YES! ❤️</button>
             <button class="btn btn-no" id="no-btn">No</button>
         </div>
-        
-        <div id="no-counter" class="stat-badge">Attempts to say No: 0</div>
     </div>
 
     <div class="panel hidden" id="success-box">
         <h1>Accepted! 💖</h1>
-        <p>You've made me very happy today!</p>
-        <div id="final-stats" style="margin: 20px 0;"></div>
-        <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Confirm to Partner <i class="fab fa-whatsapp"></i></button>
+        <p id="final-msg"></p>
+        <button class="btn btn-main" style="background:#25D366; margin-top:20px;" onclick="confirmPartner()">Confirm on WhatsApp <i class="fab fa-whatsapp"></i></button>
     </div>
 
     <div id="ad-box" class="ad-popup">
         <span class="close-ad" onclick="closeAd()">×</span>
-        <h3 style="color:#d63384; font-size:1rem; margin-bottom:5px;">Valentine's Hunger?</h3>
-        <p style="font-size:0.8rem; color:#666;">Treat your Valentine to EasyGo's best Momos! Use Zomato.</p>
-        <a href="https://zomato.com" target="_blank" style="color:#d63384; font-size:0.8rem; font-weight:bold;">View Menu</a>
+        <p><strong>Hungry for Love?</strong></p>
+        <p style="font-size:0.8rem;">Visit EasyGo Indore for a Valentine's Treat!</p>
     </div>
 
     <script>
         let noCount = 0;
-        let speed = 0.5;
+        let speed = 0.4;
         let pData = {};
         let startTime = null;
+        let isMusicPlaying = false;
+        const music = document.getElementById('bg-music');
+        const musicIcon = document.getElementById('music-icon');
 
-        // --- PHONE INPUT LOCK ---
-        document.getElementById('c-phone').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
-
-        // --- BACKGROUND HEARTS ---
-        function createHearts() {
-            const container = document.getElementById('hearts-container');
-            const heart = document.createElement('i');
-            heart.classList.add('fas', 'fa-heart', 'heart');
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.style.animationDuration = Math.random() * 3 + 3 + 's';
-            container.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
+        // MUSIC TOGGLE
+        function toggleMusic() {
+            if (isMusicPlaying) {
+                music.pause();
+                musicIcon.classList.replace('fa-pause', 'fa-music');
+                document.getElementById('music-toggle').classList.add('pulse');
+            } else {
+                music.play();
+                musicIcon.classList.replace('fa-music', 'fa-pause');
+                document.getElementById('music-toggle').classList.remove('pulse');
+            }
+            isMusicPlaying = !isMusicPlaying;
         }
-        setInterval(createHearts, 300);
 
-        // --- CORE FUNCTIONS ---
+        const questions = [
+            "Do you believe in love at first sight?", "Would you like to go on a romantic date?",
+            "Do you think we'd make a great couple?", "Can I be the reason for your smile?",
+            "Would you like to be the peanut butter to my jelly?", "Can we write our own love story?",
+            "Do you want to be the missing piece to my puzzle?", "Can I be the luckiest person to have you?",
+            "Do you believe we're meant to be?", "Would you like to be my forever Valentine?",
+            "Can we make this Valentine's Day unforgettable?", "Do you want to be the one I come home to?",
+            "Can I be the one who makes your heart skip a beat?", "Would you like to be my favorite hello?",
+            "Do you want to be my sunshine on a cloudy day?", "Can we build something beautiful together?",
+            "Do you believe in us?", "Would you like to be my dream come true?",
+            "Can I be the one who loves you unconditionally?", "Do you want to be my happy place?",
+            "Would you like to be my favorite adventure?", "Can we make magic together?",
+            "Do you want to be my sweet escape?", "Can I be the one who cherishes you always?",
+            "Do you believe we can conquer the world?", "Would you like to be my better half?",
+            "Can we make each other better?", "Do you want to be my favorite person?",
+            "Would you like to be my heart's desire?", "Can I be the one who understands you?",
+            "Do you want to be my home?", "Would you like to be my anchor?",
+            "Can I be the one who makes you feel loved?", "Do you want to be my soulmate?",
+            "Would you like to be my one and only?", "Can we make every day feel like Valentine's?"
+        ];
+
         function generateLink() {
-            const name = document.getElementById('c-name').value;
-            const vName = document.getElementById('v-name').value;
-            const phone = document.getElementById('c-phone').value;
-
-            if(!name || !vName || phone.length !== 10) return alert("Enter valid names and a 10-digit number!");
-
-            pData = { n: name, v: vName, p: "91"+phone };
-            const encoded = btoa(JSON.stringify(pData));
-            const url = window.location.origin + window.location.pathname + "?q=" + encoded;
-
+            const n = document.getElementById('c-name').value;
+            const v = document.getElementById('v-name').value;
+            const p = document.getElementById('c-phone').value;
+            if(!n || !v || p.length !== 10) return alert("Check details!");
+            pData = { n, v, p: "91"+p };
+            const url = window.location.origin + window.location.pathname + "?q=" + btoa(JSON.stringify(pData));
             document.getElementById('link-url').innerText = url;
-            document.getElementById('span-v-name').innerText = vName;
             document.getElementById('creator-box').classList.add('hidden');
             document.getElementById('share-box').classList.remove('hidden');
-
-            if(Math.random() > 0.6) showAd();
         }
 
         function copyLink() {
             navigator.clipboard.writeText(document.getElementById('link-url').innerText);
-            alert("Link Copied!");
+            alert("Copied! Now send it to your Valentine.");
         }
 
-        function shareWA() {
-            const link = document.getElementById('link-url').innerText;
-            window.open(`https://wa.me/?text=Hey! I have a special question for you: ${encodeURIComponent(link)}`, '_blank');
-        }
-
-        // --- NO BUTTON ESCAPE ---
         const noBtn = document.getElementById('no-btn');
+        const yesBtn = document.getElementById('yes-btn');
         const box = document.getElementById('response-box');
 
         function moveNo() {
             const bRect = box.getBoundingClientRect();
             const btnRect = noBtn.getBoundingClientRect();
-            
-            const maxX = bRect.width - btnRect.width - 40;
-            const maxY = bRect.height - btnRect.height - 100;
+            const yRect = yesBtn.getBoundingClientRect();
 
-            const x = Math.random() * maxX + 20;
-            const y = Math.random() * maxY + 20;
+            let x, y, overlap = true;
+            while(overlap) {
+                x = Math.random() * (bRect.width - btnRect.width - 60) + 30;
+                y = Math.random() * (bRect.height - btnRect.height - 200) + 150;
 
-            noBtn.style.transition = `all ${speed}s ease`;
+                const yesX = yRect.left - bRect.left;
+                const yesY = yRect.top - bRect.top;
+
+                overlap = !(x + btnRect.width < yesX || x > yesX + yRect.width || y + btnRect.height < yesY || y > yesY + yRect.height);
+            }
+
+            noBtn.style.transition = `all ${speed}s ease-out`;
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
         }
@@ -230,30 +225,25 @@
         noBtn.addEventListener('click', () => {
             noCount++;
             speed = Math.max(0.1, speed - 0.05);
-            document.getElementById('no-counter').innerText = `Attempts to say No: ${noCount}`;
+            document.getElementById('question-box').innerText = questions[Math.floor(Math.random() * questions.length)];
             moveNo();
         });
 
         function sayYes() {
-            const duration = Math.floor((Date.now() - startTime) / 1000);
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
-            document.getElementById('final-stats').innerHTML = `
-                <div class="stat-badge">No Missed: ${noCount}</div>
-                <div class="stat-badge">Think Time: ${duration}s</div>
-            `;
+            document.getElementById('final-msg').innerText = `You missed the button ${noCount} times, but your heart found the right way! ❤️`;
             showAd();
         }
 
         function confirmPartner() {
-            const text = `YES! I accept your Valentine's proposal! ❤️ (I missed the No button ${noCount} times!)`;
+            const text = `I SAID YES! ❤️ (I tried to click No ${noCount} times but I couldn't! 😂)`;
             window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(text)}`, '_blank');
         }
 
         function showAd() { document.getElementById('ad-box').style.display = 'block'; }
         function closeAd() { document.getElementById('ad-box').style.display = 'none'; }
 
-        // --- LOAD ---
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const q = params.get('q');
@@ -262,9 +252,9 @@
                 document.getElementById('creator-box').classList.add('hidden');
                 document.getElementById('response-box').classList.remove('hidden');
                 document.getElementById('v-header').innerText = `Hey ${pData.v}!`;
-                document.getElementById('v-subtext').innerText = `${pData.n} is waiting for your answer...`;
                 startTime = Date.now();
                 moveNo();
+                // Browsers often require interaction to play, so the Music Toggle pulses
             }
         };
     </script>
