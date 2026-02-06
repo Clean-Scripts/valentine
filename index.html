@@ -68,6 +68,7 @@
             overflow: hidden;
             border: 0.3125rem solid #ff99cc;
             margin: 1.25rem auto;
+            position: relative;
         }
 
         .hidden {
@@ -216,7 +217,7 @@
             margin-top: 3.125rem;
             flex-wrap: wrap;
             position: relative;
-            min-height: 150px;
+            height: 120px;
         }
 
         .btn {
@@ -262,8 +263,6 @@
             -webkit-user-select: none;
             -moz-user-select: none;
             -ms-user-select: none;
-            touch-action: none;
-            will-change: transform;
             pointer-events: auto;
         }
 
@@ -656,11 +655,20 @@
             50% { box-shadow: 0 0 20px #ff6600; }
         }
 
-        .no-button-container {
-            position: relative;
+        .no-button-wrapper {
+            position: absolute;
+            width: 180px;
+            height: 70px;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            pointer-events: none;
+            z-index: 99;
+        }
+
+        .no-button-wrapper button {
+            pointer-events: auto;
             width: 100%;
-            height: 100px;
-            margin: 2rem 0;
+            height: 100%;
+            position: static !important;
         }
 
         @media (max-width: 768px) {
@@ -670,12 +678,17 @@
             }
             
             .button-container {
-                min-height: 120px;
+                height: 100px;
                 margin-top: 2.5rem;
             }
             
             .btn {
                 min-width: 140px;
+            }
+            
+            .no-button-wrapper {
+                width: 140px;
+                height: 60px;
             }
             
             .ad-container, .owner-ad {
@@ -718,6 +731,11 @@
             
             .form-row .input-group {
                 min-width: 100%;
+            }
+            
+            .no-button-wrapper {
+                width: 120px;
+                height: 50px;
             }
         }
 
@@ -864,7 +882,7 @@
             
             <div class="big-question">Will you be my Valentine?</div>
             
-            <div class="creative-text" id="creative-text"></div>
+            <div class="creative-text" id="creative-text">Try to click "No"... if you can catch it! 😉</div>
             
             <div class="difficulty-level" id="difficulty-level">Difficulty: Easy</div>
             
@@ -880,7 +898,10 @@
             <!-- Main buttons -->
             <div class="button-container" id="main-buttons">
                 <button class="btn btn-yes" id="yes-btn">YES! <i class="fas fa-heart"></i></button>
-                <button class="btn btn-no" id="no-btn">No</button>
+                <!-- No button wrapper for positioning -->
+                <div class="no-button-wrapper" id="no-button-wrapper">
+                    <button class="btn btn-no" id="no-btn">No</button>
+                </div>
             </div>
             
             <div class="counter" id="counter">No attempts: 0</div>
@@ -1006,7 +1027,7 @@
         <div class="owner-ad-header">
             <i class="fas fa-star"></i> Loved This Website?
         </div>
-        <div class="owner-ad-content">
+        <div class="ad-content">
             Rate our Valentine's proposal creator or contact us to build a similar website for your business!
         </div>
         <a href="https://share.google/NedZVLe6kn0bja1C9" target="_blank" class="owner-ad-link" style="margin-right: 0.625rem;">
@@ -1057,6 +1078,7 @@
         const proposalMessage = document.getElementById('proposal-message');
         const yesBtn = document.getElementById('yes-btn');
         const noBtn = document.getElementById('no-btn');
+        const noButtonWrapper = document.getElementById('no-button-wrapper');
         const questionContainer = document.getElementById('question-container');
         const questionText = document.getElementById('question-text');
         const questionYesBtn = document.getElementById('question-yes-btn');
@@ -1102,6 +1124,11 @@
         let adShownCount = 0;
         let maxAdsToShow = 2;
         let randomAdShown = false;
+        let panelRect = null;
+        let mouseX = 0;
+        let mouseY = 0;
+        let buttonWidth = 180;
+        let buttonHeight = 70;
         
         // Creative messages
         const creativeMessages = [
@@ -1283,10 +1310,12 @@
             // Yes button (main response)
             yesBtn.addEventListener('click', handleYesClick);
             
-            // No button (main response) - using mouseover for escape
-            noBtn.addEventListener('mouseover', escapeNoButton);
-            noBtn.addEventListener('touchstart', escapeNoButtonTouch);
+            // No button (main response) - only click event
             noBtn.addEventListener('click', handleNoClick);
+            
+            // Mouse move for escaping NO button
+            responseScreen.addEventListener('mousemove', handleMouseMove);
+            responseScreen.addEventListener('touchmove', handleTouchMove, { passive: false });
             
             // Question Yes button
             questionYesBtn.addEventListener('click', handleQuestionYes);
@@ -1311,6 +1340,76 @@
             
             // Image upload handler
             imageUploadInput.addEventListener('change', handleImageUpload);
+        }
+        
+        // Handle mouse move for NO button escape
+        function handleMouseMove(e) {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+            
+            if (responseScreen && !responseScreen.classList.contains('hidden')) {
+                moveNoButtonAwayFromCursor();
+            }
+        }
+        
+        // Handle touch move for mobile
+        function handleTouchMove(e) {
+            if (e.touches[0]) {
+                mouseX = e.touches[0].clientX;
+                mouseY = e.touches[0].clientY;
+                
+                if (responseScreen && !responseScreen.classList.contains('hidden')) {
+                    moveNoButtonAwayFromCursor();
+                }
+            }
+            e.preventDefault();
+        }
+        
+        // Move NO button away from cursor
+        function moveNoButtonAwayFromCursor() {
+            if (!noButtonWrapper || !panelRect) return;
+            
+            const buttonRect = noButtonWrapper.getBoundingClientRect();
+            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
+            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
+            
+            // Calculate distance from cursor
+            const distance = Math.sqrt(
+                Math.pow(mouseX - buttonCenterX, 2) + 
+                Math.pow(mouseY - buttonCenterY, 2)
+            );
+            
+            // If cursor is within 100px of button, move it away
+            const escapeDistance = 100 * noButtonEscapeSpeed;
+            if (distance < escapeDistance && questionsAsked > 0) {
+                // Calculate escape direction (opposite from cursor)
+                const dx = buttonCenterX - mouseX;
+                const dy = buttonCenterY - mouseY;
+                
+                // Normalize direction
+                const length = Math.sqrt(dx * dx + dy * dy);
+                const directionX = dx / length;
+                const directionY = dy / length;
+                
+                // Get current button position relative to panel
+                const currentX = parseInt(noButtonWrapper.style.left) || (panelRect.width/2 + 100);
+                const currentY = parseInt(noButtonWrapper.style.top) || (panelRect.height/2);
+                
+                // Calculate new position (move away based on difficulty)
+                const moveDistance = 50 * noButtonEscapeSpeed;
+                let newX = currentX + directionX * moveDistance;
+                let newY = currentY + directionY * moveDistance;
+                
+                // Keep within panel bounds (with margin)
+                const margin = 20;
+                newX = Math.max(margin, Math.min(newX, panelRect.width - buttonWidth - margin));
+                newY = Math.max(margin, Math.min(newY, panelRect.height - buttonHeight - margin));
+                
+                // Apply new position
+                noButtonWrapper.style.transition = `all ${0.3 / noButtonEscapeSpeed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+                noButtonWrapper.style.left = `${newX}px`;
+                noButtonWrapper.style.top = `${newY}px`;
+            }
         }
         
         // Handle image upload
@@ -1664,63 +1763,33 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             const randomMsg = creativeMessages[Math.floor(Math.random() * creativeMessages.length)];
             creativeText.textContent = randomMsg;
             
-            return false;
-        }
-        
-        // Escape No button on mouse over
-        function escapeNoButton() {
-            if (questionsAsked === 0) return; // Don't escape on first hover
-            
-            const button = noBtn;
-            const container = document.querySelector('.button-container');
-            const containerRect = container.getBoundingClientRect();
-            const buttonRect = button.getBoundingClientRect();
-            
-            // Calculate escape distance based on difficulty
-            const escapeDistance = 100 * noButtonEscapeSpeed;
-            
-            // Calculate new position
-            let newX = Math.random() * (containerRect.width - buttonRect.width);
-            let newY = Math.random() * (containerRect.height - buttonRect.height);
-            
-            // Make sure it doesn't overlap with Yes button
-            const yesBtnRect = yesBtn.getBoundingClientRect();
-            const buffer = 20;
-            
-            // Check if new position is too close to Yes button
-            const distanceToYes = Math.sqrt(
-                Math.pow(newX - (yesBtn.offsetLeft), 2) + 
-                Math.pow(newY - (yesBtn.offsetTop), 2)
-            );
-            
-            if (distanceToYes < 150) {
-                // Move away from Yes button
-                newX = containerRect.width - buttonRect.width - buffer;
-                newY = Math.random() * (containerRect.height - buttonRect.height);
-            }
-            
-            // Apply new position with smooth transition
-            button.style.transition = `all ${0.5 / noButtonEscapeSpeed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
-            button.style.transform = `translate(${newX}px, ${newY}px)`;
-            
-            // Add shake animation
-            button.style.animation = 'none';
-            setTimeout(() => {
-                button.style.animation = `shake ${0.3 / noButtonEscapeSpeed}s`;
-            }, 10);
-        }
-        
-        // Escape No button on touch (for mobile)
-        function escapeNoButtonTouch(e) {
-            e.preventDefault();
-            if (questionsAsked === 0) return;
-            
-            escapeNoButton();
+            // Move button to random position
+            moveNoButtonToRandomPosition();
             
             // Add haptic feedback if available
             if (navigator.vibrate) {
                 navigator.vibrate(50);
             }
+            
+            return false;
+        }
+        
+        // Move NO button to random position within panel
+        function moveNoButtonToRandomPosition() {
+            if (!noButtonWrapper || !panelRect) return;
+            
+            const margin = 20;
+            const maxX = panelRect.width - buttonWidth - margin;
+            const maxY = panelRect.height - buttonHeight - margin;
+            
+            // Generate random position
+            const randomX = Math.max(margin, Math.random() * maxX);
+            const randomY = Math.max(margin, Math.random() * maxY);
+            
+            // Apply new position
+            noButtonWrapper.style.transition = `all ${0.5 / noButtonEscapeSpeed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
+            noButtonWrapper.style.left = `${randomX}px`;
+            noButtonWrapper.style.top = `${randomY}px`;
         }
         
         // Update difficulty display
@@ -1779,6 +1848,9 @@ Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
             // Show new creative message
             const randomMsg = creativeMessages[Math.floor(Math.random() * creativeMessages.length)];
             creativeText.textContent = randomMsg;
+            
+            // Move button to random position
+            moveNoButtonToRandomPosition();
         }
         
         // Handle question No click (to "actually, no" in question)
@@ -1917,15 +1989,19 @@ Plan something special for Valentine's Day! Make it memorable!
             
             responseStartTime = new Date();
             
-            // Initialize No button position
-            noBtn.style.transform = 'translate(0, 0)';
-            noBtn.style.transition = 'all 0.3s ease';
+            // Get panel dimensions
+            panelRect = responseScreen.getBoundingClientRect();
+            
+            // Set button dimensions
+            buttonWidth = noButtonWrapper.offsetWidth;
+            buttonHeight = noButtonWrapper.offsetHeight;
+            
+            // Initialize NO button position (right side initially)
+            noButtonWrapper.style.left = `${panelRect.width/2 + 100}px`;
+            noButtonWrapper.style.top = `${panelRect.height/2}px`;
             
             // Update difficulty display
             updateDifficultyDisplay();
-            
-            // Show initial creative message
-            creativeText.textContent = "Try clicking 'No'... if you can catch it! 😉";
         }
         
         // Format time
@@ -2019,25 +2095,6 @@ Plan something special for Valentine's Day! Make it memorable!
             
             animation.onfinish = () => confetti.remove();
         }
-        
-        // Add shake animation
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes shake {
-                0% { transform: translate(1px, 1px) rotate(0deg); }
-                10% { transform: translate(-1px, -2px) rotate(-1deg); }
-                20% { transform: translate(-3px, 0px) rotate(1deg); }
-                30% { transform: translate(3px, 2px) rotate(0deg); }
-                40% { transform: translate(1px, -1px) rotate(1deg); }
-                50% { transform: translate(-1px, 2px) rotate(-1deg); }
-                60% { transform: translate(-3px, 1px) rotate(0deg); }
-                70% { transform: translate(3px, 1px) rotate(-1deg); }
-                80% { transform: translate(-1px, -1px) rotate(1deg); }
-                90% { transform: translate(1px, 2px) rotate(0deg); }
-                100% { transform: translate(1px, -2px) rotate(-1deg); }
-            }
-        `;
-        document.head.appendChild(style);
         
         // Initialize when page loads
         window.addEventListener('DOMContentLoaded', init);
