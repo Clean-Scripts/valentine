@@ -4,228 +4,272 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be My Valentine? 💝</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* General Styles */
+        /* Keeping your original extensive styling but fixing the NO button container */
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
-        body { font-family: 'Poppins', sans-serif; background: linear-gradient(45deg, #ff0066, #ff99cc); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-x: hidden; }
-        .container { max-width: 800px; width: 100%; text-align: center; }
-        .panel { background: rgba(255, 255, 255, 0.98); border-radius: 25px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); border: 5px solid #ff99cc; position: relative; overflow: hidden; min-height: 500px; }
-        .hidden { display: none !important; }
-        h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ff0066; margin-bottom: 20px; }
-        p { color: #33001a; margin-bottom: 20px; }
-        
-        /* Form Styles */
-        .input-group { margin-bottom: 15px; text-align: left; }
-        label { display: block; font-weight: 700; color: #660033; margin-bottom: 5px; }
-        input, textarea, select { width: 100%; padding: 12px; border: 2px solid #ff99cc; border-radius: 10px; font-family: inherit; }
-        
-        /* Button Styles */
-        .btn { padding: 15px 30px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
-        .btn-yes { background: #ff0066; color: white; box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3); z-index: 10; position: relative; }
-        .btn-no { background: #999; color: white; position: absolute; z-index: 5; white-space: nowrap; }
-        .btn-generate { background: #660033; color: white; margin-top: 20px; }
-        .btn-share { background: #25D366; color: white; margin-top: 10px; }
+        :root { --base-font-size: 16px; }
+        html { font-size: var(--base-font-size); }
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(45deg, #ff0066, #ff6699, #ff99cc);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.25rem;
+            color: #33001a;
+            position: relative;
+        }
 
-        /* No Button Wrapper Area */
-        #main-buttons { position: relative; height: 200px; margin-top: 30px; display: flex; justify-content: center; align-items: center; }
+        .container { max-width: 62.5rem; width: 100%; text-align: center; position: relative; }
+
+        .panel {
+            background-color: rgba(255, 255, 255, 0.98);
+            border-radius: 1.5625rem;
+            padding: 3.125rem 2.5rem;
+            box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
+            backdrop-filter: blur(10px);
+            border: 0.3125rem solid #ff99cc;
+            margin: 1.25rem auto;
+            position: relative;
+            overflow: hidden; /* Critical for keeping button inside */
+            min-height: 600px;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Your original Typography */
+        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 6vw, 4rem); color: #ff0066; margin-bottom: 1.5625rem; }
+        .input-group { margin: 1.25rem 0; text-align: left; }
+        input, textarea, select { width: 100%; padding: 1rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1rem; }
+
+        /* Button Container logic */
+        .button-container {
+            position: relative;
+            height: 300px; /* Space for the button to run */
+            margin-top: 2rem;
+            width: 100%;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 3.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            border: none;
+        }
+
+        .btn-yes {
+            background: linear-gradient(135deg, #ff0066, #ff3385);
+            color: white;
+            z-index: 100;
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            transform: translateX(-50%);
+        }
+
+        .btn-no {
+            background: #999;
+            color: white;
+            position: absolute;
+            z-index: 101;
+            white-space: nowrap;
+        }
 
         /* Ads */
-        .ad-box { position: fixed; bottom: 20px; right: 20px; background: white; border: 3px solid #ff0066; padding: 15px; border-radius: 15px; z-index: 9999; max-width: 250px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .close-ad { position: absolute; top: -10px; right: -10px; background: #333; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; }
-        
-        /* Image Preview */
-        .valentine-image { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #ff99cc; margin: 10px auto; display: block; }
-        
-        .share-link-box { background: #f0f0f0; padding: 15px; border-radius: 10px; word-break: break-all; margin: 20px 0; font-family: monospace; border: 1px dashed #660033; }
+        .ad-container {
+            position: fixed;
+            bottom: 1.25rem;
+            right: 1.25rem;
+            background: white;
+            padding: 1rem;
+            border-radius: 1rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            border: 3px solid #ff0066;
+            z-index: 2000;
+            max-width: 280px;
+            display: none;
+        }
+        .close-ad { position: absolute; top: 5px; right: 10px; cursor: pointer; font-weight: bold; font-size: 1.5rem; border: none; background: none; }
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="panel" id="creator-screen">
-            <h1>Create Proposal</h1>
+            <h1>Create Your Proposal</h1>
             <div class="input-group">
                 <label>Your Name</label>
-                <input type="text" id="c-name" placeholder="Nishant">
+                <input type="text" id="c-name" placeholder="Nishant Jaiswal">
             </div>
             <div class="input-group">
                 <label>Valentine's Name</label>
                 <input type="text" id="v-name" placeholder="Name">
             </div>
             <div class="input-group">
-                <label>Your WhatsApp (With Country Code)</label>
-                <input type="tel" id="c-phone" placeholder="919999999999">
+                <label>Your WhatsApp (with country code, e.g., 91...)</label>
+                <input type="tel" id="c-phone" placeholder="91XXXXXXXXXX">
             </div>
-            <button class="btn btn-generate" onclick="generateLink()">Generate Link <i class="fas fa-magic"></i></button>
+            <button class="btn btn-yes" style="position:relative; transform:none; left:0;" onclick="generateProposal()">Generate Link</button>
         </div>
 
         <div class="panel hidden" id="share-screen">
-            <h1>Ready to Send!</h1>
-            <p>Copy the link or share directly to WhatsApp.</p>
-            <div class="share-link-box" id="link-display"></div>
-            <button class="btn" style="background:#3366ff; color:white;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
-            <button class="btn btn-share" onclick="shareWhatsApp()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
+            <h1>Share the Love!</h1>
+            <div style="background:#f9f9f9; padding:1rem; border:2px dashed #ff0066; margin:1rem 0; word-break:break-all;" id="link-box"></div>
+            <button class="btn" style="background:#3366ff; color:white; margin-bottom:10px;" onclick="copyLink()">Copy Link</button>
+            <button class="btn" style="background:#25D366; color:white;" onclick="shareOnWA()">Share on WhatsApp</button>
         </div>
 
         <div class="panel hidden" id="response-screen">
             <h1 id="v-title">Will You Be My Valentine?</h1>
-            <div id="main-buttons">
-                <button class="btn btn-yes" id="yes-btn" onclick="sayYes()">YES! ❤️</button>
+            <div class="button-container" id="btn-area">
+                <button class="btn btn-yes" id="yes-btn" onclick="acceptProposal()">YES! ❤️</button>
                 <button class="btn btn-no" id="no-btn">No</button>
             </div>
-            <p id="no-msg" style="font-style: italic; margin-top: 10px; color: #ff0066;"></p>
+            <p id="no-status" style="margin-top:20px; color:#ff0066; font-weight:bold;"></p>
         </div>
 
         <div class="panel hidden" id="success-screen">
-            <h1>She/He Said YES! 💖</h1>
-            <p>The universe is happy! Your response has been recorded.</p>
-            <button class="btn btn-share" id="final-wa-btn">Send Confirmation to Partner</button>
+            <h1>It's a YES! 💘</h1>
+            <p>You've made them the luckiest person!</p>
+            <button class="btn" style="background:#25D366; color:white; margin-top:2rem;" onclick="sendFinalResponse()">Send Confirmation to Partner</button>
         </div>
     </div>
 
-    <div id="ad-box" class="ad-box">
-        <button class="close-ad" onclick="closeAd()">×</button>
-        <p><strong>Valentine's Special!</strong></p>
-        <p style="font-size: 0.8rem;">Hungry? Get 30% off on Zomato for your first date!</p>
-        <a href="https://zomato.com" target="_blank" style="color: #ff0066; font-size: 0.8rem;">Order Now</a>
+    <div id="zomato-ad" class="ad-container">
+        <button class="close-ad" onclick="closeAd('zomato-ad')">×</button>
+        <p><strong>Hungry for Love?</strong></p>
+        <p style="font-size:0.8rem;">Visit <strong>EasyGo Indore</strong> for a special Valentine's treat!</p>
+        <a href="https://zomato.com" target="_blank" style="color:#ff0066;">Order Now</a>
     </div>
 
     <script>
-        let noCount = 0;
-        let speedMultiplier = 1;
-        let proposalData = {};
+        let pData = {};
+        let noAttempts = 0;
+        let difficulty = 1;
 
-        // --- 1. COORDINATION & NAVIGATION ---
-        function generateLink() {
+        // 1. Generate & WhatsApp Link logic
+        function generateProposal() {
             const name = document.getElementById('c-name').value;
             const vName = document.getElementById('v-name').value;
             const phone = document.getElementById('c-phone').value;
+            if(!name || !vName || !phone) return alert("Fill all fields!");
 
-            if(!name || !vName || !phone) return alert("Fill all details!");
+            pData = { name, vName, phone };
+            const encoded = btoa(JSON.stringify(pData));
+            const shareUrl = window.location.origin + window.location.pathname + "?p=" + encoded;
 
-            proposalData = { name, vName, phone, id: Date.now() };
-            const encoded = btoa(JSON.stringify(proposalData));
-            const url = window.location.origin + window.location.pathname + "?p=" + encoded;
-
-            document.getElementById('link-display').innerText = url;
+            document.getElementById('link-box').innerText = shareUrl;
             document.getElementById('creator-screen').classList.add('hidden');
             document.getElementById('share-screen').classList.remove('hidden');
-            
+
             // Random Ad Chance
-            if(Math.random() > 0.5) showAd();
+            if(Math.random() > 0.6) showAd();
         }
 
         function copyLink() {
-            const link = document.getElementById('link-display').innerText;
-            navigator.clipboard.writeText(link);
-            alert("Link Copied!");
+            const link = document.getElementById('link-box').innerText;
+            navigator.clipboard.writeText(link).then(() => alert("Copied!"));
         }
 
-        function shareWhatsApp() {
-            const link = document.getElementById('link-display').innerText;
-            const text = `Hi! Someone has sent you a special Valentine's Proposal. Click here to see: ${link}`;
+        function shareOnWA() {
+            const link = document.getElementById('link-box').innerText;
+            const text = `Hi ${pData.vName}, I have a question for you... ❤️ Check it here: ${link}`;
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
         }
 
-        // --- 2. THE ESCAPING NO BUTTON ---
+        // 2. NO Button Escape Logic (Harder every time)
         const noBtn = document.getElementById('no-btn');
-        const panel = document.getElementById('response-screen');
+        const yesBtn = document.getElementById('yes-btn');
+        const btnArea = document.getElementById('btn-area');
 
         document.addEventListener('mousemove', (e) => {
-            if (panel.classList.contains('hidden')) return;
+            if(document.getElementById('response-screen').classList.contains('hidden')) return;
 
-            const rect = noBtn.getBoundingClientRect();
-            const mouseX = e.clientX;
-            const mouseY = e.clientY;
+            const nRect = noBtn.getBoundingClientRect();
+            const dist = Math.sqrt(Math.pow(e.clientX - (nRect.left + nRect.width/2), 2) + Math.pow(e.clientY - (nRect.top + nRect.height/2), 2));
 
-            // Distance between mouse and button
-            const dist = Math.sqrt(Math.pow(mouseX - (rect.left + rect.width/2), 2) + Math.pow(mouseY - (rect.top + rect.height/2), 2));
-
-            // Trigger escape if mouse is within 150px
-            if (dist < 150) {
-                moveNo();
+            // Flee earlier based on difficulty
+            if (dist < (100 + (difficulty * 20))) {
+                moveNoBtn();
             }
         });
 
-        function moveNo() {
+        function moveNoBtn() {
+            const panel = document.getElementById('response-screen');
             const pRect = panel.getBoundingClientRect();
             const bRect = noBtn.getBoundingClientRect();
-            const yesBtnRect = document.getElementById('yes-btn').getBoundingClientRect();
+            const yRect = yesBtn.getBoundingClientRect();
 
-            // Calculate safe boundaries (within the pink border)
-            const maxX = pRect.width - bRect.width - 40;
-            const maxY = pRect.height - bRect.height - 40;
+            // Padding to stay inside pink border
+            const pad = 30;
+            const maxX = pRect.width - bRect.width - pad;
+            const maxY = pRect.height - bRect.height - pad;
 
-            let newX, newY;
-            let isOverlappingYes = true;
+            let x, y;
+            let overlap = true;
 
-            // Ensure it doesn't hide behind the Yes button
-            while(isOverlappingYes) {
-                newX = Math.random() * maxX;
-                newY = Math.random() * maxY;
+            while(overlap) {
+                x = Math.random() * maxX;
+                y = Math.random() * maxY;
 
                 // Check overlap with Yes Button
-                const yesRelX = yesBtnRect.left - pRect.left;
-                const yesRelY = yesBtnRect.top - pRect.top;
+                const yesX = yRect.left - pRect.left;
+                const yesY = yRect.top - pRect.top;
 
-                const overlap = !(newX + bRect.width < yesRelX || 
-                                  newX > yesRelX + yesBtnRect.width || 
-                                  newY + bRect.height < yesRelY || 
-                                  newY > yesRelY + yesBtnRect.height);
-                
-                if (!overlap) isOverlappingYes = false;
+                overlap = !(x + bRect.width < yesX || x > yesX + yRect.width || y + bRect.height < yesY || y > yesY + yRect.height);
             }
 
-            // Apply position with increasing speed/difficulty
-            noBtn.style.transition = `all ${0.3 / speedMultiplier}s ease-out`;
-            noBtn.style.left = newX + "px";
-            noBtn.style.top = newY + "px";
+            // Speed gets faster as difficulty increases
+            noBtn.style.transition = `all ${0.4 / (difficulty * 0.5)}s ease-out`;
+            noBtn.style.left = x + 'px';
+            noBtn.style.top = y + 'px';
         }
 
         noBtn.addEventListener('click', () => {
-            noCount++;
-            speedMultiplier += 0.5; // Making it harder every click
-            document.getElementById('no-msg').innerText = `Attempt ${noCount}: Nice try! But you can't say no! 😉`;
-            moveNo();
+            noAttempts++;
+            difficulty += 1; // POINT 4: Clicking it makes it harder
+            document.getElementById('no-status').innerText = `Attempt ${noAttempts}: You can't catch it! 😉`;
+            moveNoBtn();
         });
 
-        // --- 3. RESPONSE HANDLING ---
-        function sayYes() {
+        // 3. Finalization
+        function acceptProposal() {
             document.getElementById('response-screen').classList.add('hidden');
             document.getElementById('success-screen').classList.remove('hidden');
-            
-            const msg = `Hey ${proposalData.name}! I just clicked YES on your Valentine proposal! ❤️ (It took me ${noCount} tries to even catch the button!)`;
-            document.getElementById('final-wa-btn').onclick = () => {
-                window.open(`https://wa.me/${proposalData.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-            };
-            
-            // Final Ad after whole process
-            setTimeout(showAd, 1000);
+            showAd(); // POINT 8: Show at the end
         }
 
-        // --- 4. DATA LOADING ---
+        function sendFinalResponse() {
+            const msg = `YES! I'll be your Valentine! ❤️ (Tried to click No ${noAttempts} times but failed!)`;
+            window.open(`https://wa.me/${pData.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function showAd() { document.getElementById('zomato-ad').style.display = 'block'; }
+        function closeAd(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Data Loader
         window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const p = params.get('p');
+            const urlParams = new URLSearchParams(window.location.search);
+            const p = urlParams.get('p');
             if(p) {
-                proposalData = JSON.parse(atob(p));
+                pData = JSON.parse(atob(p));
                 document.getElementById('creator-screen').classList.add('hidden');
                 document.getElementById('response-screen').classList.remove('hidden');
-                document.getElementById('v-title').innerText = `Hey ${proposalData.vName}, ${proposalData.name} is asking...`;
-                // Set initial random position for No
-                moveNo();
+                document.getElementById('v-title').innerText = `Hey ${pData.vName}, ${pData.name} is asking...`;
+                moveNoBtn(); // Initial placement
             }
         };
-
-        // --- 5. ADS ---
-        function showAd() {
-            document.getElementById('ad-box').style.display = 'block';
-        }
-        function closeAd() {
-            document.getElementById('ad-box').style.display = 'none';
-        }
     </script>
 </body>
 </html>
