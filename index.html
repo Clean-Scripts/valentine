@@ -7,6 +7,7 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
         :root { --base-font-size: 16px; }
@@ -66,7 +67,6 @@
             border: 0.1875rem dashed #ff0066; word-break: break-all; font-family: monospace; font-size: 1rem;
         }
 
-        /* Music & Ad UI */
         .music-control { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; font-size: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         .pulse { animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
@@ -78,9 +78,12 @@
         .stat-badge { background: #ffccdd; padding: 0.5rem 1rem; border-radius: 1rem; font-weight: bold; margin: 10px; display: inline-block; }
     </style>
 </head>
-<body>
+<body onclick="autoPlayMusic()">
 
-    <audio id="bg-music" loop><source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg"></audio>
+    <audio id="bg-music" loop>
+        <source src="https://www.youtube.com/s/phone/uJC9iAeOcOY" type="audio/mpeg">
+    </audio>
+
     <div class="music-control pulse" onclick="toggleMusic()"><i class="fas fa-music" id="music-icon"></i></div>
 
     <div class="container">
@@ -91,7 +94,7 @@
             
             <div class="input-group">
                 <label><i class="fas fa-user"></i> Your Name</label>
-                <input type="text" id="c-name" placeholder="Enter your Name">
+                <input type="text" id="c-name" placeholder="Enter your full name (e.g. Nishant Jaiswal)">
             </div>
             
             <div class="input-group">
@@ -103,7 +106,7 @@
                 <label><i class="fas fa-phone-alt"></i> Your WhatsApp (to receive their answer)</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
-                    <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
+                    <input type="tel" id="c-phone" placeholder="Enter 10 digit number" maxlength="10">
                 </div>
             </div>
 
@@ -154,6 +157,7 @@
         let pData = {};
         let startTime = null;
         let isMusicPlaying = false;
+        let musicStarted = false;
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
@@ -178,14 +182,24 @@
             "Would you like to be my one and only?", "Can we make every day feel like Valentine's?"
         ];
 
+        function autoPlayMusic() {
+            if (!musicStarted) {
+                music.play().catch(() => { /* handle blocked autoplay */ });
+                musicIcon.className = 'fas fa-pause';
+                isMusicPlaying = true;
+                musicStarted = true;
+                document.querySelector('.music-control').classList.remove('pulse');
+            }
+        }
+
         function toggleMusic() {
             if (isMusicPlaying) { music.pause(); musicIcon.className = 'fas fa-music'; }
             else { music.play(); musicIcon.className = 'fas fa-pause'; }
             isMusicPlaying = !isMusicPlaying;
+            musicStarted = true;
             document.querySelector('.music-control').classList.remove('pulse');
         }
 
-        // Lock phone input to numbers
         document.getElementById('c-phone').addEventListener('input', function(e) {
             this.value = this.value.replace(/[^0-9]/g, '');
         });
@@ -226,17 +240,12 @@
 
             let x, y, overlap = true;
             while(overlap) {
-                // Keep inside panel with padding
                 x = Math.random() * (bRect.width - btnRect.width - 60) + 30;
                 y = Math.random() * (bRect.height - btnRect.height - 250) + 150;
-
                 const yesX = yRect.left - bRect.left;
                 const yesY = yRect.top - bRect.top;
-
-                // Overlap check against Yes button
                 overlap = !(x + btnRect.width < yesX - 20 || x > yesX + yRect.width + 20 || y + btnRect.height < yesY - 20 || y > yesY + yRect.height + 20);
             }
-
             noBtn.style.transition = `all ${speed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
             noBtn.style.left = x + "px";
             noBtn.style.top = y + "px";
@@ -253,6 +262,30 @@
 
         function sayYes() {
             const duration = Math.floor((Date.now() - startTime) / 1000);
+            
+            // CONFETTI EXPLOSION
+            const end = Date.now() + (3 * 1000);
+            const colors = ['#ff0066', '#ff3385', '#ff99cc'];
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
             document.getElementById('final-msg').innerText = `Congratulations! You missed the 'No' button ${noCount} times, but your heart chose the right way! ❤️`;
