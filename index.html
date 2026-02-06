@@ -4,2100 +4,228 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Will You Be My Valentine? 💝</title>
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            touch-action: manipulation;
-        }
-
-        :root {
-            --base-font-size: 16px;
-        }
-
-        @media (max-width: 768px) {
-            :root {
-                --base-font-size: 14px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                --base-font-size: 12px;
-            }
-        }
-
-        html {
-            font-size: var(--base-font-size);
-        }
-
-        body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(45deg, #ff0066, #ff6699, #ff99cc);
-            min-height: 100vh;
-            overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 1.25rem;
-            color: #33001a;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .container {
-            max-width: 62.5rem;
-            width: 100%;
-            text-align: center;
-            position: relative;
-        }
-
-        .panel {
-            background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem;
-            padding: 3.125rem 2.5rem;
-            box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
-            backdrop-filter: blur(10px);
-            transition: transform 0.5s ease, opacity 0.5s ease;
-            overflow: hidden;
-            border: 0.3125rem solid #ff99cc;
-            margin: 1.25rem auto;
-            position: relative;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(2.5rem, 6vw, 4rem);
-            margin-bottom: 1.5625rem;
-            color: #ff0066;
-            text-shadow: 0.1875rem 0.1875rem 0.375rem rgba(0, 0, 0, 0.1);
-            line-height: 1.2;
-        }
-
-        h2 {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(2rem, 5vw, 3.2rem);
-            color: #ff0066;
-            margin-bottom: 0.9375rem;
-            line-height: 1.2;
-        }
-
-        h3 {
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            color: #660033;
-            margin-bottom: 1.25rem;
-            border-bottom: 0.125rem solid #ff99cc;
-            padding-bottom: 0.625rem;
-            line-height: 1.3;
-        }
-
-        p {
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-            margin-bottom: 1.5625rem;
-            line-height: 1.7;
-            color: #33001a;
-        }
-
-        .input-group {
-            margin: 1.875rem 0;
-            text-align: left;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.625rem;
-            font-weight: 700;
-            color: #660033;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-        }
-
-        input, textarea, select {
-            width: 100%;
-            padding: clamp(0.875rem, 2vw, 1.125rem);
-            border: 0.1875rem solid #ff99cc;
-            border-radius: 0.9375rem;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            transition: all 0.3s;
-            font-family: 'Poppins', sans-serif;
-        }
-
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: #ff0066;
-            box-shadow: 0 0 0 0.1875rem rgba(255, 0, 102, 0.2);
-        }
-
-        .heart-icon {
-            color: #ff0066;
-            font-size: clamp(3rem, 8vw, 6rem);
-            margin: 1.5625rem 0;
-            animation: heartbeat 1.2s infinite;
-        }
-
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-
-        .valentine-image {
-            width: clamp(150px, 40vw, 220px);
-            height: clamp(150px, 40vw, 220px);
-            border-radius: 50%;
-            object-fit: cover;
-            border: clamp(0.5rem, 2vw, 0.625rem) solid #ff99cc;
-            margin: 1.5625rem auto;
-            box-shadow: 0 0.625rem 1.5625rem rgba(0, 0, 0, 0.15);
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .valentine-image:hover {
-            transform: scale(1.05);
-        }
-
-        .image-upload-container {
-            text-align: center;
-            margin: 1.25rem 0;
-        }
-
-        .image-upload-label {
-            display: inline-block;
-            background: linear-gradient(135deg, #ff0066, #ff3385);
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 2.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            margin: 0.625rem;
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        .image-upload-label:hover {
-            background: linear-gradient(135deg, #cc0052, #ff0066);
-            transform: translateY(-0.1875rem);
-        }
-
-        #image-upload {
-            display: none;
-        }
-
-        .big-question {
-            font-size: clamp(1.8rem, 5vw, 3.2rem);
-            font-family: 'Dancing Script', cursive;
-            color: #ff0066;
-            margin: 2.1875rem 0;
-            text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
-            animation: pulse 2s infinite;
-            line-height: 1.3;
-            padding: 0 0.625rem;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: clamp(1.25rem, 4vw, 3.125rem);
-            margin-top: 3.125rem;
-            flex-wrap: wrap;
-            position: relative;
-            height: 120px;
-        }
-
-        .btn {
-            padding: clamp(1rem, 3vw, 1.375rem) clamp(2rem, 5vw, 3.4375rem);
-            font-size: clamp(1.2rem, 3vw, 1.8rem);
-            font-weight: 700;
-            border: none;
-            border-radius: 3.75rem;
-            cursor: pointer;
-            transition: all 0.4s ease;
-            box-shadow: 0 0.75rem 1.5625rem rgba(0, 0, 0, 0.2);
-            position: relative;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: clamp(0.5rem, 2vw, 0.9375rem);
-            min-width: clamp(120px, 30vw, 180px);
-            touch-action: manipulation;
-        }
-
-        .btn-yes {
-            background: linear-gradient(135deg, #ff0066, #ff3385);
-            color: white;
-            border: 0.25rem solid #ff0066;
-        }
-
-        .btn-yes:hover, .btn-yes:active {
-            background: linear-gradient(135deg, #cc0052, #ff0066);
-            transform: translateY(-0.5rem) scale(1.05);
-            box-shadow: 0 1.25rem 2.1875rem rgba(204, 0, 82, 0.4);
-        }
-
-        .btn-no {
-            background: linear-gradient(135deg, #cccccc, #999999);
-            color: #33001a;
-            border: 0.25rem solid #999999;
-            position: relative;
-            transition: all 0.3s ease;
-            z-index: 99;
-            cursor: pointer;
-            user-select: none;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            pointer-events: auto;
-        }
-
-        .btn-no:hover {
-            background: linear-gradient(135deg, #999999, #666666);
-        }
-
-        .btn-generate {
-            background: linear-gradient(135deg, #660033, #99004d);
-            color: white;
-            border: 0.25rem solid #660033;
-            margin: 1.25rem auto;
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-        }
-
-        .btn-share {
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            color: white;
-            border: 0.25rem solid #25D366;
-            margin: 1.25rem auto;
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-        }
-
-        .btn-share:hover {
-            background: linear-gradient(135deg, #128C7E, #0a6e5e);
-        }
-
-        .btn-copy {
-            background: linear-gradient(135deg, #3366ff, #0033cc);
-            color: white;
-            border: 0.25rem solid #3366ff;
-            margin: 0.625rem auto;
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-            padding: clamp(0.75rem, 2vw, 0.9375rem) clamp(1.5rem, 3vw, 2.1875rem);
-        }
-
-        .btn-copy:hover {
-            background: linear-gradient(135deg, #0033cc, #002699);
-        }
-
-        .celebrate-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 1000;
-        }
-
-        .message {
-            font-size: clamp(1.3rem, 3vw, 2rem);
-            font-family: 'Dancing Script', cursive;
-            color: #ff0066;
-            margin: 1.5625rem 0;
-            min-height: 5rem;
-            line-height: 1.4;
-            padding: 0 0.625rem;
-        }
-
-        .stats-container {
-            background: linear-gradient(135deg, #ffccdd, #ff99cc);
-            padding: 1.5625rem;
-            border-radius: 1.25rem;
-            margin: 1.5625rem 0;
-            text-align: left;
-            border: 0.1875rem solid #ff66aa;
-        }
-
-        .stat-item {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.75rem 0;
-            border-bottom: 0.125rem dashed #ff66aa;
-            flex-wrap: wrap;
-        }
-
-        .stat-label {
-            font-weight: 700;
-            color: #660033;
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-        }
-
-        .stat-value {
-            font-weight: 800;
-            color: #ff0066;
-            font-size: clamp(1rem, 2.5vw, 1.3rem);
-        }
-
-        .counter {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            color: #660033;
-            margin-top: 1.5625rem;
-            font-weight: 700;
-            background: #ffccdd;
-            padding: 0.9375rem;
-            border-radius: 0.9375rem;
-            display: inline-block;
-        }
-
-        .prompt-container {
-            background: linear-gradient(135deg, #ffccdd, #ff99cc);
-            padding: 1.5625rem;
-            border-radius: 1.25rem;
-            margin: 1.5625rem 0;
-            animation: fadeIn 0.5s ease;
-            border: 0.1875rem solid #ff66aa;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(1.875rem); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .prompt-buttons {
-            display: flex;
-            justify-content: center;
-            gap: clamp(1rem, 3vw, 1.875rem);
-            margin-top: 1.5625rem;
-            flex-wrap: wrap;
-        }
-
-        .prompt-btn {
-            padding: clamp(0.875rem, 2vw, 1.125rem) clamp(1.5rem, 3vw, 2.5rem);
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            border-radius: 3.125rem;
-            border: none;
-            cursor: pointer;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.15);
-            min-width: clamp(100px, 25vw, 150px);
-        }
-
-        .prompt-btn-yes {
-            background: linear-gradient(135deg, #ff0066, #ff3385);
-            color: white;
-        }
-
-        .prompt-btn-no {
-            background: linear-gradient(135deg, #cccccc, #999999);
-            color: #33001a;
-        }
-
-        .prompt-btn:hover {
-            transform: scale(1.08);
-        }
-
-        .whatsapp-message {
-            background: linear-gradient(135deg, #dcf8c6, #c8f7b5);
-            border: 0.1875rem solid #25D366;
-            border-radius: 0.9375rem;
-            padding: 1.25rem;
-            margin: 1.5625rem 0;
-            text-align: left;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            white-space: pre-line;
-            max-height: 25rem;
-            overflow-y: auto;
-            box-shadow: 0 0.625rem 1.25rem rgba(37, 211, 102, 0.2);
-            font-size: clamp(0.9rem, 2vw, 1rem);
-        }
-
-        .whatsapp-message-header {
-            display: flex;
-            justify-content: space-between;
-            color: #128C7E;
-            font-weight: 700;
-            margin-bottom: 0.9375rem;
-            padding-bottom: 0.625rem;
-            border-bottom: 0.125rem solid #25D366;
-            font-size: clamp(0.9rem, 2vw, 1.3rem);
-            flex-wrap: wrap;
-        }
-
-        .question-container {
-            background: linear-gradient(135deg, #ffccdd, #ff99cc);
-            padding: 1.875rem;
-            border-radius: 1.25rem;
-            margin: 1.875rem 0;
-            border: 0.1875rem solid #ff66aa;
-        }
-
-        .question-text {
-            font-size: clamp(1.3rem, 4vw, 2.2rem);
-            color: #660033;
-            margin-bottom: 1.875rem;
-            font-weight: 700;
-            line-height: 1.5;
-            padding: 0 0.625rem;
-        }
-
-        .share-link-container {
-            background: linear-gradient(135deg, #e6f2ff, #cce6ff);
-            padding: 1.5625rem;
-            border-radius: 1.25rem;
-            margin: 1.5625rem 0;
-            border: 0.1875rem solid #3366ff;
-        }
-
-        .share-link {
-            font-size: clamp(0.9rem, 2vw, 1.3rem);
-            background: white;
-            padding: 0.9375rem;
-            border-radius: 0.625rem;
-            border: 0.125rem dashed #3366ff;
-            margin: 1.25rem 0;
-            word-break: break-all;
-            font-family: monospace;
-            overflow-wrap: break-word;
-        }
-
-        .ad-container {
-            position: fixed;
-            bottom: 1.25rem;
-            right: 1.25rem;
-            background: white;
-            padding: 0.9375rem;
-            border-radius: 0.9375rem;
-            box-shadow: 0 0.625rem 1.875rem rgba(0, 0, 0, 0.2);
-            border: 0.1875rem solid #ff0066;
-            max-width: clamp(200px, 80vw, 300px);
-            z-index: 1001;
-            animation: slideInRight 0.8s ease;
-            display: none;
-        }
-
-        @keyframes slideInRight {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .ad-header {
-            color: #ff0066;
-            font-weight: 700;
-            margin-bottom: 0.625rem;
-            font-size: clamp(0.9rem, 2vw, 1.2rem);
-            display: flex;
-            align-items: center;
-            gap: 0.625rem;
-        }
-
-        .ad-content {
-            font-size: clamp(0.8rem, 1.8vw, 1rem);
-            margin-bottom: 0.9375rem;
-            line-height: 1.5;
-        }
-
-        .ad-link {
-            display: inline-block;
-            background: #ff0066;
-            color: white;
-            padding: 0.625rem 1.25rem;
-            border-radius: 1.5625rem;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            margin: 0.3125rem 0;
-            font-size: clamp(0.8rem, 1.8vw, 0.9rem);
-        }
-
-        .ad-link:hover {
-            background: #cc0052;
-            transform: translateY(-0.1875rem);
-        }
-
-        .close-ad {
-            position: absolute;
-            top: 0.625rem;
-            right: 0.9375rem;
-            background: none;
-            border: none;
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            color: #999;
-            cursor: pointer;
-            line-height: 1;
-            padding: 0;
-            width: 1.5rem;
-            height: 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .close-ad:hover {
-            color: #ff0066;
-        }
-
-        .owner-ad {
-            position: fixed;
-            top: 1.25rem;
-            right: 1.25rem;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 0.9375rem;
-            border-radius: 0.9375rem;
-            box-shadow: 0 0.5rem 1.5625rem rgba(0, 0, 0, 0.15);
-            border: 0.125rem solid #25D366;
-            max-width: clamp(200px, 80vw, 280px);
-            z-index: 1001;
-            display: none;
-        }
-
-        .owner-ad-header {
-            color: #25D366;
-            font-weight: 700;
-            margin-bottom: 0.625rem;
-            font-size: clamp(0.9rem, 2vw, 1.1rem);
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .owner-ad-content {
-            font-size: clamp(0.75rem, 1.6vw, 0.95rem);
-            margin-bottom: 0.75rem;
-            line-height: 1.4;
-        }
-
-        .owner-ad-link {
-            display: inline-block;
-            background: #25D366;
-            color: white;
-            padding: 0.5rem 1rem;
-            border-radius: 1.25rem;
-            text-decoration: none;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            font-size: clamp(0.75rem, 1.6vw, 0.9rem);
-            margin: 0.25rem;
-        }
-
-        .owner-ad-link:hover {
-            background: #128C7E;
-            transform: translateY(-0.125rem);
-        }
-
-        footer {
-            margin-top: 2.5rem;
-            color: #33001a;
-            font-size: clamp(0.8rem, 2vw, 1rem);
-            opacity: 0.9;
-            text-align: center;
-            padding: 0 0.625rem;
-        }
-
-        .form-row {
-            display: flex;
-            gap: clamp(0.625rem, 2vw, 1.25rem);
-            margin-bottom: 1.25rem;
-            flex-wrap: wrap;
-        }
-
-        .form-row .input-group {
-            flex: 1;
-            margin: 0;
-            min-width: 200px;
-        }
-
-        .counter {
-            font-size: clamp(1.5rem, 4vw, 2rem);
-            font-weight: 800;
-            color: #ff0066;
-            margin-top: 0.625rem;
-        }
-
-        .creative-text {
-            font-size: clamp(1rem, 2.5vw, 1.5rem);
-            font-style: italic;
-            color: #660033;
-            margin: 1rem 0;
-            padding: 1rem;
-            background: rgba(255, 204, 221, 0.3);
-            border-radius: 1rem;
-            border-left: 0.5rem solid #ff0066;
-        }
-
-        .difficulty-level {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: linear-gradient(135deg, #ff9900, #ff6600);
-            color: white;
-            border-radius: 2rem;
-            font-weight: bold;
-            margin-top: 1rem;
-            animation: glow 2s infinite;
-        }
-
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 5px #ff9900; }
-            50% { box-shadow: 0 0 20px #ff6600; }
-        }
-
-        .no-button-wrapper {
-            position: absolute;
-            width: 180px;
-            height: 70px;
-            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            pointer-events: none;
-            z-index: 99;
-        }
-
-        .no-button-wrapper button {
-            pointer-events: auto;
-            width: 100%;
-            height: 100%;
-            position: static !important;
-        }
-
-        @media (max-width: 768px) {
-            .panel {
-                padding: 2.5rem 1.5625rem;
-                margin: 0.625rem auto;
-            }
-            
-            .button-container {
-                height: 100px;
-                margin-top: 2.5rem;
-            }
-            
-            .btn {
-                min-width: 140px;
-            }
-            
-            .no-button-wrapper {
-                width: 140px;
-                height: 60px;
-            }
-            
-            .ad-container, .owner-ad {
-                position: relative;
-                margin: 1.25rem auto;
-                width: 90%;
-                max-width: none;
-                right: auto;
-                top: auto;
-                bottom: auto;
-                animation: none;
-            }
-        }
-
-        @media (max-width: 480px) {
-            body {
-                padding: 0.625rem;
-            }
-            
-            .panel {
-                padding: 1.875rem 1.25rem;
-                border-radius: 1.25rem;
-            }
-            
-            .btn {
-                padding: 0.875rem 1.5rem;
-                font-size: 1.2rem;
-                min-width: 120px;
-            }
-            
-            .prompt-btn {
-                padding: 0.75rem 1.25rem;
-                font-size: 1.1rem;
-            }
-            
-            .form-row {
-                flex-direction: column;
-                gap: 0.9375rem;
-            }
-            
-            .form-row .input-group {
-                min-width: 100%;
-            }
-            
-            .no-button-wrapper {
-                width: 120px;
-                height: 50px;
-            }
-        }
-
-        @media (hover: none) and (pointer: coarse) {
-            .btn:hover {
-                transform: none;
-            }
-            
-            .btn-yes:active {
-                transform: translateY(-0.25rem) scale(1.02);
-            }
-            
-            .prompt-btn:hover {
-                transform: none;
-            }
-            
-            .prompt-btn:active {
-                transform: scale(0.98);
-            }
-        }
+        /* General Styles */
+        * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
+        body { font-family: 'Poppins', sans-serif; background: linear-gradient(45deg, #ff0066, #ff99cc); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; overflow-x: hidden; }
+        .container { max-width: 800px; width: 100%; text-align: center; }
+        .panel { background: rgba(255, 255, 255, 0.98); border-radius: 25px; padding: 40px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); border: 5px solid #ff99cc; position: relative; overflow: hidden; min-height: 500px; }
+        .hidden { display: none !important; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; color: #ff0066; margin-bottom: 20px; }
+        p { color: #33001a; margin-bottom: 20px; }
+        
+        /* Form Styles */
+        .input-group { margin-bottom: 15px; text-align: left; }
+        label { display: block; font-weight: 700; color: #660033; margin-bottom: 5px; }
+        input, textarea, select { width: 100%; padding: 12px; border: 2px solid #ff99cc; border-radius: 10px; font-family: inherit; }
+        
+        /* Button Styles */
+        .btn { padding: 15px 30px; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 50px; cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 10px; }
+        .btn-yes { background: #ff0066; color: white; box-shadow: 0 5px 15px rgba(255, 0, 102, 0.3); z-index: 10; position: relative; }
+        .btn-no { background: #999; color: white; position: absolute; z-index: 5; white-space: nowrap; }
+        .btn-generate { background: #660033; color: white; margin-top: 20px; }
+        .btn-share { background: #25D366; color: white; margin-top: 10px; }
+
+        /* No Button Wrapper Area */
+        #main-buttons { position: relative; height: 200px; margin-top: 30px; display: flex; justify-content: center; align-items: center; }
+
+        /* Ads */
+        .ad-box { position: fixed; bottom: 20px; right: 20px; background: white; border: 3px solid #ff0066; padding: 15px; border-radius: 15px; z-index: 9999; max-width: 250px; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
+        .close-ad { position: absolute; top: -10px; right: -10px; background: #333; color: white; border: none; border-radius: 50%; width: 25px; height: 25px; cursor: pointer; }
+        
+        /* Image Preview */
+        .valentine-image { width: 150px; height: 150px; border-radius: 50%; object-fit: cover; border: 5px solid #ff99cc; margin: 10px auto; display: block; }
+        
+        .share-link-box { background: #f0f0f0; padding: 15px; border-radius: 10px; word-break: break-all; margin: 20px 0; font-family: monospace; border: 1px dashed #660033; }
     </style>
 </head>
 <body>
-    <!-- Initial screen for Person A to create proposal -->
+
     <div class="container">
         <div class="panel" id="creator-screen">
-            <i class="fas fa-heart heart-icon"></i>
-            <h1>Create Your Valentine's Proposal</h1>
-            <p>Create a magical Valentine's proposal and share it with your special someone. They'll receive a link to answer your question!</p>
-            
-            <div class="form-row">
-                <div class="input-group">
-                    <label for="creator-name"><i class="fas fa-user"></i> Your Name</label>
-                    <input type="text" id="creator-name" placeholder="Your name" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="creator-phone"><i class="fas fa-phone-alt"></i> Your WhatsApp</label>
-                    <input type="tel" id="creator-phone" placeholder="+91XXXXXXXXXX" required>
-                </div>
-            </div>
-            
-            <div class="form-row">
-                <div class="input-group">
-                    <label for="valentine-name"><i class="fas fa-user-heart"></i> Valentine's Name</label>
-                    <input type="text" id="valentine-name" placeholder="Your Valentine's name" required>
-                </div>
-                
-                <div class="input-group">
-                    <label for="valentine-phone"><i class="fas fa-mobile-alt"></i> Valentine's WhatsApp (Optional)</label>
-                    <input type="tel" id="valentine-phone" placeholder="For direct WhatsApp sharing">
-                </div>
-            </div>
-            
-            <div class="image-upload-container">
-                <label for="image-upload" class="image-upload-label">
-                    <i class="fas fa-camera"></i> Upload Valentine's Photo
-                </label>
-                <input type="file" id="image-upload" accept="image/*" capture="user">
-                <div id="image-preview-container"></div>
-            </div>
-            
+            <h1>Create Proposal</h1>
             <div class="input-group">
-                <label for="personal-message"><i class="fas fa-envelope"></i> Personal Message</label>
-                <textarea id="personal-message" rows="3" placeholder="Write a heartfelt message for your Valentine..."></textarea>
+                <label>Your Name</label>
+                <input type="text" id="c-name" placeholder="Nishant">
             </div>
-            
             <div class="input-group">
-                <label for="relationship-type"><i class="fas fa-heart"></i> Your Relationship</label>
-                <select id="relationship-type">
-                    <option value="crush">Crush / Interested in</option>
-                    <option value="partner">Partner / Boyfriend/Girlfriend</option>
-                    <option value="spouse">Spouse / Husband/Wife</option>
-                    <option value="friend">Close Friend</option>
-                    <option value="secret">Secret Admirer</option>
-                </select>
+                <label>Valentine's Name</label>
+                <input type="text" id="v-name" placeholder="Name">
             </div>
-            
-            <button class="btn btn-generate" id="generate-btn">
-                <i class="fas fa-magic"></i> Generate Proposal Link
-            </button>
+            <div class="input-group">
+                <label>Your WhatsApp (With Country Code)</label>
+                <input type="tel" id="c-phone" placeholder="919999999999">
+            </div>
+            <button class="btn btn-generate" onclick="generateLink()">Generate Link <i class="fas fa-magic"></i></button>
         </div>
 
-        <!-- Share screen for Person A -->
         <div class="panel hidden" id="share-screen">
-            <i class="fas fa-share-alt heart-icon"></i>
-            <h1>Share With Your Valentine!</h1>
-            <p>Your Valentine's proposal has been created. Share the link below with <span id="share-valentine-name">Valentine</span> and wait for their response!</p>
-            
-            <div class="share-link-container">
-                <h3><i class="fas fa-link"></i> Proposal Link</h3>
-                <div class="share-link" id="proposal-link">Loading...</div>
-                <button class="btn btn-copy" id="copy-link-btn">
-                    <i class="far fa-copy"></i> Copy Link
-                </button>
-                
-                <div class="input-group">
-                    <label for="whatsapp-message"><i class="fab fa-whatsapp"></i> WhatsApp Message Preview</label>
-                    <textarea id="whatsapp-message" rows="4" readonly></textarea>
-                </div>
-                
-                <button class="btn btn-share" id="whatsapp-share-btn">
-                    <i class="fab fa-whatsapp"></i> Share via WhatsApp
-                </button>
-            </div>
-            
-            <div class="stats-container">
-                <h3><i class="fas fa-info-circle"></i> Proposal Details</h3>
-                <div class="stat-item">
-                    <span class="stat-label">Created By:</span>
-                    <span class="stat-value" id="share-creator-name">You</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">For:</span>
-                    <span class="stat-value" id="share-for-name">Valentine</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Created On:</span>
-                    <span class="stat-value" id="share-date">Today</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Status:</span>
-                    <span class="stat-value" id="share-status" style="color: #ff9900;">Waiting for response</span>
-                </div>
-            </div>
-            
-            <button class="btn btn-yes" id="track-response-btn">
-                <i class="fas fa-heartbeat"></i> Track Response
-            </button>
+            <h1>Ready to Send!</h1>
+            <p>Copy the link or share directly to WhatsApp.</p>
+            <div class="share-link-box" id="link-display"></div>
+            <button class="btn" style="background:#3366ff; color:white;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
+            <button class="btn btn-share" onclick="shareWhatsApp()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
         </div>
 
-        <!-- Response screen for Person B -->
         <div class="panel hidden" id="response-screen">
-            <i class="fas fa-heart heart-icon"></i>
-            <h1 id="response-title">You Have a Valentine's Proposal!</h1>
-            
-            <div id="image-container">
-                <img id="response-heart-img" class="valentine-image" src="https://images.unsplash.com/photo-1518568814500-bf0f8d125f46?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=687&q=80" alt="Valentine">
+            <h1 id="v-title">Will You Be My Valentine?</h1>
+            <div id="main-buttons">
+                <button class="btn btn-yes" id="yes-btn" onclick="sayYes()">YES! ❤️</button>
+                <button class="btn btn-no" id="no-btn">No</button>
             </div>
-            
-            <div class="message" id="proposal-message">
-                Loading proposal...
-            </div>
-            
-            <div class="big-question">Will you be my Valentine?</div>
-            
-            <div class="creative-text" id="creative-text">Try to click "No"... if you can catch it! 😉</div>
-            
-            <div class="difficulty-level" id="difficulty-level">Difficulty: Easy</div>
-            
-            <!-- Creative questions container -->
-            <div class="question-container hidden" id="question-container">
-                <div class="question-text" id="question-text">Are you sure you want to say no?</div>
-                <div class="prompt-buttons">
-                    <button class="prompt-btn prompt-btn-yes" id="question-yes-btn">Yes, I'm sure!</button>
-                    <button class="prompt-btn prompt-btn-no" id="question-no-btn">Actually, no...</button>
-                </div>
-            </div>
-            
-            <!-- Main buttons -->
-            <div class="button-container" id="main-buttons">
-                <button class="btn btn-yes" id="yes-btn">YES! <i class="fas fa-heart"></i></button>
-                <!-- No button wrapper for positioning -->
-                <div class="no-button-wrapper" id="no-button-wrapper">
-                    <button class="btn btn-no" id="no-btn">No</button>
-                </div>
-            </div>
-            
-            <div class="counter" id="counter">No attempts: 0</div>
+            <p id="no-msg" style="font-style: italic; margin-top: 10px; color: #ff0066;"></p>
         </div>
 
-        <!-- Success screen for Person B -->
         <div class="panel hidden" id="success-screen">
-            <i class="fas fa-heart heart-icon"></i>
-            <h1>You Made The Right Choice! 💖</h1>
-            
-            <div id="success-image-container">
-                <img id="success-img" class="valentine-image" src="" alt="Valentine">
-            </div>
-            
-            <div class="big-question" id="success-message">Congratulations!</div>
-            
-            <div class="stats-container">
-                <h3><i class="fas fa-chart-bar"></i> Your Response Journey</h3>
-                <div class="stat-item">
-                    <span class="stat-label">No Button Attempts:</span>
-                    <span class="stat-value" id="questions-answered">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Time to Decide:</span>
-                    <span class="stat-value" id="decision-time">0 seconds</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Final Difficulty:</span>
-                    <span class="stat-value" id="final-difficulty">Easy</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Response Sent To:</span>
-                    <span class="stat-value" id="response-to-name">Creator</span>
-                </div>
-            </div>
-            
-            <div class="whatsapp-message">
-                <div class="whatsapp-message-header">
-                    <span>Response Notification</span>
-                    <span id="response-time">Now</span>
-                </div>
-                <div id="whatsapp-response-content">
-                    Generating response message...
-                </div>
-            </div>
-            
-            <button class="btn btn-share" id="send-response-btn">
-                <i class="fab fa-whatsapp"></i> Send Response to Creator
-            </button>
-            
-            <p style="margin-top: 1.5625rem; font-size: 1rem;">
-                <i class="fas fa-info-circle"></i> Your response will be sent to the person who created this proposal.
-            </p>
-        </div>
-
-        <!-- Tracking screen for Person A -->
-        <div class="panel hidden" id="tracking-screen">
-            <i class="fas fa-heart heart-icon" style="color: #25D366;"></i>
-            <h1>Valentine's Response Received! 💘</h1>
-            
-            <div class="stats-container">
-                <h3><i class="fas fa-trophy"></i> CONGRATULATIONS!</h3>
-                <div class="stat-item">
-                    <span class="stat-label">Your Valentine:</span>
-                    <span class="stat-value" id="track-valentine-name">Valentine</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Response:</span>
-                    <span class="stat-value" style="color: #25D366; font-size: 1.5rem;">YES! 💖</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Response Time:</span>
-                    <span class="stat-value" id="track-response-time">Just now</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Attempts Made:</span>
-                    <span class="stat-value" id="track-questions">0</span>
-                </div>
-                <div class="stat-item">
-                    <span class="stat-label">Difficulty Level:</span>
-                    <span class="stat-value" id="track-difficulty">Easy</span>
-                </div>
-            </div>
-            
-            <div class="whatsapp-message">
-                <div class="whatsapp-message-header">
-                    <span>Message Sent to Your Valentine</span>
-                </div>
-                <div id="track-whatsapp-message">
-                    Loading message...
-                </div>
-            </div>
-            
-            <button class="btn btn-yes" id="create-another-btn">
-                <i class="fas fa-plus-circle"></i> Create Another Proposal
-            </button>
+            <h1>She/He Said YES! 💖</h1>
+            <p>The universe is happy! Your response has been recorded.</p>
+            <button class="btn btn-share" id="final-wa-btn">Send Confirmation to Partner</button>
         </div>
     </div>
 
-    <!-- Celebration container -->
-    <div class="celebrate-container" id="celebrate-container"></div>
-
-    <!-- Promotion Ad (Zomato/EasyGo) -->
-    <div class="ad-container" id="zomato-ad">
-        <button class="close-ad" id="close-zomato-ad">×</button>
-        <div class="ad-header">
-            <i class="fas fa-utensils"></i> Valentine's Special Offer!
-        </div>
-        <div class="ad-content">
-            Plan the perfect Valentine's date with delicious food! Get 30% off on your first order.
-        </div>
-        <a href="https://link.zomato.com/xqzv/rshare?id=12704669630563c35" target="_blank" class="ad-link">
-            <i class="fas fa-external-link-alt"></i> Order Now on Zomato
-        </a>
-        <div class="ad-content" style="margin-top: 0.9375rem; font-size: 0.9rem; padding-top: 0.625rem; border-top: 0.0625rem dashed #ff99cc;">
-            <i class="fas fa-map-marker-alt"></i> In Indore? Visit <strong>EasyGo Indore</strong> for special couple packages!
-        </div>
+    <div id="ad-box" class="ad-box">
+        <button class="close-ad" onclick="closeAd()">×</button>
+        <p><strong>Valentine's Special!</strong></p>
+        <p style="font-size: 0.8rem;">Hungry? Get 30% off on Zomato for your first date!</p>
+        <a href="https://zomato.com" target="_blank" style="color: #ff0066; font-size: 0.8rem;">Order Now</a>
     </div>
-
-    <!-- Owner Ad (Website Rating/Creation) -->
-    <div class="owner-ad" id="owner-ad">
-        <button class="close-ad" id="close-owner-ad">×</button>
-        <div class="owner-ad-header">
-            <i class="fas fa-star"></i> Loved This Website?
-        </div>
-        <div class="ad-content">
-            Rate our Valentine's proposal creator or contact us to build a similar website for your business!
-        </div>
-        <a href="https://share.google/NedZVLe6kn0bja1C9" target="_blank" class="owner-ad-link" style="margin-right: 0.625rem;">
-            <i class="fas fa-star"></i> Rate Us
-        </a>
-        <a href="mailto:contact@valentinecreator.com?subject=Website%20Creation%20Inquiry" class="owner-ad-link">
-            <i class="fas fa-briefcase"></i> Contact for Business
-        </a>
-    </div>
-
-    <footer>
-        Made with <i class="fas fa-heart" style="color: #ff0066;"></i> for Valentine's Day 2025 | Proposal Creator
-    </footer>
 
     <script>
-        // DOM Elements
-        const creatorScreen = document.getElementById('creator-screen');
-        const shareScreen = document.getElementById('share-screen');
-        const responseScreen = document.getElementById('response-screen');
-        const successScreen = document.getElementById('success-screen');
-        const trackingScreen = document.getElementById('tracking-screen');
-        
-        // Creator screen elements
-        const generateBtn = document.getElementById('generate-btn');
-        const creatorNameInput = document.getElementById('creator-name');
-        const creatorPhoneInput = document.getElementById('creator-phone');
-        const valentineNameInput = document.getElementById('valentine-name');
-        const valentinePhoneInput = document.getElementById('valentine-phone');
-        const personalMessageInput = document.getElementById('personal-message');
-        const relationshipTypeSelect = document.getElementById('relationship-type');
-        const imageUploadInput = document.getElementById('image-upload');
-        const imagePreviewContainer = document.getElementById('image-preview-container');
-        
-        // Share screen elements
-        const shareValentineName = document.getElementById('share-valentine-name');
-        const shareCreatorName = document.getElementById('share-creator-name');
-        const shareForName = document.getElementById('share-for-name');
-        const shareDate = document.getElementById('share-date');
-        const shareStatus = document.getElementById('share-status');
-        const proposalLink = document.getElementById('proposal-link');
-        const copyLinkBtn = document.getElementById('copy-link-btn');
-        const whatsappMessage = document.getElementById('whatsapp-message');
-        const whatsappShareBtn = document.getElementById('whatsapp-share-btn');
-        const trackResponseBtn = document.getElementById('track-response-btn');
-        
-        // Response screen elements
-        const responseTitle = document.getElementById('response-title');
-        const proposalMessage = document.getElementById('proposal-message');
-        const yesBtn = document.getElementById('yes-btn');
-        const noBtn = document.getElementById('no-btn');
-        const noButtonWrapper = document.getElementById('no-button-wrapper');
-        const questionContainer = document.getElementById('question-container');
-        const questionText = document.getElementById('question-text');
-        const questionYesBtn = document.getElementById('question-yes-btn');
-        const questionNoBtn = document.getElementById('question-no-btn');
-        const counter = document.getElementById('counter');
-        const creativeText = document.getElementById('creative-text');
-        const difficultyLevel = document.getElementById('difficulty-level');
-        
-        // Success screen elements
-        const questionsAnswered = document.getElementById('questions-answered');
-        const decisionTime = document.getElementById('decision-time');
-        const finalDifficulty = document.getElementById('final-difficulty');
-        const responseToName = document.getElementById('response-to-name');
-        const responseTime = document.getElementById('response-time');
-        const whatsappResponseContent = document.getElementById('whatsapp-response-content');
-        const sendResponseBtn = document.getElementById('send-response-btn');
-        
-        // Tracking screen elements
-        const trackValentineName = document.getElementById('track-valentine-name');
-        const trackResponseTime = document.getElementById('track-response-time');
-        const trackQuestions = document.getElementById('track-questions');
-        const trackDifficulty = document.getElementById('track-difficulty');
-        const trackWhatsappMessage = document.getElementById('track-whatsapp-message');
-        const createAnotherBtn = document.getElementById('create-another-btn');
-        
-        // Ad elements
-        const zomatoAd = document.getElementById('zomato-ad');
-        const closeZomatoAd = document.getElementById('close-zomato-ad');
-        const ownerAd = document.getElementById('owner-ad');
-        const closeOwnerAd = document.getElementById('close-owner-ad');
-        
-        // State variables
-        let currentQuestionIndex = 0;
-        let questionsAsked = 0;
-        let sessionStartTime = null;
-        let responseStartTime = null;
-        let proposalData = null;
-        let responseData = null;
-        let hasShownAds = false;
-        let uploadedImage = null;
-        let difficulty = 1;
-        let noButtonEscapeSpeed = 1;
-        let adShownCount = 0;
-        let maxAdsToShow = 2;
-        let randomAdShown = false;
-        let panelRect = null;
-        let mouseX = 0;
-        let mouseY = 0;
-        let buttonWidth = 180;
-        let buttonHeight = 70;
-        
-        // Creative messages
-        const creativeMessages = [
-            "The 'No' button is getting smarter with each attempt!",
-            "Every time you try to say no, the button learns your moves!",
-            "This button has a PhD in escape artistry!",
-            "The more you chase, the faster it runs!",
-            "This button was trained by Houdini himself!",
-            "Catch me if you can! Oh wait, you can't!",
-            "I'm like your crush - hard to catch!",
-            "The difficulty level is increasing... good luck!",
-            "This button has better reflexes than a cat!",
-            "I can do this all day! Can you?"
-        ];
-        
-        // 100+ Creative questions
-        const creativeQuestions = [
-            "Do you believe in love at first sight?",
-            "Would you like to go on a romantic date with me?",
-            "Do you think we'd make a great couple?",
-            "Would you like to be the reason for my smile every day?",
-            "Can I be your favorite hello and hardest goodbye?",
-            "Would you like to create beautiful memories together?",
-            "Do you want to be the peanut butter to my jelly?",
-            "Would you like to be my happily ever after?",
-            "Can I be the one who makes your heart skip a beat?",
-            "Do you want to be my sunshine on a cloudy day?",
-            "Would you like to be my partner in crime for life?",
-            "Can we write our own love story together?",
-            "Do you believe we're meant to be?",
-            "Would you like to be my forever Valentine?",
-            "Can I be the luckiest person to have you?",
-            "Do you want to be the missing piece to my puzzle?",
-            "Would you like to be my always and forever?",
-            "Can we make this Valentine's Day unforgettable?",
-            "Do you want to be the one I come home to?",
-            "Would you like to be my favorite thought every day?",
-            "Can I be the one who cherishes you always?",
-            "Do you want to be my reason to celebrate every day?",
-            "Would you like to be my today, tomorrow, and always?",
-            "Can we build something beautiful together?",
-            "Do you believe in us?",
-            "Would you like to be my perfect match?",
-            "Can I be the one who makes your heart full?",
-            "Do you want to be my sweet escape?",
-            "Would you like to be my favorite adventure?",
-            "Can we make magic together?",
-            "Do you want to be my happy place?",
-            "Would you like to be my dream come true?",
-            "Can I be the one who loves you unconditionally?",
-            "Do you want to be my constant?",
-            "Would you like to be my greatest chapter?",
-            "Can we create our own fairytale?",
-            "Do you believe we can make it work?",
-            "Would you like to be my partner in everything?",
-            "Can I be the one who supports your dreams?",
-            "Do you want to be my safe haven?",
-            "Would you like to be my favorite notification?",
-            "Can we build a future together?",
-            "Do you want to be my home?",
-            "Would you like to be my favorite love song?",
-            "Can I be the one who makes you feel special?",
-            "Do you want to be my forever and a day?",
-            "Would you like to be my better half?",
-            "Can we make each other better?",
-            "Do you believe we can conquer the world together?",
-            "Would you like to be my always?",
-            "Can I be the one who makes you laugh every day?",
-            "Do you want to be my favorite person?",
-            "Would you like to be my heart's desire?",
-            "Can we make this the best Valentine's ever?",
-            "Do you want to be my once in a lifetime?",
-            "Would you like to be my everything?",
-            "Can I be the one who treasures you?",
-            "Do you want to be my perfect plus one?",
-            "Would you like to be my forever favorite?",
-            "Can we make memories that last a lifetime?",
-            "Do you believe we're better together?",
-            "Would you like to be my special someone?",
-            "Can I be the one who makes your world brighter?",
-            "Do you want to be my happy ending?",
-            "Would you like to be my greatest blessing?",
-            "Can we create our own happily ever after?",
-            "Do you want to be my soulmate?",
-            "Would you like to be my one and only?",
-            "Can I be the one who understands you completely?",
-            "Do you want to be my favorite decision?",
-            "Would you like to be my greatest joy?",
-            "Can we make every day feel like Valentine's?",
-            "Do you believe we can make it last forever?",
-            "Would you like to be my partner for life?",
-            "Can I be the one who makes your heart sing?",
-            "Do you want to be my forever love?",
-            "Would you like to be my perfect match?",
-            "Can we build something lasting together?",
-            "Do you want to be my anchor?",
-            "Would you like to be my inspiration?",
-            "Can I be the one who makes you feel loved?",
-            "Do you want to be my happily ever after?",
-            "Would you like to be my forever and always?",
-            "Can we make this the beginning of something beautiful?",
-            "Do you believe we can create magic?",
-            "Would you like to be my partner in love?",
-            "Can I be the one who makes you feel complete?",
-            "Do you want to be my greatest adventure?",
-            "Would you like to be my favorite memory in the making?",
-            "Can we make this Valentine's Day the start of our story?",
-            "Do you want to be my today and tomorrow?",
-            "Would you like to be my heart's keeper?",
-            "Can I be the one who makes you believe in love?",
-            "Do you want to be my perfect harmony?",
-            "Would you like to be my always and forever?",
-            "Can we make each moment count?",
-            "Do you believe we can make it work beautifully?",
-            "Would you like to be my favorite chapter?",
-            "Can I be the one who makes your dreams come true?",
-            "Do you want to be my greatest love story?",
-            "Would you like to be my forever Valentine?",
-            "Can we make this the best decision ever?",
-            "Do you want to be my happily ever now?",
-            "Would you like to be my perfect beginning?",
-            "Can I be the one who makes your heart dance?",
-            "Do you want to be my everything and more?",
-            "Would you like to be my once in a lifetime love?",
-            "Can we make this Valentine's Day unforgettable?"
-        ];
+        let noCount = 0;
+        let speedMultiplier = 1;
+        let proposalData = {};
 
-        // Relationship display names
-        const relationshipNames = {
-            'crush': 'Crush',
-            'partner': 'Partner',
-            'spouse': 'Spouse',
-            'friend': 'Friend',
-            'secret': 'Secret Admirer'
+        // --- 1. COORDINATION & NAVIGATION ---
+        function generateLink() {
+            const name = document.getElementById('c-name').value;
+            const vName = document.getElementById('v-name').value;
+            const phone = document.getElementById('c-phone').value;
+
+            if(!name || !vName || !phone) return alert("Fill all details!");
+
+            proposalData = { name, vName, phone, id: Date.now() };
+            const encoded = btoa(JSON.stringify(proposalData));
+            const url = window.location.origin + window.location.pathname + "?p=" + encoded;
+
+            document.getElementById('link-display').innerText = url;
+            document.getElementById('creator-screen').classList.add('hidden');
+            document.getElementById('share-screen').classList.remove('hidden');
+            
+            // Random Ad Chance
+            if(Math.random() > 0.5) showAd();
+        }
+
+        function copyLink() {
+            const link = document.getElementById('link-display').innerText;
+            navigator.clipboard.writeText(link);
+            alert("Link Copied!");
+        }
+
+        function shareWhatsApp() {
+            const link = document.getElementById('link-display').innerText;
+            const text = `Hi! Someone has sent you a special Valentine's Proposal. Click here to see: ${link}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        // --- 2. THE ESCAPING NO BUTTON ---
+        const noBtn = document.getElementById('no-btn');
+        const panel = document.getElementById('response-screen');
+
+        document.addEventListener('mousemove', (e) => {
+            if (panel.classList.contains('hidden')) return;
+
+            const rect = noBtn.getBoundingClientRect();
+            const mouseX = e.clientX;
+            const mouseY = e.clientY;
+
+            // Distance between mouse and button
+            const dist = Math.sqrt(Math.pow(mouseX - (rect.left + rect.width/2), 2) + Math.pow(mouseY - (rect.top + rect.height/2), 2));
+
+            // Trigger escape if mouse is within 150px
+            if (dist < 150) {
+                moveNo();
+            }
+        });
+
+        function moveNo() {
+            const pRect = panel.getBoundingClientRect();
+            const bRect = noBtn.getBoundingClientRect();
+            const yesBtnRect = document.getElementById('yes-btn').getBoundingClientRect();
+
+            // Calculate safe boundaries (within the pink border)
+            const maxX = pRect.width - bRect.width - 40;
+            const maxY = pRect.height - bRect.height - 40;
+
+            let newX, newY;
+            let isOverlappingYes = true;
+
+            // Ensure it doesn't hide behind the Yes button
+            while(isOverlappingYes) {
+                newX = Math.random() * maxX;
+                newY = Math.random() * maxY;
+
+                // Check overlap with Yes Button
+                const yesRelX = yesBtnRect.left - pRect.left;
+                const yesRelY = yesBtnRect.top - pRect.top;
+
+                const overlap = !(newX + bRect.width < yesRelX || 
+                                  newX > yesRelX + yesBtnRect.width || 
+                                  newY + bRect.height < yesRelY || 
+                                  newY > yesRelY + yesBtnRect.height);
+                
+                if (!overlap) isOverlappingYes = false;
+            }
+
+            // Apply position with increasing speed/difficulty
+            noBtn.style.transition = `all ${0.3 / speedMultiplier}s ease-out`;
+            noBtn.style.left = newX + "px";
+            noBtn.style.top = newY + "px";
+        }
+
+        noBtn.addEventListener('click', () => {
+            noCount++;
+            speedMultiplier += 0.5; // Making it harder every click
+            document.getElementById('no-msg').innerText = `Attempt ${noCount}: Nice try! But you can't say no! 😉`;
+            moveNo();
+        });
+
+        // --- 3. RESPONSE HANDLING ---
+        function sayYes() {
+            document.getElementById('response-screen').classList.add('hidden');
+            document.getElementById('success-screen').classList.remove('hidden');
+            
+            const msg = `Hey ${proposalData.name}! I just clicked YES on your Valentine proposal! ❤️ (It took me ${noCount} tries to even catch the button!)`;
+            document.getElementById('final-wa-btn').onclick = () => {
+                window.open(`https://wa.me/${proposalData.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            };
+            
+            // Final Ad after whole process
+            setTimeout(showAd, 1000);
+        }
+
+        // --- 4. DATA LOADING ---
+        window.onload = () => {
+            const params = new URLSearchParams(window.location.search);
+            const p = params.get('p');
+            if(p) {
+                proposalData = JSON.parse(atob(p));
+                document.getElementById('creator-screen').classList.add('hidden');
+                document.getElementById('response-screen').classList.remove('hidden');
+                document.getElementById('v-title').innerText = `Hey ${proposalData.vName}, ${proposalData.name} is asking...`;
+                // Set initial random position for No
+                moveNo();
+            }
         };
 
-        // Initialize the page
-        function init() {
-            // Check if we're in creator mode or responder mode
-            const urlParams = new URLSearchParams(window.location.search);
-            const proposalId = urlParams.get('proposal');
-            
-            if (proposalId && localStorage.getItem(`proposal_${proposalId}`)) {
-                // We're in responder mode (Person B)
-                loadProposal(proposalId);
-                showResponseScreen();
-            } else {
-                // We're in creator mode (Person A)
-                showCreatorScreen();
-            }
-            
-            // Initialize event listeners
-            initEventListeners();
-            
-            // Random chance to show ad
-            if (Math.random() < 0.3 && !randomAdShown) {
-                setTimeout(() => {
-                    showAds();
-                    randomAdShown = true;
-                    adShownCount++;
-                }, 3000);
-            }
+        // --- 5. ADS ---
+        function showAd() {
+            document.getElementById('ad-box').style.display = 'block';
         }
-        
-        // Initialize all event listeners
-        function initEventListeners() {
-            // Generate button click
-            generateBtn.addEventListener('click', createProposal);
-            
-            // Copy link button
-            copyLinkBtn.addEventListener('click', copyProposalLink);
-            
-            // WhatsApp share button
-            whatsappShareBtn.addEventListener('click', shareViaWhatsApp);
-            
-            // Track response button
-            trackResponseBtn.addEventListener('click', trackResponse);
-            
-            // Yes button (main response)
-            yesBtn.addEventListener('click', handleYesClick);
-            
-            // No button (main response) - only click event
-            noBtn.addEventListener('click', handleNoClick);
-            
-            // Mouse move for escaping NO button
-            responseScreen.addEventListener('mousemove', handleMouseMove);
-            responseScreen.addEventListener('touchmove', handleTouchMove, { passive: false });
-            
-            // Question Yes button
-            questionYesBtn.addEventListener('click', handleQuestionYes);
-            
-            // Question No button
-            questionNoBtn.addEventListener('click', handleQuestionNo);
-            
-            // Send response button
-            sendResponseBtn.addEventListener('click', sendResponseToCreator);
-            
-            // Create another button
-            createAnotherBtn.addEventListener('click', createAnotherProposal);
-            
-            // Close ad buttons
-            closeZomatoAd.addEventListener('click', () => {
-                zomatoAd.style.display = 'none';
-            });
-            
-            closeOwnerAd.addEventListener('click', () => {
-                ownerAd.style.display = 'none';
-            });
-            
-            // Image upload handler
-            imageUploadInput.addEventListener('change', handleImageUpload);
+        function closeAd() {
+            document.getElementById('ad-box').style.display = 'none';
         }
-        
-        // Handle mouse move for NO button escape
-        function handleMouseMove(e) {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-            
-            if (responseScreen && !responseScreen.classList.contains('hidden')) {
-                moveNoButtonAwayFromCursor();
-            }
-        }
-        
-        // Handle touch move for mobile
-        function handleTouchMove(e) {
-            if (e.touches[0]) {
-                mouseX = e.touches[0].clientX;
-                mouseY = e.touches[0].clientY;
-                
-                if (responseScreen && !responseScreen.classList.contains('hidden')) {
-                    moveNoButtonAwayFromCursor();
-                }
-            }
-            e.preventDefault();
-        }
-        
-        // Move NO button away from cursor
-        function moveNoButtonAwayFromCursor() {
-            if (!noButtonWrapper || !panelRect) return;
-            
-            const buttonRect = noButtonWrapper.getBoundingClientRect();
-            const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-            const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-            
-            // Calculate distance from cursor
-            const distance = Math.sqrt(
-                Math.pow(mouseX - buttonCenterX, 2) + 
-                Math.pow(mouseY - buttonCenterY, 2)
-            );
-            
-            // If cursor is within 100px of button, move it away
-            const escapeDistance = 100 * noButtonEscapeSpeed;
-            if (distance < escapeDistance && questionsAsked > 0) {
-                // Calculate escape direction (opposite from cursor)
-                const dx = buttonCenterX - mouseX;
-                const dy = buttonCenterY - mouseY;
-                
-                // Normalize direction
-                const length = Math.sqrt(dx * dx + dy * dy);
-                const directionX = dx / length;
-                const directionY = dy / length;
-                
-                // Get current button position relative to panel
-                const currentX = parseInt(noButtonWrapper.style.left) || (panelRect.width/2 + 100);
-                const currentY = parseInt(noButtonWrapper.style.top) || (panelRect.height/2);
-                
-                // Calculate new position (move away based on difficulty)
-                const moveDistance = 50 * noButtonEscapeSpeed;
-                let newX = currentX + directionX * moveDistance;
-                let newY = currentY + directionY * moveDistance;
-                
-                // Keep within panel bounds (with margin)
-                const margin = 20;
-                newX = Math.max(margin, Math.min(newX, panelRect.width - buttonWidth - margin));
-                newY = Math.max(margin, Math.min(newY, panelRect.height - buttonHeight - margin));
-                
-                // Apply new position
-                noButtonWrapper.style.transition = `all ${0.3 / noButtonEscapeSpeed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
-                noButtonWrapper.style.left = `${newX}px`;
-                noButtonWrapper.style.top = `${newY}px`;
-            }
-        }
-        
-        // Handle image upload
-        function handleImageUpload(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-            
-            // Check if file is an image
-            if (!file.type.match('image.*')) {
-                alert('Please select an image file (JPEG, PNG, GIF, etc.)');
-                return;
-            }
-            
-            // Check file size (max 5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                alert('Image size should be less than 5MB');
-                return;
-            }
-            
-            const reader = new FileReader();
-            
-            reader.onload = function(e) {
-                uploadedImage = e.target.result;
-                
-                // Clear previous preview
-                imagePreviewContainer.innerHTML = '';
-                
-                // Create image preview
-                const img = document.createElement('img');
-                img.src = uploadedImage;
-                img.className = 'valentine-image';
-                img.alt = 'Uploaded Valentine Photo';
-                img.style.cursor = 'pointer';
-                img.onclick = () => imageUploadInput.click();
-                
-                // Add remove button
-                const removeBtn = document.createElement('button');
-                removeBtn.innerHTML = 'Remove Photo';
-                removeBtn.className = 'image-upload-label';
-                removeBtn.style.background = '#ff3333';
-                removeBtn.style.marginTop = '10px';
-                removeBtn.onclick = (e) => {
-                    e.stopPropagation();
-                    uploadedImage = null;
-                    imagePreviewContainer.innerHTML = '';
-                    imageUploadInput.value = '';
-                };
-                
-                imagePreviewContainer.appendChild(img);
-                imagePreviewContainer.appendChild(removeBtn);
-            };
-            
-            reader.readAsDataURL(file);
-        }
-        
-        // Load proposal data
-        function loadProposal(proposalId) {
-            const data = JSON.parse(localStorage.getItem(`proposal_${proposalId}`));
-            if (!data) return;
-            
-            proposalData = data;
-            
-            // Update response screen with proposal data
-            responseTitle.textContent = `${data.creatorName} Has a Valentine's Question For You!`;
-            proposalMessage.innerHTML = `
-                <strong>From:</strong> ${data.creatorName}<br>
-                <strong>Message:</strong> ${data.personalMessage || "Will you be my Valentine?"}<br>
-                <strong>Relationship:</strong> ${relationshipNames[data.relationshipType]}
-            `;
-            
-            // Load uploaded image if exists
-            if (data.uploadedImage) {
-                document.getElementById('response-heart-img').src = data.uploadedImage;
-                uploadedImage = data.uploadedImage;
-            }
-        }
-        
-        // Create proposal (Person A)
-        function createProposal() {
-            const creatorName = creatorNameInput.value.trim();
-            const creatorPhone = creatorPhoneInput.value.trim();
-            const valentineName = valentineNameInput.value.trim();
-            const valentinePhone = valentinePhoneInput.value.trim();
-            const personalMessage = personalMessageInput.value.trim();
-            const relationshipType = relationshipTypeSelect.value;
-            
-            // Validate inputs
-            if (!creatorName || !creatorPhone || !valentineName) {
-                alert("Please fill in all required fields: Your name, WhatsApp, and Valentine's name.");
-                return;
-            }
-            
-            // Generate unique proposal ID
-            const proposalId = 'prop_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            
-            // Create proposal data
-            proposalData = {
-                id: proposalId,
-                creatorName,
-                creatorPhone,
-                valentineName,
-                valentinePhone,
-                personalMessage,
-                relationshipType,
-                uploadedImage,
-                createdAt: new Date().toISOString(),
-                status: 'pending',
-                response: null
-            };
-            
-            // Save to localStorage (image stored as data URL)
-            localStorage.setItem(`proposal_${proposalId}`, JSON.stringify(proposalData));
-            
-            // Generate shareable URL
-            const shareUrl = `${window.location.origin}${window.location.pathname}?proposal=${proposalId}`;
-            
-            // Update share screen
-            shareValentineName.textContent = valentineName;
-            shareCreatorName.textContent = creatorName;
-            shareForName.textContent = valentineName;
-            shareDate.textContent = new Date().toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            });
-            proposalLink.textContent = shareUrl;
-            
-            // Generate WhatsApp message
-            const whatsappMsg = `💌 *Valentine's Day Proposal* 💌
-
-Hi ${valentineName}!
-
-${creatorName} has created a special Valentine's proposal for you! ❤️
-
-Click the link below to view and respond:
-${shareUrl}
-
-Can't wait to see your response! 💝`;
-            
-            whatsappMessage.value = whatsappMsg;
-            
-            // Switch to share screen
-            creatorScreen.classList.add('hidden');
-            shareScreen.classList.remove('hidden');
-        }
-        
-        // Copy proposal link
-        function copyProposalLink() {
-            const linkText = proposalLink.textContent;
-            
-            // Create a temporary textarea element
-            const textArea = document.createElement('textarea');
-            textArea.value = linkText;
-            textArea.style.position = 'fixed';
-            textArea.style.left = '-999999px';
-            textArea.style.top = '-999999px';
-            document.body.appendChild(textArea);
-            textArea.focus();
-            textArea.select();
-            
-            try {
-                const successful = document.execCommand('copy');
-                if (successful) {
-                    const originalText = copyLinkBtn.innerHTML;
-                    copyLinkBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
-                    copyLinkBtn.style.background = 'linear-gradient(135deg, #25D366, #128C7E)';
-                    copyLinkBtn.style.borderColor = '#25D366';
-                    
-                    setTimeout(() => {
-                        copyLinkBtn.innerHTML = originalText;
-                        copyLinkBtn.style.background = 'linear-gradient(135deg, #3366ff, #0033cc)';
-                        copyLinkBtn.style.borderColor = '#3366ff';
-                    }, 2000);
-                } else {
-                    alert('Failed to copy link. Please try again.');
-                }
-            } catch (err) {
-                console.error('Failed to copy: ', err);
-                alert('Failed to copy link. Please try again.');
-            }
-            
-            document.body.removeChild(textArea);
-        }
-        
-        // Share via WhatsApp
-        function shareViaWhatsApp() {
-            if (!proposalData) {
-                alert('No proposal data found. Please create a proposal first.');
-                return;
-            }
-            
-            const phone = proposalData.valentinePhone || '';
-            const message = whatsappMessage.value;
-            const encodedMessage = encodeURIComponent(message);
-            
-            let whatsappUrl;
-            if (phone) {
-                // Direct message to Valentine's WhatsApp
-                const cleanPhone = phone.replace(/\D/g, '');
-                whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-            } else {
-                // Generic share
-                whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
-            }
-            
-            // Try to open WhatsApp app first, then fallback to web
-            window.open(whatsappUrl, '_blank');
-        }
-        
-        // Track response
-        function trackResponse() {
-            if (!proposalData) {
-                alert('No proposal data found. Please create a proposal first.');
-                return;
-            }
-            
-            const proposalId = proposalData.id;
-            const storedData = localStorage.getItem(`proposal_${proposalId}`);
-            
-            if (storedData) {
-                const data = JSON.parse(storedData);
-                
-                if (data.response) {
-                    // Response has been received
-                    shareStatus.textContent = 'Response received!';
-                    shareStatus.style.color = '#25D366';
-                    
-                    // Show tracking screen
-                    shareScreen.classList.add('hidden');
-                    trackingScreen.classList.remove('hidden');
-                    
-                    // Update tracking screen
-                    updateTrackingScreen(data);
-                    
-                    // Show ads AFTER process completion
-                    if (adShownCount < maxAdsToShow) {
-                        showAds();
-                        adShownCount++;
-                    }
-                } else {
-                    // Still waiting
-                    alert(`Still waiting for ${data.valentineName}'s response. Share the link again if needed!`);
-                }
-            }
-        }
-        
-        // Update tracking screen
-        function updateTrackingScreen(data) {
-            trackValentineName.textContent = data.valentineName;
-            trackResponseTime.textContent = new Date(data.response.timestamp).toLocaleString();
-            trackQuestions.textContent = data.response.questionsAnswered || 0;
-            trackDifficulty.textContent = data.response.difficulty || 'Easy';
-            
-            const message = `🎉 *VALENTINE'S RESPONSE RECEIVED!* 🎉
-
-Great news! ${data.valentineName} has responded to your Valentine's proposal!
-
-💖 *Response:* YES! They will be your Valentine! 💝
-
-📊 *Response Details:*
-• No Button Attempts: ${data.response.questionsAnswered || 0}
-• Difficulty Level: ${data.response.difficulty || 'Easy'}
-• Decision Time: ${data.response.decisionTime || 'A few moments'}
-• Response Time: ${new Date(data.response.timestamp).toLocaleString()}
-
-🎯 *Next Steps:*
-Plan a wonderful Valentine's Day with ${data.valentineName}! Make it special!
-
-💌 Created with Valentine's Proposal Creator`;
-
-            trackWhatsappMessage.textContent = message;
-        }
-        
-        // Handle Yes click (Person B)
-        function handleYesClick() {
-            // Show celebration
-            celebrate();
-            
-            // Calculate decision time
-            const decisionTimeMs = new Date() - responseStartTime;
-            const decisionTimeStr = formatTime(decisionTimeMs);
-            
-            // Determine difficulty level
-            let difficultyLevelText = 'Easy';
-            if (difficulty >= 5) difficultyLevelText = 'Hard';
-            else if (difficulty >= 3) difficultyLevelText = 'Medium';
-            
-            // Update response data
-            responseData = {
-                decision: 'yes',
-                timestamp: new Date().toISOString(),
-                questionsAnswered: questionsAsked,
-                difficulty: difficultyLevelText,
-                decisionTime: decisionTimeStr
-            };
-            
-            // Update proposal data in localStorage
-            if (proposalData) {
-                proposalData.response = responseData;
-                proposalData.status = 'accepted';
-                localStorage.setItem(`proposal_${proposalData.id}`, JSON.stringify(proposalData));
-            }
-            
-            // Update success screen
-            questionsAnswered.textContent = questionsAsked;
-            decisionTime.textContent = decisionTimeStr;
-            finalDifficulty.textContent = difficultyLevelText;
-            responseToName.textContent = proposalData ? proposalData.creatorName : 'Creator';
-            responseTime.textContent = new Date().toLocaleString();
-            
-            // Set success image
-            if (uploadedImage) {
-                document.getElementById('success-img').src = uploadedImage;
-            }
-            
-            // Generate WhatsApp message
-            const whatsappMsg = generateResponseWhatsAppMessage();
-            whatsappResponseContent.textContent = whatsappMsg;
-            
-            // Switch to success screen
-            responseScreen.classList.add('hidden');
-            successScreen.classList.remove('hidden');
-            
-            // Show ads AFTER process completion
-            if (adShownCount < maxAdsToShow) {
-                showAds();
-                adShownCount++;
-            }
-        }
-        
-        // Handle No click (Person B)
-        function handleNoClick(e) {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            questionsAsked++;
-            counter.textContent = `No attempts: ${questionsAsked}`;
-            
-            // Increase difficulty
-            difficulty++;
-            noButtonEscapeSpeed = Math.min(noButtonEscapeSpeed + 0.2, 3);
-            
-            // Update difficulty display
-            updateDifficultyDisplay();
-            
-            // Show creative question
-            showCreativeQuestion();
-            
-            // Show random creative message
-            const randomMsg = creativeMessages[Math.floor(Math.random() * creativeMessages.length)];
-            creativeText.textContent = randomMsg;
-            
-            // Move button to random position
-            moveNoButtonToRandomPosition();
-            
-            // Add haptic feedback if available
-            if (navigator.vibrate) {
-                navigator.vibrate(50);
-            }
-            
-            return false;
-        }
-        
-        // Move NO button to random position within panel
-        function moveNoButtonToRandomPosition() {
-            if (!noButtonWrapper || !panelRect) return;
-            
-            const margin = 20;
-            const maxX = panelRect.width - buttonWidth - margin;
-            const maxY = panelRect.height - buttonHeight - margin;
-            
-            // Generate random position
-            const randomX = Math.max(margin, Math.random() * maxX);
-            const randomY = Math.max(margin, Math.random() * maxY);
-            
-            // Apply new position
-            noButtonWrapper.style.transition = `all ${0.5 / noButtonEscapeSpeed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
-            noButtonWrapper.style.left = `${randomX}px`;
-            noButtonWrapper.style.top = `${randomY}px`;
-        }
-        
-        // Update difficulty display
-        function updateDifficultyDisplay() {
-            let levelText = 'Easy';
-            let color = '#25D366';
-            
-            if (difficulty >= 8) {
-                levelText = 'IMPOSSIBLE!';
-                color = '#ff0000';
-            } else if (difficulty >= 6) {
-                levelText = 'Extreme';
-                color = '#ff3300';
-            } else if (difficulty >= 4) {
-                levelText = 'Hard';
-                color = '#ff9900';
-            } else if (difficulty >= 2) {
-                levelText = 'Medium';
-                color = '#ffcc00';
-            }
-            
-            difficultyLevel.textContent = `Difficulty: ${levelText}`;
-            difficultyLevel.style.background = `linear-gradient(135deg, ${color}, ${color}99)`;
-        }
-        
-        // Show creative question
-        function showCreativeQuestion() {
-            if (currentQuestionIndex >= creativeQuestions.length) {
-                currentQuestionIndex = 0; // Loop back to beginning
-            }
-            
-            questionText.textContent = creativeQuestions[currentQuestionIndex];
-            questionContainer.classList.remove('hidden');
-            
-            // Hide main buttons temporarily
-            yesBtn.style.visibility = 'hidden';
-            noBtn.style.visibility = 'hidden';
-            
-            currentQuestionIndex++;
-        }
-        
-        // Handle question Yes click (to "no" in question)
-        function handleQuestionYes() {
-            // User insists on saying no
-            questionsAsked++;
-            counter.textContent = `No attempts: ${questionsAsked}`;
-            
-            // Increase difficulty more
-            difficulty += 2;
-            noButtonEscapeSpeed = Math.min(noButtonEscapeSpeed + 0.3, 4);
-            updateDifficultyDisplay();
-            
-            // Show next question
-            showCreativeQuestion();
-            
-            // Show new creative message
-            const randomMsg = creativeMessages[Math.floor(Math.random() * creativeMessages.length)];
-            creativeText.textContent = randomMsg;
-            
-            // Move button to random position
-            moveNoButtonToRandomPosition();
-        }
-        
-        // Handle question No click (to "actually, no" in question)
-        function handleQuestionNo() {
-            // User is reconsidering, show main buttons again
-            questionContainer.classList.add('hidden');
-            yesBtn.style.visibility = 'visible';
-            noBtn.style.visibility = 'visible';
-            
-            // Update creative message
-            creativeText.textContent = "I knew you'd reconsider! 😊";
-        }
-        
-        // Generate response WhatsApp message
-        function generateResponseWhatsAppMessage() {
-            const creatorName = proposalData ? proposalData.creatorName : 'Your Valentine';
-            const responderName = proposalData ? proposalData.valentineName : 'Someone special';
-            let difficultyLevelText = 'Easy';
-            if (difficulty >= 5) difficultyLevelText = 'Hard';
-            else if (difficulty >= 3) difficultyLevelText = 'Medium';
-            
-            return `💖 *VALENTINE'S RESPONSE* 💖
-
-To: ${creatorName}
-From: ${responderName}
-
-🎉 *GREAT NEWS!* 🎉
-
-${responderName} has accepted your Valentine's proposal! 
-
-💌 *Response Details:*
-• Decision: YES! 💝
-• No Button Attempts: ${questionsAsked}
-• Final Difficulty: ${difficultyLevelText}
-• Decision Time: ${formatTime(new Date() - responseStartTime)}
-• Response Time: ${new Date().toLocaleString()}
-
-📝 *Message from ${responderName}:*
-"I tried to say no ${questionsAsked} times, but my heart kept saying YES! I would love to be your Valentine! ❤️"
-
-🎯 *Next Steps:*
-Plan something special for Valentine's Day! Make it memorable!
-
-💝 This response was sent via Valentine's Proposal Creator`;
-        }
-        
-        // Send response to creator
-        function sendResponseToCreator() {
-            if (!proposalData) {
-                alert('No proposal data found.');
-                return;
-            }
-            
-            const phone = proposalData.creatorPhone;
-            const message = generateResponseWhatsAppMessage();
-            const encodedMessage = encodeURIComponent(message);
-            
-            let whatsappUrl;
-            if (phone) {
-                const cleanPhone = phone.replace(/\D/g, '');
-                whatsappUrl = `https://wa.me/${cleanPhone}?text=${encodedMessage}`;
-            } else {
-                whatsappUrl = `whatsapp://send?text=${encodedMessage}`;
-            }
-            
-            window.open(whatsappUrl, '_blank');
-        }
-        
-        // Create another proposal
-        function createAnotherProposal() {
-            // Reset form
-            creatorNameInput.value = '';
-            creatorPhoneInput.value = '';
-            valentineNameInput.value = '';
-            valentinePhoneInput.value = '';
-            personalMessageInput.value = '';
-            relationshipTypeSelect.value = 'crush';
-            imageUploadInput.value = '';
-            uploadedImage = null;
-            imagePreviewContainer.innerHTML = '';
-            
-            // Clear local storage for this session
-            if (proposalData) {
-                localStorage.removeItem(`proposal_${proposalData.id}`);
-            }
-            
-            // Reset state
-            proposalData = null;
-            responseData = null;
-            questionsAsked = 0;
-            difficulty = 1;
-            noButtonEscapeSpeed = 1;
-            currentQuestionIndex = 0;
-            
-            // Hide ads
-            zomatoAd.style.display = 'none';
-            ownerAd.style.display = 'none';
-            
-            // Show creator screen
-            trackingScreen.classList.add('hidden');
-            creatorScreen.classList.remove('hidden');
-        }
-        
-        // Show ads
-        function showAds() {
-            zomatoAd.style.display = 'block';
-            ownerAd.style.display = 'block';
-            
-            // Auto hide after 15 seconds
-            setTimeout(() => {
-                if (zomatoAd.style.display === 'block') {
-                    zomatoAd.style.display = 'none';
-                }
-                if (ownerAd.style.display === 'block') {
-                    ownerAd.style.display = 'none';
-                }
-            }, 15000);
-        }
-        
-        // Show creator screen
-        function showCreatorScreen() {
-            creatorScreen.classList.remove('hidden');
-            shareScreen.classList.add('hidden');
-            responseScreen.classList.add('hidden');
-            successScreen.classList.add('hidden');
-            trackingScreen.classList.add('hidden');
-        }
-        
-        // Show response screen (Person B)
-        function showResponseScreen() {
-            creatorScreen.classList.add('hidden');
-            shareScreen.classList.add('hidden');
-            responseScreen.classList.remove('hidden');
-            successScreen.classList.add('hidden');
-            trackingScreen.classList.add('hidden');
-            
-            responseStartTime = new Date();
-            
-            // Get panel dimensions
-            panelRect = responseScreen.getBoundingClientRect();
-            
-            // Set button dimensions
-            buttonWidth = noButtonWrapper.offsetWidth;
-            buttonHeight = noButtonWrapper.offsetHeight;
-            
-            // Initialize NO button position (right side initially)
-            noButtonWrapper.style.left = `${panelRect.width/2 + 100}px`;
-            noButtonWrapper.style.top = `${panelRect.height/2}px`;
-            
-            // Update difficulty display
-            updateDifficultyDisplay();
-        }
-        
-        // Format time
-        function formatTime(ms) {
-            const seconds = Math.floor(ms / 1000);
-            
-            if (seconds < 60) {
-                return `${seconds} second${seconds !== 1 ? 's' : ''}`;
-            } else {
-                const minutes = Math.floor(seconds / 60);
-                const remainingSeconds = seconds % 60;
-                
-                if (remainingSeconds === 0) {
-                    return `${minutes} minute${minutes !== 1 ? 's' : ''}`;
-                } else {
-                    return `${minutes} minute${minutes !== 1 ? 's' : ''} and ${remainingSeconds} second${remainingSeconds !== 1 ? 's' : ''}`;
-                }
-            }
-        }
-        
-        // Celebration animation
-        function celebrate() {
-            // Create hearts
-            for (let i = 0; i < 100; i++) {
-                createHeart();
-            }
-            
-            // Create confetti
-            for (let i = 0; i < 150; i++) {
-                createConfetti();
-            }
-        }
-        
-        // Create a heart element for celebration
-        function createHeart() {
-            const heart = document.createElement('div');
-            heart.innerHTML = '❤️';
-            heart.style.position = 'fixed';
-            heart.style.fontSize = `${Math.random() * 25 + 15}px`;
-            heart.style.left = `${Math.random() * window.innerWidth}px`;
-            heart.style.top = `${window.innerHeight + 20}px`;
-            heart.style.zIndex = '9999';
-            heart.style.textAlign = 'center';
-            heart.style.lineHeight = '1';
-            heart.style.pointerEvents = 'none';
-            
-            document.getElementById('celebrate-container').appendChild(heart);
-            
-            // Animate
-            const animation = heart.animate([
-                { transform: 'translateY(0) rotate(0deg) scale(1)', opacity: 1 },
-                { transform: `translateY(-${window.innerHeight + 100}px) rotate(360deg) scale(0.5)`, opacity: 0 }
-            ], {
-                duration: Math.random() * 3000 + 2000,
-                easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-            });
-            
-            animation.onfinish = () => heart.remove();
-        }
-        
-        // Create confetti element for celebration
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            confetti.style.position = 'fixed';
-            confetti.style.width = '10px';
-            confetti.style.height = '20px';
-            
-            // Random color
-            const hues = [340, 350, 0, 10, 20];
-            const hue = hues[Math.floor(Math.random() * hues.length)];
-            confetti.style.backgroundColor = `hsl(${hue}, 100%, 65%)`;
-            
-            // Random rotation
-            const rotation = Math.random() * 360;
-            
-            confetti.style.left = `${Math.random() * window.innerWidth}px`;
-            confetti.style.top = `-20px`;
-            confetti.style.transform = `rotate(${rotation}deg)`;
-            confetti.style.pointerEvents = 'none';
-            
-            document.getElementById('celebrate-container').appendChild(confetti);
-            
-            // Animate
-            const animation = confetti.animate([
-                { transform: `translateY(0) rotate(${rotation}deg)`, opacity: 1 },
-                { transform: `translateY(${window.innerHeight + 100}px) rotate(${rotation + 360}deg)`, opacity: 0 }
-            ], {
-                duration: Math.random() * 3000 + 2000,
-                easing: 'cubic-bezier(0.215, 0.61, 0.355, 1)'
-            });
-            
-            animation.onfinish = () => confetti.remove();
-        }
-        
-        // Initialize when page loads
-        window.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
