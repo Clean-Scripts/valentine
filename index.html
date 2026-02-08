@@ -10,6 +10,9 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
+        :root { --base-font-size: 16px; }
+        html { font-size: var(--base-font-size); }
+
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -44,7 +47,7 @@
 
         .btn {
             padding: 1rem 2rem; font-size: 1.3rem; font-weight: 700; border: none; border-radius: 3.75rem;
-            cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+            cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
             z-index: 100;
         }
         .btn-main { background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; }
@@ -123,7 +126,61 @@
         const questionsList = [
             "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", 
             "Really? No? 😭", "I'll keep asking! 😋", "Wait! Think again! 😍",
-            "Can't touch this! 🏃‍♂️", "Almost caught it! 💨"
+            "Can't touch this! 🏃‍♂️", "Almost caught it! 💨", "Do you believe in love at first sight?", 
+            "Would you like to go on a romantic date with me?", "Do you think we'd make a great couple?", 
+            "Would you like to be the reason for my smile every day?", "Can I be your favorite hello and hardest goodbye?", 
+            "Would you like to create beautiful memories together?", "Do you want to be the peanut butter to my jelly?", 
+            "Would you like to be my happily ever after?", "Can I be the one who makes your heart skip a beat?", 
+            "Do you want to be my sunshine on a cloudy day?", "Would you like to be my partner in crime for life?", 
+            "Can we write our own love story together?", "Do you believe we're meant to be?", 
+            "Would you like to be my forever Valentine?", "Can I be the luckiest person to have you?", 
+            "Do you want to be the missing piece to my puzzle?", "Would you like to be my always and forever?", 
+            "Can we make this Valentine's Day unforgettable?", "Do you want to be the one I come home to?", 
+            "Would you like to be my favorite thought every day?", "Can I be the one who cherishes you always?", 
+            "Do you want to be my reason to celebrate every day?", "Would you like to be my today, tomorrow, and always?", 
+            "Can we build something beautiful together?", "Do you believe in us?", 
+            "Would you like to be my perfect match?", "Can I be the one who makes your heart full?", 
+            "Do you want to be my sweet escape?", "Would you like to be my favorite adventure?", 
+            "Can we make magic together?", "Do you want to be my happy place?", 
+            "Would you like to be my dream come true?", "Can I be the one who loves you unconditionally?", 
+            "Do you want to be my constant?", "Would you like to be my greatest chapter?", 
+            "Can we create our own fairytale?", "Do you believe we can make it work?", 
+            "Would you like to be my partner in everything?", "Can I be the one who supports your dreams?", 
+            "Do you want to be my safe haven?", "Would you like to be my favorite notification?", 
+            "Can we build a future together?", "Do you want to be my home?", 
+            "Would you like to be my favorite love song?", "Can I be the one who makes you feel special?", 
+            "Do you want to be my forever and a day?", "Would you like to be my better half?", 
+            "Can we make each other better?", "Do you believe we can conquer the world together?", 
+            "Would you like to be my always?", "Can I be the one who makes you laugh every day?", 
+            "Do you want to be my favorite person?", "Would you like to be my heart's desire?", 
+            "Can we make this the best Valentine's ever?", "Do you want to be my once in a lifetime?", 
+            "Would you like to be my everything?", "Can I be the one who treasures you?", 
+            "Do you want to be my perfect plus one?", "Would you like to be my forever favorite?", 
+            "Can we make memories that last a lifetime?", "Do you believe we're better together?", 
+            "Would you like to be my special someone?", "Can I be the one who makes your world brighter?", 
+            "Do you want to be my happy ending?", "Would you like to be my greatest blessing?", 
+            "Can we create our own happily ever after?", "Do you want to be my soulmate?", 
+            "Would you like to be my one and only?", "Can I be the one who understands you completely?", 
+            "Do you want to be my favorite decision?", "Would you like to be my greatest joy?", 
+            "Can we make every day feel like Valentine's?", "Do you believe we can make it last forever?", 
+            "Would you like to be my partner for life?", "Can I be the one who makes your heart sing?", 
+            "Do you want to be my forever love?", "Would you like to be my perfect match?", 
+            "Can we build something lasting together?", "Do you want to be my anchor?", 
+            "Would you like to be my inspiration?", "Can I be the one who makes you feel loved?", 
+            "Do you want to be my happily ever after?", "Would you like to be my forever and always?", 
+            "Can we make this the beginning of something beautiful?", "Do you believe we can create magic?", 
+            "Would you like to be my partner in love?", "Can I be the one who makes you feel complete?", 
+            "Do you want to be my greatest adventure?", "Would you like to be my favorite memory in the making?", 
+            "Can we make this Valentine's Day the start of our story?", "Do you want to be my today and tomorrow?", 
+            "Would you like to be my heart's keeper?", "Can I be the one who makes you believe in love?", 
+            "Do you want to be my perfect harmony?", "Would you like to be my always and forever?", 
+            "Can we make each moment count?", "Do you believe we can make it work beautifully?", 
+            "Would you like to be my favorite chapter?", "Can I be the one who makes your dreams come true?", 
+            "Do you want to be my greatest love story?", "Would you like to be my forever Valentine?", 
+            "Can we make this the best decision ever?", "Do you want to be my happily ever now?", 
+            "Would you like to be my perfect beginning?", "Can I be the one who makes your heart dance?", 
+            "Do you want to be my everything and more?", "Would you like to be my once in a lifetime love?", 
+            "Can we make this Valentine's Day unforgettable?"
         ];
 
         const fakeYesMessages = [
@@ -173,7 +230,6 @@
             const btnRect = noBtn.getBoundingClientRect();
             const yRect = yesBtn.getBoundingClientRect();
             
-            // Safe zone logic for mobile
             const padding = 40;
             const maxX = bRect.width - btnRect.width - padding;
             const maxY = bRect.height - btnRect.height - 200; 
@@ -193,7 +249,6 @@
             noBtn.style.left = x + "px"; noBtn.style.top = y + "px";
         }
 
-        // Unified Interaction for Mobile/Desktop
         function handleNoInteraction(e) {
             e.preventDefault();
             noCount++;
