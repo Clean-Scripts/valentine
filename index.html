@@ -120,6 +120,7 @@
         let pData = {};
         let musicStarted = false;
         let finalLink = "";
+        let fakeYesIndex = 0;
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
@@ -363,13 +364,20 @@ const fakeYesMessages = [
         noBtn.addEventListener('click', handleNoInteraction);
 
         function checkYes() {
-            if (noCount < 25) {
-                document.getElementById('status-msg').innerText = fakeYesMessages[noCount % fakeYesMessages.length];
-                moveNo();
-                return;
-            }
-            sayYes();
-        }
+    // Now it requires 25 'No' attempts before 'Yes' works
+    if (noCount < 25) {
+        // This picks a RANDOM message from your list of 100+
+        const randomIndex = Math.floor(Math.random() * fakeYesMessages.length);
+        const msg = fakeYesMessages[randomIndex];
+        
+        document.getElementById('status-msg').innerText = msg;
+        
+        moveNo(); // Make the No button jump away
+        return;
+    }
+    // Only after 25 misses, the real Yes happens
+    sayYes();
+}
 
         function sayYes() {
             confetti({ particleCount: 300, spread: 90, origin: { y: 0.6 } });
