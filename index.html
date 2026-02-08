@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Will You Be My Valentine? 💝</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>❤️</text></svg>">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -10,9 +10,6 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; user-select: none; touch-action: manipulation; }
-        :root { --base-font-size: 16px; }
-        html { font-size: var(--base-font-size); }
-
         body {
             font-family: 'Poppins', sans-serif;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
@@ -20,214 +17,147 @@
             animation: gradient 15s ease infinite;
             min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            padding: 1.25rem; overflow: hidden;
+            padding: 1.25rem; overflow: hidden; position: relative;
         }
-
         @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
+        .heart-particle { position: absolute; color: rgba(255, 255, 255, 0.6); pointer-events: none; animation: floatUp 6s linear infinite; z-index: 1; }
+        @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
 
         .panel {
             background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem;
-            padding: 3.125rem 2.5rem;
+            border-radius: 1.5625rem; padding: 3.125rem 2.5rem;
             box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
-            backdrop-filter: blur(10px);
             border: 0.3125rem solid #ff99cc;
-            width: 100%; max-width: 62.5rem;
-            text-align: center; position: relative;
-            min-height: 600px; transition: transform 0.5s ease;
+            width: 100%; max-width: 600px; text-align: center; position: relative; z-index: 10;
         }
-
         .hidden { display: none !important; }
-
-        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 6vw, 4rem); color: #ff0066; margin-bottom: 1.5625rem; }
+        h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.5rem, 6vw, 4rem); color: #ff0066; margin-bottom: 1rem; }
         
-        .input-group { margin: 1.875rem 0; text-align: left; }
-        label { display: block; margin-bottom: 0.625rem; font-weight: 700; color: #660033; }
-        
+        .input-group { margin: 1.5rem 0; text-align: left; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: #660033; }
         .phone-container { display: flex; align-items: center; background: #fff; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; padding: 0 1rem; }
         .prefix { font-weight: 800; color: #ff0066; border-right: 2px solid #ff99cc; padding-right: 10px; margin-right: 10px; }
-        
-        input, textarea, select {
-            width: 100%; padding: 1.125rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1.1rem; outline: none;
-        }
-        .phone-container input { border: none !important; padding-left: 0; }
+        input { width: 100%; padding: 1rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1rem; outline: none; }
+        .phone-container input { border: none !important; }
 
         .btn {
-            padding: 1.375rem 3.4375rem; font-size: 1.8rem; font-weight: 700; border: none; border-radius: 3.75rem;
-            cursor: pointer; transition: all 0.4s ease; box-shadow: 0 0.75rem 1.5625rem rgba(0, 0, 0, 0.2);
-            display: inline-flex; align-items: center; justify-content: center; gap: 0.9375rem;
+            padding: 1.2rem 2.5rem; font-size: 1.4rem; font-weight: 700; border: none; border-radius: 3.75rem;
+            cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
         }
-
         .btn-main { background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; }
         .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; position: relative; z-index: 100; }
-        .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; position: absolute; z-index: 50; white-space: nowrap; }
+        .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; position: absolute; z-index: 50; }
 
-        .share-link-box {
-            background: #f8f9fa; padding: 1.5625rem; border-radius: 1.25rem; margin: 1.5625rem 0;
-            border: 0.1875rem dashed #ff0066; word-break: break-all; font-family: monospace; font-size: 1rem;
-        }
-
-        .music-control { position: fixed; top: 20px; right: 20px; width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; font-size: 1.5rem; box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 10px; }
+        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.9rem; margin-top: 10px; min-height: 20px; }
+        .music-control { position: fixed; top: 20px; right: 20px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
         .pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
-
-        .ad-container { position: fixed; bottom: 1.25rem; right: 1.25rem; background: white; padding: 1rem; border-radius: 1rem; border: 3px solid #ff0066; z-index: 1001; display: none; max-width: 300px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        .close-ad { position: absolute; top: 0; right: 10px; cursor: pointer; font-size: 1.5rem; color: #999; }
-
-        #question-text { font-size: 1.8rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 20px; }
-        .stat-badge { background: #ffccdd; padding: 0.5rem 1rem; border-radius: 1rem; font-weight: bold; margin: 10px; display: inline-block; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
     </style>
 </head>
 <body onclick="autoPlayMusic()">
 
-    <audio id="bg-music" loop>
-        <source src="https://raw.githubusercontent.com/Clean-Scripts/valentine/main/song.mp3" type="audio/mpeg">
-    </audio>
-
+    <div id="hearts-container"></div>
+    <audio id="bg-music" loop><source src="https://raw.githubusercontent.com/Clean-Scripts/valentine/main/song.mp3" type="audio/mpeg"></audio>
     <div class="music-control pulse" onclick="toggleMusic()"><i class="fas fa-music" id="music-icon"></i></div>
 
     <div class="container">
         <div class="panel" id="creator-box">
-            <i class="fas fa-heart" style="color: #ff0066; font-size: 4rem; margin-bottom: 1rem;"></i>
-            <h1>Create Your Valentine's Proposal</h1>
-            <p>Create a magical Valentine's proposal and share it with your special someone.</p>
-            
+            <h1>Create Proposal 💖</h1>
             <div class="input-group">
-                <label><i class="fas fa-user"></i> Your Name</label>
+                <label>Your Name</label>
                 <input type="text" id="c-name" placeholder="Enter your Name">
             </div>
-            
             <div class="input-group">
-                <label><i class="fas fa-user-heart"></i> Valentine's Name</label>
+                <label>Valentine's Name</label>
                 <input type="text" id="v-name" placeholder="Enter your Valentine's name">
             </div>
-
             <div class="input-group">
-                <label><i class="fas fa-phone-alt"></i> Your WhatsApp (to receive their answer)</label>
+                <label>Your WhatsApp</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
-                    <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
+                    <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="11">
                 </div>
             </div>
-
-            <button class="btn btn-main" onclick="generateLink()">Create Magical Link <i class="fas fa-sparkles"></i></button>
+            <button class="btn btn-main" onclick="generateLink()">Create Link ✨</button>
         </div>
 
         <div class="panel hidden" id="share-box">
-            <i class="fas fa-share-alt" style="color: #ff0066; font-size: 4rem; margin-bottom: 1rem;"></i>
             <h1>Link Ready! 💌</h1>
-            <p>Your Valentine's proposal has been created. Share the link below with <span id="span-v-name" style="color:#ff0066; font-weight:bold;"></span></p>
-            <div id="link-url" class="share-link-box"></div>
-            <div style="display:flex; gap:1.25rem; justify-content: center; flex-wrap: wrap;">
-                <button class="btn" style="background:#3366ff; color:white;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
-                <button class="btn" style="background:#25D366; color:white;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
-            </div>
+            <div id="link-url" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all;"></div>
+            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
         </div>
 
         <div class="panel hidden" id="response-box">
-            <h1 id="v-header">A Special Message For You...</h1>
+            <h1 id="v-header">For You... 🌹</h1>
             <div id="question-text">Will you be my Valentine? ❤️</div>
+            <div class="status-msg" id="status-msg"></div>
             
-            <div id="game-area" style="height: 350px; position: relative; margin-top: 2rem; display: flex; align-items: center; justify-content: center;">
-                <button class="btn btn-yes" id="yes-btn" onclick="sayYes()">YES! ❤️</button>
-                <button class="btn btn-no" id="no-btn">No</button>
+            <div id="game-area" style="height: 300px; position: relative; margin-top: 1rem; display: flex; align-items: center; justify-content: center;">
+                <button class="btn btn-yes" id="yes-btn" onclick="checkYes()">YES! ❤️</button>
+                <button class="btn btn-no" id="no-btn">No 😭</button>
             </div>
-            
-            <div id="no-counter" class="stat-badge">No Button Attempts: 0</div>
         </div>
 
         <div class="panel hidden" id="success-box">
-            <h1>You Made The Right Choice! 💖</h1>
-            <p id="final-msg"></p>
-            <div id="final-stats"></div>
-            <button class="btn" style="background:#25D366; color:white; width:100%; margin-top: 2rem;" onclick="confirmPartner()">Send Response to Partner <i class="fab fa-whatsapp"></i></button>
+            <h1>UFF! Finally! 🥰💍</h1>
+            <p id="final-msg" style="font-size: 1.2rem; margin: 1rem 0;"></p>
+            <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Tell them YES! <i class="fab fa-whatsapp"></i></button>
         </div>
-    </div>
-
-    <div id="ad-box" class="ad-container">
-        <span class="close-ad" onclick="closeAd()">×</span>
-        <div style="color:#ff0066; font-weight:bold;"><i class="fas fa-utensils"></i> Valentine's Special Offer!</div>
-        <p style="font-size:0.9rem; margin:10px 0;">Visit <strong>EasyGo Indore</strong> for the perfect date with delicious Momos! Get 30% off today.</p>
-        <a href="https://zomato.com" target="_blank" style="color:#ff0066; font-weight:bold; text-decoration:none;">Order Now on Zomato →</a>
     </div>
 
     <script>
         let noCount = 0;
         let speed = 0.4;
         let pData = {};
-        let startTime = null;
-        let isMusicPlaying = false;
         let musicStarted = false;
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-        const creativeQuestions = [
-            "Do you believe in love at first sight?", "Would you like to go on a romantic date?",
-            "Do you think we'd make a great couple?", "Can I be the reason for your smile?",
-            "Would you like to be the peanut butter to my jelly?", "Can we write our own love story?",
-            "Do you want to be the missing piece to my puzzle?", "Can I be the luckiest person to have you?",
-            "Do you believe we're meant to be?", "Would you like to be my forever Valentine?",
-            "Can we make this Valentine's Day unforgettable?", "Do you want to be the one I come home to?",
-            "Can I be the one who makes your heart skip a beat?", "Would you like to be my favorite hello?",
-            "Do you want to be my sunshine on a cloudy day?", "Can we build something beautiful together?",
-            "Do you believe in us?", "Would you like to be my dream come true?",
-            "Can I be the one who loves you unconditionally?", "Do you want to be my happy place?",
-            "Would you like to be my favorite adventure?", "Can we make magic together?",
-            "Do you want to be my sweet escape?", "Can I be the one who cherishes you always?",
-            "Do you believe we can conquer the world?", "Would you like to be my better half?",
-            "Can we make each other better?", "Do you want to be my favorite person?",
-            "Would you like to be my heart's desire?", "Can I be the one who understands you?",
-            "Do you want to be my home?", "Would you like to be my anchor?",
-            "Can I be the one who makes you feel loved?", "Do you want to be my soulmate?",
-            "Would you like to be my one and only?", "Can we make every day feel like Valentine's?"
+        const questions = [
+            "Wait! Do you believe in love? 💖", "Will you go on a date with me? 🕯️",
+            "Am I your favorite person? 😍", "Will you hold my hand forever? 🤝",
+            "Can I make you smile every day? 😊", "Are you ready for our love story? 📖",
+            "Will you be my queen/king? 👑", "Is your heart beating for me? 💓"
         ];
 
-        function autoPlayMusic() {
-            if (!musicStarted) {
-                music.play().catch(() => { /* handle blocked autoplay */ });
-                musicIcon.className = 'fas fa-pause';
-                isMusicPlaying = true;
-                musicStarted = true;
-                document.querySelector('.music-control').classList.remove('pulse');
-            }
-        }
+        const fakeYesMessages = [
+            "Itni jaldi? Thoda manaao toh sahi! 🙄💖",
+            "Sirf ek click mein Haan? Not fair! Try again! 😜",
+            "Boring pati mat bano, thodi mehnat karo! 😂🔥",
+            "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨",
+            "My heart needs more romance than that! 🌸✨",
+            "Almost there... but try once more! 😋💘"
+        ];
 
-        function toggleMusic() {
-            if (isMusicPlaying) { music.pause(); musicIcon.className = 'fas fa-music'; }
-            else { music.play(); musicIcon.className = 'fas fa-pause'; }
-            isMusicPlaying = !isMusicPlaying;
-            musicStarted = true;
-            document.querySelector('.music-control').classList.remove('pulse');
+        function createHeart() {
+            const container = document.getElementById('hearts-container');
+            const heart = document.createElement('i');
+            heart.classList.add('fas', 'fa-heart', 'heart-particle');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            container.appendChild(heart);
+            setTimeout(() => heart.remove(), 6000);
         }
+        setInterval(createHeart, 300);
 
-        document.getElementById('c-phone').addEventListener('input', function(e) {
-            this.value = this.value.replace(/[^0-9]/g, '');
-        });
+        function autoPlayMusic() { if (!musicStarted) { music.play(); musicIcon.className = 'fas fa-pause'; musicStarted = true; } }
+        function toggleMusic() { if (!music.paused) { music.pause(); musicIcon.className = 'fas fa-music'; } else { music.play(); musicIcon.className = 'fas fa-pause'; } }
 
         function generateLink() {
             const n = document.getElementById('c-name').value;
             const v = document.getElementById('v-name').value;
             const p = document.getElementById('c-phone').value;
-            if(!n || !v || p.length !== 10) return alert("Please fill all details correctly! Name and 10-digit Phone.");
+            if(!n || !v || p.length !== 10) return alert("Fill everything!");
             pData = { n, v, p: "91"+p };
-            const url = window.location.origin + window.location.pathname + "?q=" + btoa(JSON.stringify(pData));
-            document.getElementById('link-url').innerText = url;
-            document.getElementById('span-v-name').innerText = v;
+            document.getElementById('link-url').innerText = window.location.origin + window.location.pathname + "?q=" + btoa(JSON.stringify(pData));
             document.getElementById('creator-box').classList.add('hidden');
             document.getElementById('share-box').classList.remove('hidden');
-            if(Math.random() > 0.5) showAd();
         }
 
-        function copyLink() {
-            navigator.clipboard.writeText(document.getElementById('link-url').innerText);
-            alert("Link Copied! Share it with your Valentine.");
-        }
-
-        function shareWA() {
-            const link = document.getElementById('link-url').innerText;
-            const text = `Hi! I have a very special Valentine's message for you. Open this link: ${link}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-        }
+        function shareWA() { window.open(`https://wa.me/?text=I have a special message: ${encodeURIComponent(document.getElementById('link-url').innerText)}`, '_blank'); }
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
@@ -237,69 +167,47 @@
             const bRect = box.getBoundingClientRect();
             const btnRect = noBtn.getBoundingClientRect();
             const yRect = yesBtn.getBoundingClientRect();
-
             let x, y, overlap = true;
             while(overlap) {
                 x = Math.random() * (bRect.width - btnRect.width - 60) + 30;
                 y = Math.random() * (bRect.height - btnRect.height - 250) + 150;
                 const yesX = yRect.left - bRect.left;
                 const yesY = yRect.top - bRect.top;
-                overlap = !(x + btnRect.width < yesX - 20 || x > yesX + yRect.width + 20 || y + btnRect.height < yesY - 20 || y > yesY + yRect.height + 20);
+                overlap = !(x + btnRect.width < yesX - 30 || x > yesX + yRect.width + 30 || y + btnRect.height < yesY - 30 || y > yesY + yRect.height + 30);
             }
-            noBtn.style.transition = `all ${speed}s cubic-bezier(0.34, 1.56, 0.64, 1)`;
-            noBtn.style.left = x + "px";
-            noBtn.style.top = y + "px";
+            noBtn.style.transition = `all ${speed}s ease-out`;
+            noBtn.style.left = x + "px"; noBtn.style.top = y + "px";
         }
 
         noBtn.addEventListener('mouseover', moveNo);
         noBtn.addEventListener('click', () => {
             noCount++;
             speed = Math.max(0.1, speed - 0.05);
-            document.getElementById('no-counter').innerText = `No Button Attempts: ${noCount}`;
-            document.getElementById('question-text').innerText = creativeQuestions[Math.floor(Math.random() * creativeQuestions.length)];
+            document.getElementById('question-text').innerText = questions[noCount % questions.length];
+            document.getElementById('status-msg').innerText = "Catch me if you can! 🏃‍♀️🔥";
             moveNo();
         });
 
-        function sayYes() {
-            const duration = Math.floor((Date.now() - startTime) / 1000);
-            
-            // CONFETTI EXPLOSION
-            const end = Date.now() + (3 * 1000);
-            const colors = ['#ff0066', '#ff3385', '#ff99cc'];
-            (function frame() {
-                confetti({
-                    particleCount: 5,
-                    angle: 60,
-                    spread: 55,
-                    origin: { x: 0 },
-                    colors: colors
-                });
-                confetti({
-                    particleCount: 5,
-                    angle: 120,
-                    spread: 55,
-                    origin: { x: 1 },
-                    colors: colors
-                });
-                if (Date.now() < end) {
-                    requestAnimationFrame(frame);
-                }
-            }());
+        function checkYes() {
+            if (noCount < 6) {
+                const msg = fakeYesMessages[noCount % fakeYesMessages.length];
+                document.getElementById('status-msg').innerText = msg;
+                moveNo(); // Button moves anyway to frustrate them
+                return;
+            }
+            sayYes();
+        }
 
+        function sayYes() {
+            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
-            document.getElementById('final-msg').innerText = `Congratulations! You missed the 'No' button ${noCount} times, but your heart chose the right way! ❤️`;
-            document.getElementById('final-stats').innerHTML = `<div class="stat-badge">Total Misses: ${noCount}</div><div class="stat-badge">Time to Decide: ${duration}s</div>`;
-            showAd();
+            document.getElementById('final-msg').innerText = `I knew you'd work hard for me! 😍 I missed you ${noCount} times, but I'm yours! 💍💖`;
         }
 
         function confirmPartner() {
-            const text = `I SAID YES! ❤️ I'll be your Valentine! (It took me ${noCount} attempts to click through your tricky No button! 😂)`;
-            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(text)}`, '_blank');
+            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent("YESSS! I am your Valentine! ❤️ It was hard to catch that button but I did it for you! 🥰💍")}`, '_blank');
         }
-
-        function showAd() { document.getElementById('ad-box').style.display = 'block'; }
-        function closeAd() { document.getElementById('ad-box').style.display = 'none'; }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
@@ -308,8 +216,7 @@
                 pData = JSON.parse(atob(q));
                 document.getElementById('creator-box').classList.add('hidden');
                 document.getElementById('response-box').classList.remove('hidden');
-                document.getElementById('v-header').innerText = `Hey ${pData.v}!`;
-                startTime = Date.now();
+                document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
                 moveNo();
             }
         };
