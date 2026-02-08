@@ -378,9 +378,12 @@ const fakeYesMessages = [
             document.getElementById('final-msg').innerText = `I knew you'd work hard for me! 😍 I teased you ${noCount} times, but I'm yours! 💍💖`;
         }
 
-        function confirmPartner() {
-            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent("YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍" ${noCount} "times.")}`, '_blank');
-        }
+function confirmPartner() {
+    // Correct way to use variables inside a string using backticks
+    const message = `YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍 I missed it ${noCount} times.`;
+    
+    window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(message)}`, '_blank');
+}
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
