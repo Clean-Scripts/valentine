@@ -74,10 +74,10 @@
                 <input type="text" id="v-name" placeholder="Enter your Valentine's name">
             </div>
             <div class="input-group">
-                <label>Your WhatsApp</label>
+                <label>Your WhatsApp (To get their reply)</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
-                    <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="11">
+                    <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
                 </div>
             </div>
             <button class="btn btn-main" onclick="generateLink()">Create Link ✨</button>
@@ -85,8 +85,11 @@
 
         <div class="panel hidden" id="share-box">
             <h1>Link Ready! 💌</h1>
-            <div id="link-url" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all;"></div>
-            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
+            <div id="link-url-display" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all; font-size: 0.8rem;"></div>
+            <div style="display:flex; gap:10px; flex-direction:column;">
+                <button class="btn btn-main" style="background:#3366ff;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
+                <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
+            </div>
         </div>
 
         <div class="panel hidden" id="response-box">
@@ -112,6 +115,7 @@
         let speed = 0.4;
         let pData = {};
         let musicStarted = false;
+        let finalLink = "";
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
@@ -150,14 +154,27 @@
             const n = document.getElementById('c-name').value;
             const v = document.getElementById('v-name').value;
             const p = document.getElementById('c-phone').value;
-            if(!n || !v || p.length !== 10) return alert("Fill everything!");
-            pData = { n, v, p: "91"+p };
-            document.getElementById('link-url').innerText = window.location.origin + window.location.pathname + "?q=" + btoa(JSON.stringify(pData));
+            if(!n || !v || p.length !== 10) return alert("Please fill all details correctly!");
+            
+            pData = { n: n, v: v, p: "91" + p };
+            // Simple encoding to avoid link breaking
+            const encodedData = btoa(encodeURIComponent(JSON.stringify(pData)));
+            finalLink = window.location.origin + window.location.pathname + "?q=" + encodedData;
+            
+            document.getElementById('link-url-display').innerText = finalLink;
             document.getElementById('creator-box').classList.add('hidden');
             document.getElementById('share-box').classList.remove('hidden');
         }
 
-        function shareWA() { window.open(`https://wa.me/?text=I have a special message: ${encodeURIComponent(document.getElementById('link-url').innerText)}`, '_blank'); }
+        function copyLink() {
+            navigator.clipboard.writeText(finalLink);
+            alert("Link Copied! Send it to your Valentine.");
+        }
+
+        function shareWA() {
+            const text = `Hi ${pData.v}! I have a very special message for you. Open this: ${finalLink}`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+        }
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
@@ -180,11 +197,13 @@
         }
 
         noBtn.addEventListener('mouseover', moveNo);
+        noBtn.addEventListener('touchstart', (e) => { e.preventDefault(); moveNo(); });
+
         noBtn.addEventListener('click', () => {
             noCount++;
             speed = Math.max(0.1, speed - 0.05);
             document.getElementById('question-text').innerText = questions[noCount % questions.length];
-            document.getElementById('status-msg').innerText = "Catch me if you can! 🏃‍♀️🔥";
+            document.getElementById('status-msg').innerText = "Arre catch me! 🏃‍♀️🔥";
             moveNo();
         });
 
@@ -192,7 +211,7 @@
             if (noCount < 6) {
                 const msg = fakeYesMessages[noCount % fakeYesMessages.length];
                 document.getElementById('status-msg').innerText = msg;
-                moveNo(); // Button moves anyway to frustrate them
+                moveNo(); 
                 return;
             }
             sayYes();
@@ -202,22 +221,27 @@
             confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
-            document.getElementById('final-msg').innerText = `I knew you'd work hard for me! 😍 I missed you ${noCount} times, but I'm yours! 💍💖`;
+            document.getElementById('final-msg').innerText = `I knew you'd work hard for me! 😍 I teased you ${noCount} times, but I'm yours! 💍💖`;
         }
 
         function confirmPartner() {
-            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent("YESSS! I am your Valentine! ❤️ It was hard to catch that button but I did it for you! 🥰💍")}`, '_blank');
+            const msg = `YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍`;
+            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
         window.onload = () => {
             const params = new URLSearchParams(window.location.search);
             const q = params.get('q');
             if(q) {
-                pData = JSON.parse(atob(q));
-                document.getElementById('creator-box').classList.add('hidden');
-                document.getElementById('response-box').classList.remove('hidden');
-                document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
-                moveNo();
+                try {
+                    pData = JSON.parse(decodeURIComponent(atob(q)));
+                    document.getElementById('creator-box').classList.add('hidden');
+                    document.getElementById('response-box').classList.remove('hidden');
+                    document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
+                    moveNo();
+                } catch(e) {
+                    console.error("Invalid link");
+                }
             }
         };
     </script>
