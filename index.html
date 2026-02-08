@@ -363,7 +363,7 @@ const fakeYesMessages = [
         noBtn.addEventListener('click', handleNoInteraction);
 
         function checkYes() {
-            if (noCount < 6) {
+            if (noCount < 25) {
                 document.getElementById('status-msg').innerText = fakeYesMessages[noCount % fakeYesMessages.length];
                 moveNo();
                 return;
@@ -372,14 +372,14 @@ const fakeYesMessages = [
         }
 
         function sayYes() {
-            confetti({ particleCount: 200, spread: 80, origin: { y: 0.6 } });
+            confetti({ particleCount: 300, spread: 90, origin: { y: 0.6 } });
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
             document.getElementById('final-msg').innerText = `I knew you'd work hard for me! 😍 I teased you ${noCount} times, but I'm yours! 💍💖`;
         }
 
         function confirmPartner() {
-            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent("YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍")}`, '_blank');
+            window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent("YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍" ${noCount} "times.")}`, '_blank');
         }
 
         window.onload = () => {
