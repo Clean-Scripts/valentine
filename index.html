@@ -387,8 +387,8 @@ const fakeYesMessages = [
 
 function confirmPartner() {
     // Correct way to use variables inside a string using backticks
-    const message = `YESSS! I am your Valentine! ❤️ It was so hard to catch that button but I did it for you! 🥰💍 I missed it ${noCount} times.`;
-    
+    const msg = "YESSS! I am your Valentine! %E2%9D%A4%EF%B8%8F I missed it " + noCount + " times! %F0%9F%A4%A9%F0%9F%92%8D";
+// This bypasses the browser's ability to mess up the emoji    
     window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(message)}`, '_blank');
 }
 
