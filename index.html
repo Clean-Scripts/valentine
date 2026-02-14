@@ -28,30 +28,34 @@
         @keyframes floatUp { 0% { transform: translateY(100vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; } }
 
         .panel {
-            background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem; 
-            padding: 1.5rem; /* Padding thodi kam kari mobile ke liye */
-            box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
-            border: 0.3125rem solid #ff99cc;
-            width: 95%; /* Mobile par side se thoda gap rahega */
-            max-width: 500px; 
-            text-align: center; 
-            position: relative; 
-            z-index: 10;
-            
-            /* FIX: Fixed min-height hata kar flex-basis aur auto height di hai */
-            min-height: auto; 
-            height: auto;
-            max-height: 90vh; /* Screen ke 90% se bada nahi hoga */
-            
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-start;
-            overflow-y: auto; 
-            
-            /* Smooth scrolling mobile ke liye */
-            -webkit-overflow-scrolling: touch; 
-                        }
+    background-color: rgba(255, 255, 255, 0.98);
+    border-radius: 1.5625rem; 
+    padding: 2rem 1.5rem;
+    box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
+    border: 0.3125rem solid #ff99cc;
+    width: 100%; 
+    max-width: 600px; 
+    text-align: center; 
+    position: relative; 
+    z-index: 10;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-start;
+}
+
+/* Question box ke liye height wapas 600px fix */
+#response-box {
+    min-height: 600px;
+    overflow: hidden;
+}
+
+/* Success box ko lamba hone do aur scroll enable karo */
+#success-box {
+    min-height: 600px;
+    height: auto;
+    overflow-y: auto;
+    max-height: 95vh;
+}
 
         .hidden { display: none !important; }
         h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 8vw, 3.5rem); color: #ff0066; margin-bottom: 1rem; position: relative; z-index: 5; }
