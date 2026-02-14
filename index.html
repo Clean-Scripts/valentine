@@ -275,7 +275,7 @@
         noBtn.addEventListener('click', handleNoInteraction);
 
         function checkYes() {
-            if (noCount < 25) {
+            if (noCount < 15) {
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) moveBtn(yesBtn, noBtn);
                 const randomIndex = Math.floor(Math.random() * fakeYesMessages.length);
                 document.getElementById('status-msg').innerText = fakeYesMessages[randomIndex];
