@@ -241,27 +241,44 @@
             return !(rect1.right + buffer < rect2.left || rect1.left - buffer > rect2.right || rect1.bottom + buffer < rect2.top || rect1.top - buffer > rect2.bottom);
         }
 
-        function moveBtn(btnToMove, otherBtn) {
-            const pRect = panel.getBoundingClientRect();
-            const bRect = btnToMove.getBoundingClientRect();
-            const padding = 40;
-            const textBuffer = pRect.height * 0.35; 
-            const maxX = pRect.width - bRect.width - padding;
-            const maxY = pRect.height - bRect.height - padding;
-            let x, y, newRect, attempts = 0;
+    function moveBtn(btnToMove, otherBtn) {
+    const pRect = panel.getBoundingClientRect();
+    const bRect = btnToMove.getBoundingClientRect();
+    const oRect = otherBtn.getBoundingClientRect();
+    
+    const padding = 30; // Distance from the pink border
+    const textBuffer = pRect.height * 0.4; // Keeps buttons below the question text area
+    
+    const maxX = pRect.width - bRect.width - padding;
+    const maxY = pRect.height - bRect.height - padding;
 
-            do {
-                x = Math.max(padding, Math.random() * maxX);
-                y = Math.max(textBuffer, Math.random() * maxY);
-                newRect = { left: pRect.left + x, top: pRect.top + y, right: pRect.left + x + bRect.width, bottom: pRect.top + y + bRect.height };
-                attempts++;
-            } while (isOverlapping(newRect, otherBtn.getBoundingClientRect()) && attempts < 50);
+    let x, y, overlap;
+    let attempts = 0;
 
-            btnToMove.style.position = "absolute";
-            btnToMove.style.transition = `all ${speed}s ease-out`;
-            btnToMove.style.left = x + "px"; 
-            btnToMove.style.top = y + "px";
-        }
+    do {
+        // Calculate random position inside the white box
+        x = Math.max(padding, Math.random() * maxX);
+        y = Math.max(textBuffer, Math.random() * maxY);
+        
+        // Overlap Check logic
+        const buffer = 60; // Extra space between Yes and No
+        const newLeft = pRect.left + x;
+        const newTop = pRect.top + y;
+        
+        overlap = !(
+            newLeft + bRect.width + buffer < oRect.left || 
+            newLeft > oRect.right + buffer || 
+            newTop + bRect.height + buffer < oRect.top || 
+            newTop > oRect.bottom + buffer
+        );
+        attempts++;
+    } while (overlap && attempts < 50);
+
+    btnToMove.style.position = "absolute";
+    btnToMove.style.transition = `all ${speed}s ease-out`;
+    btnToMove.style.left = x + "px"; 
+    btnToMove.style.top = y + "px";
+}
 
         function handleNoInteraction(e) {
             if(e) e.preventDefault();
@@ -298,21 +315,32 @@
             window.open(`https://api.whatsapp.com/send?phone=${pData.p}&text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-        window.onload = () => {
-            const params = new URLSearchParams(window.location.search);
-            const q = params.get('q');
-            if(q) {
-                try {
-                    pData = JSON.parse(decodeURIComponent(atob(q)));
-                    document.getElementById('creator-box').classList.add('hidden');
-                    document.getElementById('response-box').classList.remove('hidden');
-                    document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
-                    noBtn.style.position = "absolute";
-                    yesBtn.style.position = "absolute";
-                    noBtn.style.left = "20%"; noBtn.style.top = "60%";
-                    yesBtn.style.left = "60%"; yesBtn.style.top = "60%";
-                } catch(e) { console.error("Link error"); }
-            }
+window.onload = () => {
+    const params = new URLSearchParams(window.location.search);
+    const q = params.get('q');
+    if(q) {
+        try {
+            pData = JSON.parse(decodeURIComponent(atob(q)));
+            document.getElementById('creator-box').classList.add('hidden');
+            document.getElementById('response-box').classList.remove('hidden');
+            document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
+            
+            // Buttons ko shuruat se hi absolute aur niche set karne ke liye
+            noBtn.style.position = "absolute";
+            yesBtn.style.position = "absolute";
+            
+            // Text se door niche (75% height par) aur ek dusre se door rakhne ke liye
+            noBtn.style.top = "75%";
+            noBtn.style.left = "25%";
+            yesBtn.style.top = "75%";
+            yesBtn.style.left = "75%";
+            
+            // Initial position fix karne ke liye transform reset
+            noBtn.style.transform = "translate(-50%, -50%)";
+            yesBtn.style.transform = "translate(-50%, -50%)";
+        } catch(e) { console.error("Link error"); }
+    }
+};
         };
     </script>
 </body>
