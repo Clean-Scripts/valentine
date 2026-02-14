@@ -20,7 +20,7 @@
             animation: gradient 15s ease infinite;
             min-height: 100vh;
             display: flex; align-items: center; justify-content: center;
-            padding: 1.25rem; overflow: hidden; position: relative;
+            padding: 1rem; overflow: hidden; position: relative;
         }
         @keyframes gradient { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
 
@@ -29,45 +29,43 @@
 
         .panel {
             background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem; padding: 2rem 1.5rem;
+            border-radius: 1.5625rem; padding: 2rem 1rem;
             box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
             border: 0.3125rem solid #ff99cc;
-            width: 100%; max-width: 600px; text-align: center; position: relative; z-index: 10;
+            width: 100%; max-width: 500px; text-align: center; position: relative; z-index: 10;
             min-height: 580px; display: flex; flex-direction: column; justify-content: center;
+            overflow: hidden; /* Strict containment */
         }
         .hidden { display: none !important; }
         h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 8vw, 3.5rem); color: #ff0066; margin-bottom: 1rem; }
         
-        .input-group { margin: 1rem 0; text-align: left; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: #660033; font-size: 0.9rem; }
+        .input-group { margin: 0.8rem 0; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-weight: 700; color: #660033; font-size: 0.9rem; }
         .phone-container { display: flex; align-items: center; background: #fff; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; padding: 0 1rem; }
         .prefix { font-weight: 800; color: #ff0066; border-right: 2px solid #ff99cc; padding-right: 10px; margin-right: 10px; }
         input { width: 100%; padding: 0.8rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1rem; outline: none; }
         .phone-container input { border: none !important; }
 
         .btn {
-            padding: 1rem 2rem; font-size: 1.3rem; font-weight: 700; border: none; border-radius: 3.75rem;
-            cursor: pointer; transition: 0.3s; display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 1rem 2rem; font-size: 1.2rem; font-weight: 700; border: none; border-radius: 3.75rem;
+            cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0.75rem 1.5625rem rgba(0, 0, 0, 0.2);
+            display: inline-flex; align-items: center; gap: 0.5rem;
             z-index: 100;
         }
         .btn-main { background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; }
         .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; position: relative; }
         .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; position: absolute; white-space: nowrap; }
 
-        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; }
-        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; }
-        .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
-        .pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
+        #question-text { font-size: 1.5rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; padding: 0 10px; }
+        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; padding: 0 10px; }
         
-        .upload-hint { font-size: 0.7rem; color: #99004d; margin-top: 5px; text-decoration: none; display: block; }
+        .upload-hint { font-size: 0.7rem; color: #99004d; margin-top: 5px; text-decoration: none; display: block; text-align: left; }
     </style>
 </head>
 <body onclick="autoPlayMusic()">
 
     <div id="hearts-container"></div>
     <audio id="bg-music" loop><source src="https://raw.githubusercontent.com/Clean-Scripts/valentine/main/song.mp3" type="audio/mpeg"></audio>
-    <div class="music-control pulse" onclick="toggleMusic()"><i class="fas fa-music" id="music-icon"></i></div>
 
     <div class="container">
         <div class="panel" id="creator-box">
@@ -84,11 +82,11 @@
             <div class="input-group">
                 <label>Upload Clip/Image (Max 5MB)</label>
                 <input type="file" id="media-upload" accept="image/*,video/*" onchange="validateFile(this)">
-                <a href="https://github.com/Clean-Scripts/valentine/upload/main" target="_blank" class="upload-hint">Upload here</a>
+                <a href="https://github.com/Clean-Scripts/valentine/upload/main" target="_blank" class="upload-hint">Upload here & commit</a>
             </div>
 
             <div class="input-group">
-                <label>Your WhatsApp [To get Reply] </label>
+                <label>Your WhatsApp [To get Reply]</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
                     <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
@@ -97,23 +95,16 @@
             <button class="btn btn-main" onclick="generateLink()">Create Link ✨</button>
         </div>
 
-        <div class="panel hidden" id="share-box">
-            <h1>Link Ready! 💌</h1>
-            <div id="link-url-display" class="share-link-box" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all; font-size: 0.8rem;"></div>
-            <button class="btn btn-main" style="background:#3366ff; margin-bottom: 10px;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
-            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
-        </div>
-
         <div class="panel hidden" id="response-box">
             <h1 id="v-header">A Special Message... 🌹</h1>
             <div id="question-text">Will you be my Valentine? ❤️</div>
             <div class="status-msg" id="status-msg"></div>
             
-            <div id="game-area" style="height: 320px; position: relative; margin-top: 1rem; display: flex; align-items: center; justify-content: center;">
+            <div id="game-area" style="height: 350px; position: relative; width: 100%;">
                 <button class="btn btn-yes" id="yes-btn" onclick="checkYes()">YES! ❤️</button>
                 <button class="btn btn-no" id="no-btn">No 😭</button>
             </div>
-            <div id="no-counter" style="font-size: 0.8rem; color: #ff0066; font-weight: bold; margin-top: 10px;">Misses: 0</div>
+            <div id="no-counter" style="font-size: 0.8rem; color: #ff0066; font-weight: bold;">Misses: 0</div>
         </div>
 
         <div class="panel hidden" id="success-box">
@@ -128,17 +119,14 @@
         let speed = 0.4;
         let pData = {};
         let musicStarted = false;
-        let finalLink = "";
         const music = document.getElementById('bg-music');
-        const musicIcon = document.getElementById('music-icon');
 
-        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "I'll keep asking! 😋", "Wait! Think again! 😍", "Can't touch this! 🏃‍♂️", "Almost caught it! 💨", "Do you believe in love at first sight?"];
+        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "I'll keep asking! 😋", "Wait! Think again! 😍", "Almost caught it! 💨", "Do you believe in love at first sight?"];
         const fakeYesMessages = ["Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨", "Almost there... but try once more! 😋💘"];
 
         function validateFile(input) {
-            const fileSize = input.files[0].size / 1024 / 1024;
-            if (fileSize > 5) {
-                alert("File size exceeds 5MB! Please upload a smaller clip.");
+            if (input.files[0] && input.files[0].size / 1024 / 1024 > 5) {
+                alert("File size exceeds 5MB!");
                 input.value = "";
             }
         }
@@ -146,7 +134,7 @@
         function createHeart() {
             const container = document.getElementById('hearts-container');
             const heart = document.createElement('i');
-            heart.classList.add('fas', 'fa-heart', 'heart-particle');
+            heart.className = 'fas fa-heart heart-particle';
             heart.style.left = Math.random() * 100 + 'vw';
             heart.style.fontSize = Math.random() * 20 + 10 + 'px';
             heart.style.animationDuration = Math.random() * 3 + 4 + 's';
@@ -155,8 +143,7 @@
         }
         setInterval(createHeart, 350);
 
-        function autoPlayMusic() { if (!musicStarted) { music.play().catch(()=>{}); musicIcon.className = 'fas fa-pause'; musicStarted = true; document.querySelector('.music-control').classList.remove('pulse'); } }
-        function toggleMusic() { if (!music.paused) { music.pause(); musicIcon.className = 'fas fa-music'; } else { music.play(); musicIcon.className = 'fas fa-pause'; } }
+        function autoPlayMusic() { if (!musicStarted) { music.play().catch(()=>{}); musicStarted = true; } }
 
         function generateLink() {
             const n = document.getElementById('c-name').value;
@@ -164,27 +151,29 @@
             const p = document.getElementById('c-phone').value;
             if(!n || !v || p.length !== 10) return alert("Fill everything!");
             pData = { n, v, p: "91" + p };
-            finalLink = window.location.origin + window.location.pathname + "?q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
-            document.getElementById('link-url-display').innerText = finalLink;
-            document.getElementById('creator-box').classList.add('hidden');
-            document.getElementById('share-box').classList.remove('hidden');
+            const url = window.location.origin + window.location.pathname + "?q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
+            // In real use, you'd show a share box here
+            window.location.search = "q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
         }
-
-        function copyLink() { navigator.clipboard.writeText(finalLink); alert("Link Copied!"); }
-        function shareWA() { window.open(`https://wa.me/?text=Open this special message: ${encodeURIComponent(finalLink)}`, '_blank'); }
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
-        const box = document.getElementById('response-box');
+        const panel = document.querySelector('.panel');
 
         function moveBtn(btn) {
-            const bRect = box.getBoundingClientRect();
-            const btnRect = btn.getBoundingClientRect();
-            const padding = 40;
-            const maxX = bRect.width - btnRect.width - padding;
-            const maxY = bRect.height - btnRect.height - 200; 
-            const x = Math.random() * (maxX - padding) + padding;
-            const y = Math.random() * (maxY - 100) + 150; 
+            const pRect = panel.getBoundingClientRect();
+            const bRect = btn.getBoundingClientRect();
+            
+            // Boundary limit: Panel width/height minus button size and border padding
+            const padding = 20;
+            const maxX = pRect.width - bRect.width - padding;
+            const maxY = pRect.height - bRect.height - padding;
+
+            // Random coordinates strictly inside the white panel
+            const x = Math.max(padding, Math.random() * maxX);
+            const y = Math.max(padding, Math.random() * maxY);
+
+            btn.style.position = "absolute";
             btn.style.transition = `all ${speed}s ease-out`;
             btn.style.left = x + "px"; 
             btn.style.top = y + "px";
@@ -204,9 +193,9 @@
         noBtn.addEventListener('click', handleNoInteraction);
 
         function checkYes() {
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
             if (noCount < 15) {
-                if (isMobile) moveBtn(yesBtn); // Only jumps if on mobile screen
+                // Yes button only moves inside the panel on mobile
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) moveBtn(yesBtn);
                 const randomIndex = Math.floor(Math.random() * fakeYesMessages.length);
                 document.getElementById('status-msg').innerText = fakeYesMessages[randomIndex];
                 moveBtn(noBtn);
@@ -223,7 +212,7 @@
         }
 
         function confirmPartner() {
-            const msg = "YESSS! I am your Valentine! ❤️ I missed it " + noCount + " times! 😍💍";
+            const msg = `YESSS! I am your Valentine! ❤️ I missed it ${noCount} times! 😍💍`;
             window.open(`https://wa.me/${pData.p}?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
@@ -236,7 +225,11 @@
                     document.getElementById('creator-box').classList.add('hidden');
                     document.getElementById('response-box').classList.remove('hidden');
                     document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
+                    // Reset to absolute within panel
+                    noBtn.style.position = "absolute";
+                    yesBtn.style.position = "absolute";
                     moveBtn(noBtn);
+                    moveBtn(yesBtn);
                 } catch(e) { console.error("Link error"); }
             }
         };
