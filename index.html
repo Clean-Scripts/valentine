@@ -29,7 +29,7 @@
 
         .panel {
             background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem; padding: 2rem 1.5rem;
+            border-radius: 1.5625rem; padding: 2.5rem 1.5rem;
             box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
             border: 0.3125rem solid #ff99cc;
             width: 100%; max-width: 600px; text-align: center; 
@@ -60,7 +60,7 @@
         .btn-yes { background: rgba(255, 0, 102, 0.9); color: white; border: 2px solid #fff; }
         .btn-no { background: rgba(204, 204, 204, 0.9); color: #33001a; white-space: nowrap; border: 2px solid #fff; }
 
-        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 90px; margin-bottom: 5px; padding: 0 10px; position: relative; z-index: 5; }
+        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 100px; margin-bottom: 5px; padding: 0 10px; position: relative; z-index: 5; }
         .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 40px; padding: 0 10px; position: relative; z-index: 5; }
         
         .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
@@ -96,6 +96,13 @@
             <button class="btn btn-main" onclick="generateLink()">Create Link ✨</button>
         </div>
 
+        <div class="panel hidden" id="share-box">
+            <h1>Link Ready! 💌</h1>
+            <div id="link-url-display" class="share-link-box" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all; font-size: 0.8rem; position: relative; z-index: 5;"></div>
+            <button class="btn btn-main" style="background:#3366ff; margin-bottom: 10px;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
+            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
+        </div>
+
         <div class="panel hidden" id="response-box">
             <h1 id="v-header">A Special Message... 🌹</h1>
             <div id="question-text">Will you be my Valentine? ❤️</div>
@@ -129,66 +136,67 @@
         let speed = 0.4;
         let pData = {};
         let musicStarted = false;
+        let finalLink = "";
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-const questionsList = [
-    "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍",
-    "Do you believe in love at first sight? ✨", "Would you like to go on a romantic date with me? 🕯️", "Do you think we'd make a great couple? 👫", 
-    "Would you like to be the reason for my smile every day? 😊", "Can I be your favorite hello and hardest goodbye? 👋", 
-    "Would you like to create beautiful memories together? 📸", "Do you want to be the peanut butter to my jelly? 🥪", 
-    "Would you like to be my happily ever after? 🏰", "Can I be the one who makes your heart skip a beat? 💓", 
-    "Do you want to be my sunshine on a cloudy day? ☀️", "Would you like to be my partner in crime for life? 🔫❤️", 
-    "Can we write our own love story together? 📖", "Do you believe we're meant to be? 🌌", 
-    "Would you like to be my forever Valentine? 💝", "Can I be the luckiest person to have you? 🍀", 
-    "Do you want to be the missing piece to my puzzle? 🧩", "Would you like to be my always and forever? ♾️", 
-    "Can we make this Valentine's Day unforgettable? 🎇", "Do you want to be the one I come home to? 🏠", 
-    "Would you like to be my favorite thought every day? 💭", "Can I be the one who cherishes you always? 💎", 
-    "Do you want to be my reason to celebrate every day? 🎉", "Would you like to be my today, tomorrow, and always? 🗓️", 
-    "Can we build something beautiful together? 🏗️❤️", "Do you believe in us? 🤝", 
-    "Would you like to be my perfect match? 🔥", "Can I be the one who makes your heart full? ❤️", 
-    "Do you want to be my sweet escape? 🏝️", "Would you like to be my favorite adventure? 🧗", 
-    "Can we make magic together? 🪄", "Do you want to be my happy place? 🌈", 
-    "Would you like to be my dream come true? 🌠", "Can I be the one who loves you unconditionally? 🫂", 
-    "Do you want to be my constant? ⚓", "Would you like to be my greatest chapter? 📑", 
-    "Can we create our own fairytale? 🧚", "Do you believe we can make it work? 🛠️", 
-    "Would you like to be my partner in everything? 👔👗", "Can I be the one who supports your dreams? 🚀", 
-    "Do you want to be my safe haven? 🛡️", "Would you like to be my favorite notification? 🔔", 
-    "Can we build a future together? 🌅", "Do you want to be my home? 🗝️", 
-    "Would you like to be my favorite love song? 🎵", "Can I be the one who makes you feel special? 🌟", 
-    "Do you want to be my forever and a day? ⏳", "Would you like to be my better half? 🌓", 
-    "Can we make each other better? 🪴", "Do you believe we can conquer the world together? 🌍", 
-    "Would you like to be my always? 🎀", "Can I be the one who makes you laugh every day? 😆", 
-    "Do you want to be my favorite person? 🥇", "Would you like to be my heart's desire? 🏹", 
-    "Can we make this the best Valentine's ever? 🥂", "Do you want to be my once in a lifetime? 🦄", 
-    "Would you like to be my everything? 🌏", "Can I be the one who treasures you? 🏴‍☠️💎", 
-    "Do you want to be my perfect plus one? 🎟️", "Would you like to be my forever favorite? ⭐", 
-    "Can we make memories that last a lifetime? 🕰️", "Do you believe we're better together? 🖇️", 
-    "Would you like to be my special someone? 🌹", "Can I be the one who makes your world brighter? 💡", 
-    "Do you want to be my happy ending? 🎬", "Would you like to be my greatest blessing? 🙏", 
-    "Can we create our own happily ever after? 💍", "Do you want to be my soulmate? 🧿", 
-    "Would you like to be my one and only? ☝️", "Can I be the one who understands you completely? 🧠❤️", 
-    "Do you want to be my favorite decision? ✅", "Would you like to be my greatest joy? 🎈", 
-    "Can we make every day feel like Valentine's? 🍬", "Do you believe we can make it last forever? 🕰️♾️", 
-    "Would you like to be my partner for life? 💍", "Can I be the one who makes your heart sing? 🎤", 
-    "Do you want to be my forever love? 💓", "Would you like to be my perfect match? 🧩", 
-    "Can we build something lasting together? 🧱❤️", "Do you want to be my anchor? ⚓", 
-    "Would you like to be my inspiration? 💡", "Can I be the one who makes you feel loved? 🧸", 
-    "Do you want to be my happily ever after? 🎀", "Would you like to be my forever and always? 📅", 
-    "Can we make this the beginning of something beautiful? 🌱", "Do you believe we can create magic? 🎆", 
-    "Would you like to be my partner in love? 🏹", "Can I be the one who makes you feel complete? ☯️", 
-    "Do you want to be my greatest adventure? 🗺️", "Would you like to be my favorite memory in the making? 🎥", 
-    "Can we make this Valentine's Day the start of our story? ✒️", "Do you want to be my today and tomorrow? 🌗", 
-    "Would you like to be my heart's keeper? 🔐", "Can I be the one who makes you believe in love? 💖", 
-    "Do you want to be my perfect harmony? 🎼", "Would you like to be my always and forever? 💌", 
-    "Can we make each moment count? ⌛", "Do you believe we can make it work beautifully? 🌺", 
-    "Would you like to be my favorite chapter? 📖", "Can I be the one who makes your dreams come true? 🧞", 
-    "Do you want to be my greatest love story? 📽️", "Would you like to be my forever Valentine? 🍫", 
-    "Can we make this the best decision ever? 🎖️", "Do you want to be my happily ever now? 🔔", 
-    "Would you like to be my perfect beginning? 🏁❤️", "Can I be the one who makes your heart dance? 💃", 
-    "Do you want to be my everything and more? 🪐", "Would you like to be my once in a lifetime love? 💖", 
-    "Can we make this Valentine's Day unforgettable? 🎇"
-];
+        const questionsList = [
+            "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍",
+            "Do you believe in love at first sight? ✨", "Would you like to go on a romantic date with me? 🕯️", "Do you think we'd make a great couple? 👫", 
+            "Would you like to be the reason for my smile every day? 😊", "Can I be your favorite hello and hardest goodbye? 👋", 
+            "Would you like to create beautiful memories together? 📸", "Do you want to be the peanut butter to my jelly? 🥪", 
+            "Would you like to be my happily ever after? 🏰", "Can I be the one who makes your heart skip a beat? 💓", 
+            "Do you want to be my sunshine on a cloudy day? ☀️", "Would you like to be my partner in crime for life? 🔫❤️", 
+            "Can we write our own love story together? 📖", "Do you believe we're meant to be? 🌌", 
+            "Would you like to be my forever Valentine? 💝", "Can I be the luckiest person to have you? 🍀", 
+            "Do you want to be the missing piece to my puzzle? 🧩", "Would you like to be my always and forever? ♾️", 
+            "Can we make this Valentine's Day unforgettable? 🎇", "Do you want to be the one I come home to? 🏠", 
+            "Would you like to be my favorite thought every day? 💭", "Can I be the one who cherishes you always? 💎", 
+            "Do you want to be my reason to celebrate every day? 🎉", "Would you like to be my today, tomorrow, and always? 🗓️", 
+            "Can we build something beautiful together? 🏗️❤️", "Do you believe in us? 🤝", 
+            "Would you like to be my perfect match? 🔥", "Can I be the one who makes your heart full? ❤️", 
+            "Do you want to be my sweet escape? 🏝️", "Would you like to be my favorite adventure? 🧗", 
+            "Can we make magic together? 🪄", "Do you want to be my happy place? 🌈", 
+            "Would you like to be my dream come true? 🌠", "Can I be the one who loves you unconditionally? 🫂", 
+            "Do you want to be my constant? ⚓", "Would you like to be my greatest chapter? 📑", 
+            "Can we create our own fairytale? 🧚", "Do you believe we can make it work? 🛠️", 
+            "Would you like to be my partner in everything? 👔👗", "Can I be the one who supports your dreams? 🚀", 
+            "Do you want to be my safe haven? 🛡️", "Would you like to be my favorite notification? 🔔", 
+            "Can we build a future together? 🌅", "Do you want to be my home? 🗝️", 
+            "Would you like to be my favorite love song? 🎵", "Can I be the one who makes you feel special? 🌟", 
+            "Do you want to be my forever and a day? ⏳", "Would you like to be my better half? 🌓", 
+            "Can we make each other better? 🪴", "Do you believe we can conquer the world together? 🌍", 
+            "Would you like to be my always? 🎀", "Can I be the one who makes you laugh every day? 😆", 
+            "Do you want to be my favorite person? 🥇", "Would you like to be my heart's desire? 🏹", 
+            "Can we make this the best Valentine's ever? 🥂", "Do you want to be my once in a lifetime? 🦄", 
+            "Would you like to be my everything? 🌏", "Can I be the one who treasures you? 🏴‍☠️💎", 
+            "Do you want to be my perfect plus one? 🎟️", "Would you like to be my forever favorite? ⭐", 
+            "Can we make memories that last a lifetime? 🕰️", "Do you believe we're better together? 🖇️", 
+            "Would you like to be my special someone? 🌹", "Can I be the one who makes your world brighter? 💡", 
+            "Do you want to be my happy ending? 🎬", "Would you like to be my greatest blessing? 🙏", 
+            "Can we create our own happily ever after? 💍", "Do you want to be my soulmate? 🧿", 
+            "Would you like to be my one and only? ☝️", "Can I be the one who understands you completely? 🧠❤️", 
+            "Do you want to be my favorite decision? ✅", "Would you like to be my greatest joy? 🎈", 
+            "Can we make every day feel like Valentine's? 🍬", "Do you believe we can make it last forever? 🕰️♾️", 
+            "Would you like to be my partner for life? 💍", "Can I be the one who makes your heart sing? 🎤", 
+            "Do you want to be my forever love? 💓", "Would you like to be my perfect match? 🧩", 
+            "Can we build something lasting together? 🧱❤️", "Do you want to be my anchor? ⚓", 
+            "Would you like to be my inspiration? 💡", "Can I be the one who makes you feel loved? 🧸", 
+            "Do you want to be my happily ever after? 🎀", "Would you like to be my forever and always? 📅", 
+            "Can we make this the beginning of something beautiful? 🌱", "Do you believe we can create magic? 🎆", 
+            "Would you like to be my partner in love? 🏹", "Can I be the one who makes you feel complete? ☯️", 
+            "Do you want to be my greatest adventure? 🗺️", "Would you like to be my favorite memory in the making? 🎥", 
+            "Can we make this Valentine's Day the start of our story? ✒️", "Do you want to be my today and tomorrow? 🌗", 
+            "Would you like to be my heart's keeper? 🔐", "Can I be the one who makes you believe in love? 💖", 
+            "Do you want to be my perfect harmony? 🎼", "Would you like to be my always and forever? 💌", 
+            "Can we make each moment count? ⌛", "Do you believe we can make it work beautifully? 🌺", 
+            "Would you like to be my favorite chapter? 📖", "Can I be the one who makes your dreams come true? 🧞", 
+            "Do you want to be my greatest love story? 📽️", "Would you like to be my forever Valentine? 🍫", 
+            "Can we make this the best decision ever? 🎖️", "Do you want to be my happily ever now? 🔔", 
+            "Would you like to be my perfect beginning? 🏁❤️", "Can I be the one who makes your heart dance? 💃", 
+            "Do you want to be my everything and more? 🪐", "Would you like to be my once in a lifetime love? 💖", 
+            "Can we make this Valentine's Day unforgettable? 🎇"
+        ];
 
         const fakeYesMessages = [
             "Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨", "Almost there... but try once more! 😋💘",
@@ -203,28 +211,8 @@ const questionsList = [
             "My Yes is expensive! Show me the effort! 💰💍", "Thoda aur tadpao! 😂🔥", "Is your finger tired? Good! 😜💪", "Romance level: Low. Need more button chasing! 📉💔", "Catch me if you can, Mr. Valentine! 🏃‍♂️💨",
             "You're making it look too easy! 🙄📈", "Check your heartbeat! Still too slow! 💓📉", "Wait for the signal! 🚦🙊", "I like it when you work for it! 🔨❤️", "Still in 'Maybe' zone! Push harder! 🚀🌌",
             "Show some passion! Catch that button! 🔥👐", "You're almost there... just 100 more tries! 😂📏", "Not convinced yet! 🤨⚖️", "Make it legendary! Don't click Yes yet! 🦸‍♂️🌟", "Are we there yet? NO! 😂🚗",
-            "The universe says: TRY AGAIN! 🌌💫", "My cat gives more effort than this! 🐱💤", "Where's the drama? Give me drama! 🎭😱", "I'm blushing... but the answer is still 'Not Yet'! 😊🚫", "Catch the wind, then catch the No! 🌬️🏃‍♂️",
-            "You're cute when you're frustrated! 😂😍", "Is that your final answer? Too bad! 🙅‍♀️❌", "Unlock the Yes by catching the No! 🔐🏃‍♂️", "Heart loading... 99%... stay there! ⏳💖", "Do you need a map to the No button? 🗺️😂",
-            "I'm hidden in the No button! Find me! 🕵️‍♀️💕", "You have 0% luck right now! Try again! 🎲❌", "Clicking Yes is for beginners! 👶🍼", "Be a pro! Chasing is an art! 🎨🏃‍♂️", "I'm enjoying this way too much! 😂🍿",
-            "Wait! My mom is watching! 😂👵", "Is this a proposal or a speed test? 🏎️⏱️", "You win a cookie! 🍪 (But no Yes yet!)", "Focus! The No button is mocking you! 🤡🤣", "Your persistence is charming! 🤩✨",
-            "Can you do this with your eyes closed? 🙈🚫", "I'm dancing away from you! 💃💨", "Try again with more feelings! 🎭❤️", "Are you even looking at the screen? 😂👁️", "I feel the love... and the struggle! 😂💓",
-            "Almost caught it! Try one more time! 🎣🐟", "I'm like a dream... hard to catch! 😴🌈", "You're getting warmer! 🌡️🔥", "You're getting colder! ❄️🧊", "Just say... wait, don't say anything! 🙊🚫",
-            "Magic takes time! 🪄✨", "I'm worth the wait! 🕰️💎", "Keep the fire burning! 🔥❤️", "You're a star! 🌟 (But still no!)", "Best proposal ever! (In progress...) 😂📜", "Did you try restarting your heart? 😂🔧",
-            "I'm high maintenance! More clicks! 💅💰", "One more time for the person in the back! 📣😂", "Are we having fun yet? I am! 😂🥳", "The 'Yes' button is on vacation! 🏖️🚫", "Call a friend! Maybe they can click it! 😂📞",
-            "You're a legend in the making! 🏆🔥", "Don't stop now! The end is near! 🏁💕", "Final boss: The No Button! 🐉🗡️"
+            "The universe says: TRY AGAIN! 🌌💫", "My cat gives more effort than this! 🐱💤", "Where's the drama? Give me drama! 🎭😱", "I'm blushing... but the answer is still 'Not Yet'! 😊🚫", "You're cute when you're frustrated! 😂😍", "Heart loading... 99%... stay there! ⏳💖", "Unlock the Yes by catching the No! 🔐🏃‍♂️"
         ];
-
-        function createHeart() {
-            const container = document.getElementById('hearts-container');
-            const heart = document.createElement('i');
-            heart.className = 'fas fa-heart heart-particle';
-            heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.fontSize = Math.random() * 20 + 10 + 'px';
-            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
-            container.appendChild(heart);
-            setTimeout(() => heart.remove(), 6000);
-        }
-        setInterval(createHeart, 350);
 
         function autoPlayMusic() { if (!musicStarted) { music.play().catch(()=>{}); musicStarted = true; } }
         function toggleMusic() { if (!music.paused) { music.pause(); musicIcon.className = 'fas fa-music'; } else { music.play(); musicIcon.className = 'fas fa-pause'; } }
@@ -235,8 +223,14 @@ const questionsList = [
             const p = document.getElementById('c-phone').value;
             if(!n || !v || p.length !== 10) return alert("Fill everything!");
             pData = { n, v, p: "91" + p };
-            window.location.search = "q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
+            finalLink = window.location.origin + window.location.pathname + "?q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
+            document.getElementById('link-url-display').innerText = finalLink;
+            document.getElementById('creator-box').classList.add('hidden');
+            document.getElementById('share-box').classList.remove('hidden');
         }
+
+        function copyLink() { navigator.clipboard.writeText(finalLink); alert("Link Copied!"); }
+        function shareWA() { window.open(`https://wa.me/?text=Open this special message: ${encodeURIComponent(finalLink)}`, '_blank'); }
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
