@@ -52,23 +52,20 @@
             padding: 1rem 2rem; font-size: 1.3rem; font-weight: 700; border: none; border-radius: 3.75rem;
             cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0.75rem 1.5625rem rgba(0, 0, 0, 0.2);
             display: inline-flex; align-items: center; gap: 0.5rem;
-            z-index: 100; position: absolute; /* Both buttons are absolute for internal moving */
+            z-index: 100; position: absolute;
         }
 
-        /* Initial positions */
-        #yes-btn { left: 50%; top: 60%; transform: translate(-50%, -50%); }
-        #no-btn { left: 50%; top: 75%; transform: translate(-50%, -50%); }
-
-        .btn-main { position: relative; background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; margin-top: 1rem; transform: none !important; left: auto !important; top: auto !important; }
+        .btn-main { position: relative; background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; margin-top: 1rem; left: auto !important; top: auto !important; transform: none !important; }
         .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; }
         .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; white-space: nowrap; }
 
         #question-text { font-size: 1.5rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; padding: 0 10px; }
-        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; }
+        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; padding: 0 10px; }
         
         .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
         .pulse { animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
+        .upload-hint { font-size: 0.7rem; color: #99004d; margin-top: 5px; text-decoration: none; display: block; text-align: left; }
     </style>
 </head>
 <body onclick="autoPlayMusic()">
@@ -88,8 +85,15 @@
                 <label>Valentine's Name</label>
                 <input type="text" id="v-name" placeholder="Enter your Valentine's name">
             </div>
+            
             <div class="input-group">
-                <label>Your WhatsApp Number</label>
+                <label>Upload Clip/Image (Max 5MB)</label>
+                <input type="file" id="media-upload" accept="image/*,video/*" onchange="validateFile(this)">
+                <a href="https://github.com/Clean-Scripts/valentine/upload/main" target="_blank" class="upload-hint">Upload here & commit</a>
+            </div>
+
+            <div class="input-group">
+                <label>Your WhatsApp [To get Reply]</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
                     <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
@@ -127,8 +131,89 @@
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍"];
-        const fakeYesMessages = ["Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Boring pati mat bano! 😂🔥", "Pehle No button pakad ke dikhao! 🏃‍♂️💨"];
+        const questionsList = [
+            "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍",
+            "Do you believe in love at first sight?", "Would you like to go on a romantic date with me?", "Do you think we'd make a great couple?", 
+            "Would you like to be the reason for my smile every day?", "Can I be your favorite hello and hardest goodbye?", 
+            "Would you like to create beautiful memories together?", "Do you want to be the peanut butter to my jelly?", 
+            "Would you like to be my happily ever after?", "Can I be the one who makes your heart skip a beat?", 
+            "Do you want to be my sunshine on a cloudy day?", "Would you like to be my partner in crime for life?", 
+            "Can we write our own love story together?", "Do you believe we're meant to be?", 
+            "Would you like to be my forever Valentine?", "Can I be the luckiest person to have you?", 
+            "Do you want to be the missing piece to my puzzle?", "Would you like to be my always and forever?", 
+            "Can we make this Valentine's Day unforgettable?", "Do you want to be the one I come home to?", 
+            "Would you like to be my favorite thought every day?", "Can I be the one who cherishes you always?", 
+            "Do you want to be my reason to celebrate every day?", "Would you like to be my today, tomorrow, and always?", 
+            "Can we build something beautiful together?", "Do you believe in us?", 
+            "Would you like to be my perfect match?", "Can I be the one who makes your heart full?", 
+            "Do you want to be my sweet escape?", "Would you like to be my favorite adventure?", 
+            "Can we make magic together?", "Do you want to be my happy place?", 
+            "Would you like to be my dream come true?", "Can I be the one who loves you unconditionally?", 
+            "Do you want to be my constant?", "Would you like to be my greatest chapter?", 
+            "Can we create our own fairytale?", "Do you believe we can make it work?", 
+            "Would you like to be my partner in everything?", "Can I be the one who supports your dreams?", 
+            "Do you want to be my safe haven?", "Would you like to be my favorite notification?", 
+            "Can we build a future together?", "Do you want to be my home?", 
+            "Would you like to be my favorite love song?", "Can I be the one who makes you feel special?", 
+            "Do you want to be my forever and a day?", "Would you like to be my better half?", 
+            "Can we make each other better?", "Do you believe we can conquer the world together?", 
+            "Would you like to be my always?", "Can I be the one who makes you laugh every day?", 
+            "Do you want to be my favorite person?", "Would you like to be my heart's desire?", 
+            "Can we make this the best Valentine's ever?", "Do you want to be my once in a lifetime?", 
+            "Would you like to be my everything?", "Can I be the one who treasures you?", 
+            "Do you want to be my perfect plus one?", "Would you like to be my forever favorite?", 
+            "Can we make memories that last a lifetime?", "Do you believe we're better together?", 
+            "Would you like to be my special someone?", "Can I be the one who makes your world brighter?", 
+            "Do you want to be my happy ending?", "Would you like to be my greatest blessing?", 
+            "Can we create our own happily ever after?", "Do you want to be my soulmate?", 
+            "Would you like to be my one and only?", "Can I be the one who understands you completely?", 
+            "Do you want to be my favorite decision?", "Would you like to be my greatest joy?", 
+            "Can we make every day feel like Valentine's?", "Do you believe we can make it last forever?", 
+            "Would you like to be my partner for life?", "Can I be the one who makes your heart sing?", 
+            "Do you want to be my forever love?", "Would you like to be my perfect match?", 
+            "Can we build something lasting together?", "Do you want to be my anchor?", 
+            "Would you like to be my inspiration?", "Can I be the one who makes you feel loved?", 
+            "Do you want to be my happily ever after?", "Would you like to be my forever and always?", 
+            "Can we make this the beginning of something beautiful?", "Do you believe we can create magic?", 
+            "Would you like to be my partner in love?", "Can I be the one who makes you feel complete?", 
+            "Do you want to be my greatest adventure?", "Would you like to be my favorite memory in the making?", 
+            "Can we make this Valentine's Day the start of our story?", "Do you want to be my today and tomorrow?", 
+            "Would you like to be my heart's keeper?", "Can I be the one who makes you believe in love?", 
+            "Do you want to be my perfect harmony?", "Would you like to be my always and forever?", 
+            "Can we make each moment count?", "Do you believe we can make it work beautifully?", 
+            "Would you like to be my favorite chapter?", "Can I be the one who makes your dreams come true?", 
+            "Do you want to be my greatest love story?", "Would you like to be my forever Valentine?", 
+            "Can we make this the best decision ever?", "Do you want to be my happily ever now?", 
+            "Would you like to be my perfect beginning?", "Can I be the one who makes your heart dance?", 
+            "Do you want to be my everything and more?", "Would you like to be my once in a lifetime love?", 
+            "Can we make this Valentine's Day unforgettable?"
+        ];
+
+        const fakeYesMessages = [
+            "Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨", "Almost there... but try once more! 😋💘",
+            "Nakhre toh bante hai na! Thoda aur chase karo! 💅✨", "Not that easy! Pehle prove karo! 🤨❤️", "Ek aur koshish! Your love needs more efforts! 🌹💪", "Haan bolne ke liye itni jaldi? Sharam karo! 😂🙈", "Dil itna sasta nahi hai mera! Do better! 💅💎",
+            "Error 403: Haan not allowed yet! Try clicking No! 🚫😋", "Mujhe laga thoda aur bhagaoge! Keep going! 🏃‍♀️💨", "Aise kaise? Pehle 10 No button miss karo! 😜📉", "Boring! Thodi aur flirting chahiye! 🙄🔥", "My heart says: Keep them waiting! 😂⏳",
+            "Oho! Bade utawale ho rahe ho? 🤪💖", "Patience is a virtue, my love! Not yet! 😇✨", "Sirf YES? Kuch aur creative dhoondo! 🧐🌹", "Nice try, but I like the chase! 🦁🏃‍♂️", "Abhi toh start hua hai game! Haan itni jaldi? 😂🥳",
+            "Wait! Did you even read the question? 🤨📜", "You can't just skip the fun part! 🎢😋", "Is that all the effort you've got? 😴💔", "Make me blush first! Try again! 😊🌸", "Haan bolne ke liye mehnat lagti hai boss! 💼❤️",
+            "Itna aasaan hota toh sab Valentine ban jate! 😂🌍", "Bhago bhago! No button bula raha hai! 🏃‍♂️💨", "Just a few more misses, then maybe! 😉📏", "Your thumb needs more exercise! 👆🏋️‍♂️", "Aww, cute! But still NO for now! 😜🍭",
+            "Dil hai ki manta nahi, abhi aur wait karwayega! 🎶🕰️", "Almost impressed, but not quite! 😎👌", "Keep trying, the reward is worth it! 🏆💎", "Love isn't a race, enjoy the chase! 🐢💕", "You missed a spot! Catch that No button! 🎯💨",
+            "Why so serious? Enjoy the game! 🤡🎈", "Still too fast! Slow down and romance me! 🕯️✨", "I'm worth more than one click! 💎✨", "Haan toh main bol dungi, par maza kaise aayega? 😂🎉", "Try clicking No... it's more fun! 😈🏽",
+            "You are breaking the rules of romance! 📜🚫", "Ek baar aur! For luck! 🍀💖", "Are you sweating yet? 😂💦", "I love watching you struggle! So cute! 😍🍿", "Don't give up now, you're so close! 🧗‍♂️❤️",
+            "My Yes is expensive! Show me the effort! 💰💍", "Thoda aur tadpao! 😂🔥", "Is your finger tired? Good! 😜💪", "Romance level: Low. Need more button chasing! 📉💔", "Catch me if you can, Mr. Valentine! 🏃‍♂️💨",
+            "You're making it look too easy! 🙄📈", "Check your heartbeat! Still too slow! 💓📉", "Wait for the signal! 🚦🙊", "I like it when you work for it! 🔨❤️", "Still in 'Maybe' zone! Push harder! 🚀🌌",
+            "Show some passion! Catch that button! 🔥👐", "You're almost there... just 100 more tries! 😂📏", "Not convinced yet! 🤨⚖️", "Make it legendary! Don't click Yes yet! 🦸‍♂️🌟", "Are we there yet? NO! 😂🚗",
+            "The universe says: TRY AGAIN! 🌌💫", "My cat gives more effort than this! 🐱💤", "Where's the drama? Give me drama! 🎭😱", "I'm blushing... but the answer is still 'Not Yet'! 😊🚫", "Catch the wind, then catch the No! 🌬️🏃‍♂️",
+            "You're cute when you're frustrated! 😂😍", "Is that your final answer? Too bad! 🙅‍♀️❌", "Unlock the Yes by catching the No! 🔐🏃‍♂️", "Heart loading... 99%... stay there! ⏳💖", "Do you need a map to the No button? 🗺️😂",
+            "I'm hidden in the No button! Find me! 🕵️‍♀️💕", "You have 0% luck right now! Try again! 🎲❌", "Clicking Yes is for beginners! 👶🍼", "Be a pro! Chasing is an art! 🎨🏃‍♂️", "I'm enjoying this way too much! 😂🍿",
+            "Wait! My mom is watching! 😂👵", "Is this a proposal or a speed test? 🏎️⏱️", "You win a cookie! 🍪 (But no Yes yet!)", "Focus! The No button is mocking you! 🤡🤣", "Your persistence is charming! 🤩✨",
+            "Can you do this with your eyes closed? 🙈🚫", "I'm dancing away from you! 💃💨", "Try again with more feelings! 🎭❤️", "Are you even looking at the screen? 😂👁️", "I feel the love... and the struggle! 😂💓",
+            "Almost caught it! Try one more time! 🎣🐟", "I'm like a dream... hard to catch! 😴🌈", "You're getting warmer! 🌡️🔥", "You're getting colder! ❄️🧊", "Just say... wait, don't say anything! 🙊🚫",
+            "Magic takes time! 🪄✨", "I'm worth the wait! 🕰️💎", "Keep the fire burning! 🔥❤️", "You're a star! 🌟 (But still no!)", "Best proposal ever! (In progress...) 😂📜", "Did you try restarting your heart? 😂🔧",
+            "I'm high maintenance! More clicks! 💅💰", "One more time for the person in the back! 📣😂", "Are we having fun yet? I am! 😂🥳", "The 'Yes' button is on vacation! 🏖️🚫", "Call a friend! Maybe they can click it! 😂📞",
+            "You're a legend in the making! 🏆🔥", "Don't stop now! The end is near! 🏁💕", "Final boss: The No Button! 🐉🗡️"
+        ];
+
+        function validateFile(input) { if (input.files[0] && input.files[0].size / 1024 / 1024 > 5) { alert("File size exceeds 5MB!"); input.value = ""; } }
 
         function createHeart() {
             const container = document.getElementById('hearts-container');
@@ -158,36 +243,30 @@
         const yesBtn = document.getElementById('yes-btn');
         const panel = document.getElementById('response-box');
 
+        function isOverlapping(rect1, rect2) {
+            const buffer = 50;
+            return !(rect1.right + buffer < rect2.left || rect1.left - buffer > rect2.right || rect1.bottom + buffer < rect2.top || rect1.top - buffer > rect2.bottom);
+        }
+
         function moveBtn(btnToMove, otherBtn) {
             const pRect = panel.getBoundingClientRect();
             const bRect = btnToMove.getBoundingClientRect();
-            
-            // STAY INSIDE BORDERS: Max width/height minus button size and padding
-            const pad = 40;
-            const maxX = pRect.width - bRect.width - pad;
-            const maxY = pRect.height - bRect.height - pad;
+            const padding = 40;
+            const maxX = pRect.width - bRect.width - padding;
+            const maxY = pRect.height - bRect.height - padding;
+            let x, y, newRect, attempts = 0;
 
-            let x, y, overlap = true;
-            let attempts = 0;
-
-            while(overlap && attempts < 50) {
-                x = Math.max(pad, Math.random() * maxX);
-                y = Math.max(pad, Math.random() * maxY);
-                
-                const otherRect = otherBtn.getBoundingClientRect();
-                const buffer = 50;
-                
-                // Overlap Check
-                overlap = !( (pRect.left + x + bRect.width) < otherRect.left - buffer || 
-                             (pRect.left + x) > otherRect.right + buffer || 
-                             (pRect.top + y + bRect.height) < otherRect.top - buffer || 
-                             (pRect.top + y) > otherRect.bottom + buffer );
+            do {
+                x = Math.max(padding, Math.random() * maxX);
+                y = Math.max(padding, Math.random() * maxY);
+                newRect = { left: pRect.left + x, top: pRect.top + y, right: pRect.left + x + bRect.width, bottom: pRect.top + y + bRect.height };
                 attempts++;
-            }
+            } while (isOverlapping(newRect, otherBtn.getBoundingClientRect()) && attempts < 50);
 
+            btnToMove.style.position = "absolute";
             btnToMove.style.transition = `all ${speed}s ease-out`;
-            btnToMove.style.left = x + (bRect.width/2) + "px"; 
-            btnToMove.style.top = y + (bRect.height/2) + "px";
+            btnToMove.style.left = x + "px"; 
+            btnToMove.style.top = y + "px";
         }
 
         function handleNoInteraction(e) {
@@ -204,8 +283,7 @@
         noBtn.addEventListener('click', handleNoInteraction);
 
         function checkYes() {
-            if (noCount < 15) {
-                // Yes button only moves on mobile to frustrate them
+            if (noCount < 25) {
                 if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) moveBtn(yesBtn, noBtn);
                 document.getElementById('status-msg').innerText = fakeYesMessages[Math.floor(Math.random() * fakeYesMessages.length)];
                 moveBtn(noBtn, yesBtn);
@@ -229,12 +307,15 @@
             const params = new URLSearchParams(window.location.search);
             const q = params.get('q');
             if(q) {
-                pData = JSON.parse(decodeURIComponent(atob(q)));
-                document.getElementById('creator-box').classList.add('hidden');
-                document.getElementById('response-box').classList.remove('hidden');
-                document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
-                moveBtn(noBtn, yesBtn);
-                moveBtn(yesBtn, noBtn);
+                try {
+                    pData = JSON.parse(decodeURIComponent(atob(q)));
+                    document.getElementById('creator-box').classList.add('hidden');
+                    document.getElementById('response-box').classList.remove('hidden');
+                    document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
+                    noBtn.style.position = "absolute";
+                    yesBtn.style.position = "absolute";
+                    noBtn.style.left = "20%"; yesBtn.style.left = "60%";
+                } catch(e) { console.error("Link error"); }
             }
         };
     </script>
