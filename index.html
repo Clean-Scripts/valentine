@@ -29,7 +29,7 @@
 
         .panel {
             background-color: rgba(255, 255, 255, 0.98);
-            border-radius: 1.5625rem; padding: 2.5rem 1.5rem;
+            border-radius: 1.5625rem; padding: 2rem 1.5rem;
             box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
             border: 0.3125rem solid #ff99cc;
             width: 100%; max-width: 600px; text-align: center; 
@@ -66,6 +66,7 @@
         .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
         .pulse { animation: pulse-red 2s infinite; }
         @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
+        .ad-box { background: #fff; padding: 1rem; border-radius: 1rem; border: 2px solid #ff0066; margin-top: 1.5rem; text-align: center; }
     </style>
 </head>
 <body onclick="autoPlayMusic()">
@@ -112,6 +113,13 @@
                 <iframe width="100%" height="300" src="https://www.youtube.com/embed/w8gnsDL6DKw?autoplay=1&mute=1&loop=1&playlist=w8gnsDL6DKw&controls=0" frameborder="0"></iframe>
             </div>
             <p id="final-msg" style="font-size: 1rem; color: #ff0066; margin: 10px 0;">And you made a good choice... ❤️✨</p>
+            
+            <div class="ad-box">
+                <div style="color:#ff0066; font-weight:bold;"><i class="fas fa-utensils"></i> Valentine's Special Offer!</div>
+                <p style="font-size:0.9rem; margin:10px 0;">Visit <strong>EasyGo Indore</strong> for the perfect date with delicious Momos! Get 30% off today.</p>
+                <a href="https://zomato.com" target="_blank" style="color:#ff0066; font-weight:bold; text-decoration:none;">Order Now on Zomato →</a>
+            </div>
+
             <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Tell them YES! <i class="fab fa-whatsapp"></i></button>
         </div>
     </div>
@@ -124,63 +132,63 @@
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-        const questionsList = [
-            "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍",
-            "Do you believe in love at first sight?", "Would you like to go on a romantic date with me?", "Do you think we'd make a great couple?", 
-            "Would you like to be the reason for my smile every day?", "Can I be your favorite hello and hardest goodbye?", 
-            "Would you like to create beautiful memories together?", "Do you want to be the peanut butter to my jelly?", 
-            "Would you like to be my happily ever after?", "Can I be the one who makes your heart skip a beat?", 
-            "Do you want to be my sunshine on a cloudy day?", "Would you like to be my partner in crime for life?", 
-            "Can we write our own love story together?", "Do you believe we're meant to be?", 
-            "Would you like to be my forever Valentine?", "Can I be the luckiest person to have you?", 
-            "Do you want to be the missing piece to my puzzle?", "Would you like to be my always and forever?", 
-            "Can we make this Valentine's Day unforgettable?", "Do you want to be the one I come home to?", 
-            "Would you like to be my favorite thought every day?", "Can I be the one who cherishes you always?", 
-            "Do you want to be my reason to celebrate every day?", "Would you like to be my today, tomorrow, and always?", 
-            "Can we build something beautiful together?", "Do you believe in us?", 
-            "Would you like to be my perfect match?", "Can I be the one who makes your heart full?", 
-            "Do you want to be my sweet escape?", "Would you like to be my favorite adventure?", 
-            "Can we make magic together?", "Do you want to be my happy place?", 
-            "Would you like to be my dream come true?", "Can I be the one who loves you unconditionally?", 
-            "Do you want to be my constant?", "Would you like to be my greatest chapter?", 
-            "Can we create our own fairytale?", "Do you believe we can make it work?", 
-            "Would you like to be my partner in everything?", "Can I be the one who supports your dreams?", 
-            "Do you want to be my safe haven?", "Would you like to be my favorite notification?", 
-            "Can we build a future together?", "Do you want to be my home?", 
-            "Would you like to be my favorite love song?", "Can I be the one who makes you feel special?", 
-            "Do you want to be my forever and a day?", "Would you like to be my better half?", 
-            "Can we make each other better?", "Do you believe we can conquer the world together?", 
-            "Would you like to be my always?", "Can I be the one who makes you laugh every day?", 
-            "Do you want to be my favorite person?", "Would you like to be my heart's desire?", 
-            "Can we make this the best Valentine's ever?", "Do you want to be my once in a lifetime?", 
-            "Would you like to be my everything?", "Can I be the one who treasures you?", 
-            "Do you want to be my perfect plus one?", "Would you like to be my forever favorite?", 
-            "Can we make memories that last a lifetime?", "Do you believe we're better together?", 
-            "Would you like to be my special someone?", "Can I be the one who makes your world brighter?", 
-            "Do you want to be my happy ending?", "Would you like to be my greatest blessing?", 
-            "Can we create our own happily ever after?", "Do you want to be my soulmate?", 
-            "Would you like to be my one and only?", "Can I be the one who understands you completely?", 
-            "Do you want to be my favorite decision?", "Would you like to be my greatest joy?", 
-            "Can we make every day feel like Valentine's?", "Do you believe we can make it last forever?", 
-            "Would you like to be my partner for life?", "Can I be the one who makes your heart sing?", 
-            "Do you want to be my forever love?", "Would you like to be my perfect match?", 
-            "Can we build something lasting together?", "Do you want to be my anchor?", 
-            "Would you like to be my inspiration?", "Can I be the one who makes you feel loved?", 
-            "Do you want to be my happily ever after?", "Would you like to be my forever and always?", 
-            "Can we make this the beginning of something beautiful?", "Do you believe we can create magic?", 
-            "Would you like to be my partner in love?", "Can I be the one who makes you feel complete?", 
-            "Do you want to be my greatest adventure?", "Would you like to be my favorite memory in the making?", 
-            "Can we make this Valentine's Day the start of our story?", "Do you want to be my today and tomorrow?", 
-            "Would you like to be my heart's keeper?", "Can I be the one who makes you believe in love?", 
-            "Do you want to be my perfect harmony?", "Would you like to be my always and forever?", 
-            "Can we make each moment count?", "Do you believe we can make it work beautifully?", 
-            "Would you like to be my favorite chapter?", "Can I be the one who makes your dreams come true?", 
-            "Do you want to be my greatest love story?", "Would you like to be my forever Valentine?", 
-            "Can we make this the best decision ever?", "Do you want to be my happily ever now?", 
-            "Would you like to be my perfect beginning?", "Can I be the one who makes your heart dance?", 
-            "Do you want to be my everything and more?", "Would you like to be my once in a lifetime love?", 
-            "Can we make this Valentine's Day unforgettable?"
-        ];
+const questionsList = [
+    "Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍",
+    "Do you believe in love at first sight? ✨", "Would you like to go on a romantic date with me? 🕯️", "Do you think we'd make a great couple? 👫", 
+    "Would you like to be the reason for my smile every day? 😊", "Can I be your favorite hello and hardest goodbye? 👋", 
+    "Would you like to create beautiful memories together? 📸", "Do you want to be the peanut butter to my jelly? 🥪", 
+    "Would you like to be my happily ever after? 🏰", "Can I be the one who makes your heart skip a beat? 💓", 
+    "Do you want to be my sunshine on a cloudy day? ☀️", "Would you like to be my partner in crime for life? 🔫❤️", 
+    "Can we write our own love story together? 📖", "Do you believe we're meant to be? 🌌", 
+    "Would you like to be my forever Valentine? 💝", "Can I be the luckiest person to have you? 🍀", 
+    "Do you want to be the missing piece to my puzzle? 🧩", "Would you like to be my always and forever? ♾️", 
+    "Can we make this Valentine's Day unforgettable? 🎇", "Do you want to be the one I come home to? 🏠", 
+    "Would you like to be my favorite thought every day? 💭", "Can I be the one who cherishes you always? 💎", 
+    "Do you want to be my reason to celebrate every day? 🎉", "Would you like to be my today, tomorrow, and always? 🗓️", 
+    "Can we build something beautiful together? 🏗️❤️", "Do you believe in us? 🤝", 
+    "Would you like to be my perfect match? 🔥", "Can I be the one who makes your heart full? ❤️", 
+    "Do you want to be my sweet escape? 🏝️", "Would you like to be my favorite adventure? 🧗", 
+    "Can we make magic together? 🪄", "Do you want to be my happy place? 🌈", 
+    "Would you like to be my dream come true? 🌠", "Can I be the one who loves you unconditionally? 🫂", 
+    "Do you want to be my constant? ⚓", "Would you like to be my greatest chapter? 📑", 
+    "Can we create our own fairytale? 🧚", "Do you believe we can make it work? 🛠️", 
+    "Would you like to be my partner in everything? 👔👗", "Can I be the one who supports your dreams? 🚀", 
+    "Do you want to be my safe haven? 🛡️", "Would you like to be my favorite notification? 🔔", 
+    "Can we build a future together? 🌅", "Do you want to be my home? 🗝️", 
+    "Would you like to be my favorite love song? 🎵", "Can I be the one who makes you feel special? 🌟", 
+    "Do you want to be my forever and a day? ⏳", "Would you like to be my better half? 🌓", 
+    "Can we make each other better? 🪴", "Do you believe we can conquer the world together? 🌍", 
+    "Would you like to be my always? 🎀", "Can I be the one who makes you laugh every day? 😆", 
+    "Do you want to be my favorite person? 🥇", "Would you like to be my heart's desire? 🏹", 
+    "Can we make this the best Valentine's ever? 🥂", "Do you want to be my once in a lifetime? 🦄", 
+    "Would you like to be my everything? 🌏", "Can I be the one who treasures you? 🏴‍☠️💎", 
+    "Do you want to be my perfect plus one? 🎟️", "Would you like to be my forever favorite? ⭐", 
+    "Can we make memories that last a lifetime? 🕰️", "Do you believe we're better together? 🖇️", 
+    "Would you like to be my special someone? 🌹", "Can I be the one who makes your world brighter? 💡", 
+    "Do you want to be my happy ending? 🎬", "Would you like to be my greatest blessing? 🙏", 
+    "Can we create our own happily ever after? 💍", "Do you want to be my soulmate? 🧿", 
+    "Would you like to be my one and only? ☝️", "Can I be the one who understands you completely? 🧠❤️", 
+    "Do you want to be my favorite decision? ✅", "Would you like to be my greatest joy? 🎈", 
+    "Can we make every day feel like Valentine's? 🍬", "Do you believe we can make it last forever? 🕰️♾️", 
+    "Would you like to be my partner for life? 💍", "Can I be the one who makes your heart sing? 🎤", 
+    "Do you want to be my forever love? 💓", "Would you like to be my perfect match? 🧩", 
+    "Can we build something lasting together? 🧱❤️", "Do you want to be my anchor? ⚓", 
+    "Would you like to be my inspiration? 💡", "Can I be the one who makes you feel loved? 🧸", 
+    "Do you want to be my happily ever after? 🎀", "Would you like to be my forever and always? 📅", 
+    "Can we make this the beginning of something beautiful? 🌱", "Do you believe we can create magic? 🎆", 
+    "Would you like to be my partner in love? 🏹", "Can I be the one who makes you feel complete? ☯️", 
+    "Do you want to be my greatest adventure? 🗺️", "Would you like to be my favorite memory in the making? 🎥", 
+    "Can we make this Valentine's Day the start of our story? ✒️", "Do you want to be my today and tomorrow? 🌗", 
+    "Would you like to be my heart's keeper? 🔐", "Can I be the one who makes you believe in love? 💖", 
+    "Do you want to be my perfect harmony? 🎼", "Would you like to be my always and forever? 💌", 
+    "Can we make each moment count? ⌛", "Do you believe we can make it work beautifully? 🌺", 
+    "Would you like to be my favorite chapter? 📖", "Can I be the one who makes your dreams come true? 🧞", 
+    "Do you want to be my greatest love story? 📽️", "Would you like to be my forever Valentine? 🍫", 
+    "Can we make this the best decision ever? 🎖️", "Do you want to be my happily ever now? 🔔", 
+    "Would you like to be my perfect beginning? 🏁❤️", "Can I be the one who makes your heart dance? 💃", 
+    "Do you want to be my everything and more? 🪐", "Would you like to be my once in a lifetime love? 💖", 
+    "Can we make this Valentine's Day unforgettable? 🎇"
+];
 
         const fakeYesMessages = [
             "Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨", "Almost there... but try once more! 😋💘",
@@ -243,7 +251,7 @@
             const pRect = panel.getBoundingClientRect();
             const bRect = btnToMove.getBoundingClientRect();
             const padding = 40;
-            const textBuffer = pRect.height * 0.35; // Stay in bottom 65%
+            const textBuffer = pRect.height * 0.35; 
             const maxX = pRect.width - bRect.width - padding;
             const maxY = pRect.height - bRect.height - padding;
             let x, y, newRect, attempts = 0;
