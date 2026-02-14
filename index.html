@@ -57,6 +57,30 @@
     max-height: 95vh;
 }
 
+
+/* Response box waisa hi rahega jaisa tha taaki buttons na gayab hon */
+#response-box {
+    min-height: 580px !important;
+    overflow: hidden !important;
+}
+
+/* Success box phone par scroll hoga aur ad-box dikhayega */
+#success-box {
+    min-height: auto !important;
+    height: auto !important;
+    max-height: 95vh !important;
+    overflow-y: auto !important;
+    padding-bottom: 20px !important;
+}
+
+/* Mobile par buttons thode niche shift na hon uske liye */
+@media (max-width: 600px) {
+    #success-box {
+        padding: 1rem !important;
+    }
+}
+        
+
         .hidden { display: none !important; }
         h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 8vw, 3.5rem); color: #ff0066; margin-bottom: 1rem; position: relative; z-index: 5; }
         
