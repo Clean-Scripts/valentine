@@ -56,11 +56,9 @@
         .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; position: relative; }
         .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; position: absolute; white-space: nowrap; }
 
-        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; }
-        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; }
-        .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
-        .pulse { animation: pulse-red 2s infinite; }
-        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
+        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; padding: 0 10px; }
+        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; padding: 0 10px; }
+        
         .upload-hint { font-size: 0.7rem; color: #99004d; margin-top: 5px; text-decoration: none; display: block; }
     </style>
 </head>
@@ -119,17 +117,9 @@
 
         <div class="panel hidden" id="success-box">
             <h1>UFF! Finally! 🥰💍</h1>
-                <div style="width: 100%; border-radius: 1.5rem; overflow: hidden; margin: 1rem 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-                    <iframe 
-                        width="100%" 
-                        height="400" 
-                        src="https://www.youtube.com/embed/w8gnsDL6DKw?autoplay=1&mute=1&loop=1&playlist=w8gnsDL6DKw&controls=0&modestbranding=1" 
-                        title="Romantic Hugs" 
-                        frameborder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen>
-                    </iframe>
-                </div>
+            <div style="width: 100%; border-radius: 1.5rem; overflow: hidden; margin: 1rem 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
+                <iframe width="100%" height="400" src="https://www.youtube.com/embed/w8gnsDL6DKw?autoplay=1&mute=1&loop=1&playlist=w8gnsDL6DKw&controls=0&modestbranding=1" title="Romantic Hugs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
             <p id="final-msg" style="font-size: 1.1rem; margin: 1rem 0; font-style: italic; color: #ff0066;"></p>
             <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Tell them YES! <i class="fab fa-whatsapp"></i></button>
         </div>
@@ -144,7 +134,7 @@
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍", "Do you believe in love at first sight?", "Would you like to be my forever Valentine?"];
+        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "I'll keep asking! 😋", "Wait! Think again! 😍", "Almost caught it! 💨", "Do you believe in love at first sight?"];
         const fakeYesMessages = ["Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨"];
 
         function validateFile(input) {
@@ -186,20 +176,19 @@
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
-        const panel = document.querySelector('.panel');
+        const box = document.getElementById('response-box');
 
         function isOverlapping(rect1, rect2) {
-            return !(rect1.right < rect2.left || 
-                     rect1.left > rect2.right || 
-                     rect1.bottom < rect2.top || 
-                     rect1.top > rect2.bottom);
+            const buffer = 20; // Extra space between buttons
+            return !(rect1.right + buffer < rect2.left || 
+                     rect1.left - buffer > rect2.right || 
+                     rect1.bottom + buffer < rect2.top || 
+                     rect1.top - buffer > rect2.bottom);
         }
 
         function moveBtn(btnToMove, otherBtn) {
-            const pRect = panel.getBoundingClientRect();
+            const pRect = box.getBoundingClientRect();
             const bRect = btnToMove.getBoundingClientRect();
-            const oRect = otherBtn.getBoundingClientRect();
-            
             const padding = 30;
             const maxX = pRect.width - bRect.width - padding;
             const maxY = pRect.height - bRect.height - padding;
@@ -211,7 +200,6 @@
                 x = Math.max(padding, Math.random() * maxX);
                 y = Math.max(padding, Math.random() * maxY);
                 
-                // Create a virtual rect for the new position to check overlap
                 newRect = {
                     left: pRect.left + x,
                     top: pRect.top + y,
@@ -276,7 +264,6 @@
                     document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
                     noBtn.style.position = "absolute";
                     yesBtn.style.position = "absolute";
-                    // Initial positions
                     noBtn.style.left = "20%";
                     yesBtn.style.left = "60%";
                 } catch(e) { console.error("Link error"); }
