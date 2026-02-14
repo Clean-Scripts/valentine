@@ -32,15 +32,17 @@
             border-radius: 1.5625rem; padding: 2rem 1.5rem;
             box-shadow: 0 1.25rem 3.125rem rgba(153, 0, 77, 0.3);
             border: 0.3125rem solid #ff99cc;
-            width: 100%; max-width: 600px; text-align: center; position: relative; z-index: 10;
-            min-height: 580px; display: flex; flex-direction: column; justify-content: center;
+            width: 100%; max-width: 600px; text-align: center; 
+            position: relative; z-index: 10;
+            min-height: 580px; display: flex; flex-direction: column; justify-content: flex-start;
             overflow: hidden; 
         }
+
         .hidden { display: none !important; }
         h1 { font-family: 'Dancing Script', cursive; font-size: clamp(2.2rem, 8vw, 3.5rem); color: #ff0066; margin-bottom: 1rem; }
         
-        .input-group { margin: 1rem 0; text-align: left; }
-        label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: #660033; font-size: 0.9rem; }
+        .input-group { margin: 0.8rem 0; text-align: left; }
+        label { display: block; margin-bottom: 0.4rem; font-weight: 700; color: #660033; font-size: 0.9rem; }
         .phone-container { display: flex; align-items: center; background: #fff; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; padding: 0 1rem; }
         .prefix { font-weight: 800; color: #ff0066; border-right: 2px solid #ff99cc; padding-right: 10px; margin-right: 10px; }
         input { width: 100%; padding: 0.8rem; border: 0.1875rem solid #ff99cc; border-radius: 0.9375rem; font-size: 1rem; outline: none; }
@@ -50,16 +52,23 @@
             padding: 1rem 2rem; font-size: 1.3rem; font-weight: 700; border: none; border-radius: 3.75rem;
             cursor: pointer; transition: all 0.3s ease; box-shadow: 0 0.75rem 1.5625rem rgba(0, 0, 0, 0.2);
             display: inline-flex; align-items: center; gap: 0.5rem;
-            z-index: 100;
+            z-index: 100; position: absolute; /* Both buttons are absolute for internal moving */
         }
-        .btn-main { background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; }
-        .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; position: relative; }
-        .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; position: absolute; white-space: nowrap; }
 
-        #question-text { font-size: 1.6rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; padding: 0 10px; }
-        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; padding: 0 10px; }
+        /* Initial positions */
+        #yes-btn { left: 50%; top: 60%; transform: translate(-50%, -50%); }
+        #no-btn { left: 50%; top: 75%; transform: translate(-50%, -50%); }
+
+        .btn-main { position: relative; background: linear-gradient(135deg, #660033, #99004d); color: white; width: 100%; margin-top: 1rem; transform: none !important; left: auto !important; top: auto !important; }
+        .btn-yes { background: linear-gradient(135deg, #ff0066, #ff3385); color: white; }
+        .btn-no { background: linear-gradient(135deg, #cccccc, #999999); color: #33001a; white-space: nowrap; }
+
+        #question-text { font-size: 1.5rem; font-family: 'Dancing Script', cursive; color: #ff0066; min-height: 80px; margin-bottom: 5px; padding: 0 10px; }
+        .status-msg { color: #cc0066; font-weight: 600; font-size: 0.85rem; margin-top: 5px; min-height: 25px; }
         
-        .upload-hint { font-size: 0.7rem; color: #99004d; margin-top: 5px; text-decoration: none; display: block; }
+        .music-control { position: fixed; top: 15px; right: 15px; width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 1001; border: 3px solid #ff0066; color: #ff0066; }
+        .pulse { animation: pulse-red 2s infinite; }
+        @keyframes pulse-red { 0% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0.7); } 70% { box-shadow: 0 0 0 10px rgba(255, 0, 102, 0); } 100% { box-shadow: 0 0 0 0 rgba(255, 0, 102, 0); } }
     </style>
 </head>
 <body onclick="autoPlayMusic()">
@@ -79,15 +88,8 @@
                 <label>Valentine's Name</label>
                 <input type="text" id="v-name" placeholder="Enter your Valentine's name">
             </div>
-            
             <div class="input-group">
-                <label>Upload Clip/Image (Max 5MB)</label>
-                <input type="file" id="media-upload" accept="image/*,video/*" onchange="validateFile(this)">
-                <a href="https://github.com/Clean-Scripts/valentine/upload/main" target="_blank" class="upload-hint">Upload here & commit</a>
-            </div>
-
-            <div class="input-group">
-                <label>Your WhatsApp [To get Reply from Valentine] </label>
+                <label>Your WhatsApp Number</label>
                 <div class="phone-container">
                     <span class="prefix">+91</span>
                     <input type="tel" id="c-phone" placeholder="XXXXX XXXXX" maxlength="10">
@@ -96,31 +98,23 @@
             <button class="btn btn-main" onclick="generateLink()">Create Link ✨</button>
         </div>
 
-        <div class="panel hidden" id="share-box">
-            <h1>Link Ready! 💌</h1>
-            <div id="link-url-display" class="share-link-box" style="background:#f8f9fa; padding:1rem; border-radius:1rem; margin:1rem 0; border:2px dashed #ff0066; word-break:break-all; font-size: 0.8rem;"></div>
-            <button class="btn btn-main" style="background:#3366ff; margin-bottom: 10px;" onclick="copyLink()">Copy Link <i class="fas fa-copy"></i></button>
-            <button class="btn btn-main" style="background:#25D366;" onclick="shareWA()">Share on WhatsApp <i class="fab fa-whatsapp"></i></button>
-        </div>
-
         <div class="panel hidden" id="response-box">
             <h1 id="v-header">A Special Message... 🌹</h1>
             <div id="question-text">Will you be my Valentine? ❤️</div>
             <div class="status-msg" id="status-msg"></div>
             
-            <div id="game-area" style="height: 350px; position: relative; width: 100%;">
-                <button class="btn btn-yes" id="yes-btn" onclick="checkYes()">YES! ❤️</button>
-                <button class="btn btn-no" id="no-btn">No 😭</button>
-            </div>
-            <div id="no-counter" style="font-size: 0.8rem; color: #ff0066; font-weight: bold; margin-top: 10px;">Misses: 0</div>
+            <button class="btn btn-yes" id="yes-btn" onclick="checkYes()">YES! ❤️</button>
+            <button class="btn btn-no" id="no-btn">No 😭</button>
+
+            <div id="no-counter" style="font-size: 0.8rem; color: #ff0066; font-weight: bold; position: absolute; bottom: 10px; width: 100%; left: 0;">Misses: 0</div>
         </div>
 
         <div class="panel hidden" id="success-box">
             <h1>UFF! Finally! 🥰💍</h1>
-            <div style="width: 100%; border-radius: 1.5rem; overflow: hidden; margin: 1rem 0; box-shadow: 0 10px 20px rgba(0,0,0,0.1);">
-                <iframe width="100%" height="400" src="https://www.youtube.com/embed/w8gnsDL6DKw?autoplay=1&mute=1&loop=1&playlist=w8gnsDL6DKw&controls=0&modestbranding=1" title="Romantic Hugs" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <div style="width: 100%; border-radius: 1.5rem; overflow: hidden; margin: 1rem 0;">
+                <iframe width="100%" height="300" src="https://www.youtube.com/embed/w8gnsDL6DKw?autoplay=1&mute=1&loop=1&playlist=w8gnsDL6DKw&controls=0" frameborder="0"></iframe>
             </div>
-            <p id="final-msg" style="font-size: 1.1rem; margin: 1rem 0; font-style: italic; color: #ff0066;"></p>
+            <p id="final-msg" style="font-size: 1rem; color: #ff0066; margin: 10px 0;">And you made a good choice... ❤️✨</p>
             <button class="btn btn-main" style="background:#25D366" onclick="confirmPartner()">Tell them YES! <i class="fab fa-whatsapp"></i></button>
         </div>
     </div>
@@ -130,19 +124,11 @@
         let speed = 0.4;
         let pData = {};
         let musicStarted = false;
-        let finalLink = "";
         const music = document.getElementById('bg-music');
         const musicIcon = document.getElementById('music-icon');
 
-        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "I'll keep asking! 😋", "Wait! Think again! 😍", "Almost caught it! 💨", "Do you believe in love at first sight?"];
-        const fakeYesMessages = ["Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Sirf ek click mein Haan? Try again! 😜", "Boring pati mat bano, thodi mehnat karo! 😂🔥", "Arre! Pehle No button toh pakad ke dikhao! 🏃‍♂️💨"];
-
-        function validateFile(input) {
-            if (input.files[0] && input.files[0].size / 1024 / 1024 > 5) {
-                alert("File size exceeds 5MB!");
-                input.value = "";
-            }
-        }
+        const questionsList = ["Are you sure? 💔", "Pehle manaao toh sahi! 🙄", "Don't be so boring! 😂", "Really? No? 😭", "Wait! Think again! 😍"];
+        const fakeYesMessages = ["Itni jaldi? Thoda manaao toh sahi! 🙄💖", "Boring pati mat bano! 😂🔥", "Pehle No button pakad ke dikhao! 🏃‍♂️💨"];
 
         function createHeart() {
             const container = document.getElementById('hearts-container');
@@ -165,54 +151,43 @@
             const p = document.getElementById('c-phone').value;
             if(!n || !v || p.length !== 10) return alert("Fill everything!");
             pData = { n, v, p: "91" + p };
-            finalLink = window.location.origin + window.location.pathname + "?q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
-            document.getElementById('link-url-display').innerText = finalLink;
-            document.getElementById('creator-box').classList.add('hidden');
-            document.getElementById('share-box').classList.remove('hidden');
+            window.location.search = "q=" + btoa(encodeURIComponent(JSON.stringify(pData)));
         }
-
-        function copyLink() { navigator.clipboard.writeText(finalLink); alert("Link Copied!"); }
-        function shareWA() { window.open(`https://wa.me/?text=Open this special message: ${encodeURIComponent(finalLink)}`, '_blank'); }
 
         const noBtn = document.getElementById('no-btn');
         const yesBtn = document.getElementById('yes-btn');
-        const box = document.getElementById('response-box');
-
-        function isOverlapping(rect1, rect2) {
-            const buffer = 20; // Extra space between buttons
-            return !(rect1.right + buffer < rect2.left || 
-                     rect1.left - buffer > rect2.right || 
-                     rect1.bottom + buffer < rect2.top || 
-                     rect1.top - buffer > rect2.bottom);
-        }
+        const panel = document.getElementById('response-box');
 
         function moveBtn(btnToMove, otherBtn) {
-            const pRect = box.getBoundingClientRect();
+            const pRect = panel.getBoundingClientRect();
             const bRect = btnToMove.getBoundingClientRect();
-            const padding = 30;
-            const maxX = pRect.width - bRect.width - padding;
-            const maxY = pRect.height - bRect.height - padding;
+            
+            // STAY INSIDE BORDERS: Max width/height minus button size and padding
+            const pad = 40;
+            const maxX = pRect.width - bRect.width - pad;
+            const maxY = pRect.height - bRect.height - pad;
 
-            let x, y, newRect;
+            let x, y, overlap = true;
             let attempts = 0;
 
-            do {
-                x = Math.max(padding, Math.random() * maxX);
-                y = Math.max(padding, Math.random() * maxY);
+            while(overlap && attempts < 50) {
+                x = Math.max(pad, Math.random() * maxX);
+                y = Math.max(pad, Math.random() * maxY);
                 
-                newRect = {
-                    left: pRect.left + x,
-                    top: pRect.top + y,
-                    right: pRect.left + x + bRect.width,
-                    bottom: pRect.top + y + bRect.height
-                };
+                const otherRect = otherBtn.getBoundingClientRect();
+                const buffer = 50;
+                
+                // Overlap Check
+                overlap = !( (pRect.left + x + bRect.width) < otherRect.left - buffer || 
+                             (pRect.left + x) > otherRect.right + buffer || 
+                             (pRect.top + y + bRect.height) < otherRect.top - buffer || 
+                             (pRect.top + y) > otherRect.bottom + buffer );
                 attempts++;
-            } while (isOverlapping(newRect, otherBtn.getBoundingClientRect()) && attempts < 50);
+            }
 
-            btnToMove.style.position = "absolute";
             btnToMove.style.transition = `all ${speed}s ease-out`;
-            btnToMove.style.left = x + "px"; 
-            btnToMove.style.top = y + "px";
+            btnToMove.style.left = x + (bRect.width/2) + "px"; 
+            btnToMove.style.top = y + (bRect.height/2) + "px";
         }
 
         function handleNoInteraction(e) {
@@ -230,11 +205,9 @@
 
         function checkYes() {
             if (noCount < 15) {
-                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-                    moveBtn(yesBtn, noBtn);
-                }
-                const randomIndex = Math.floor(Math.random() * fakeYesMessages.length);
-                document.getElementById('status-msg').innerText = fakeYesMessages[randomIndex];
+                // Yes button only moves on mobile to frustrate them
+                if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) moveBtn(yesBtn, noBtn);
+                document.getElementById('status-msg').innerText = fakeYesMessages[Math.floor(Math.random() * fakeYesMessages.length)];
                 moveBtn(noBtn, yesBtn);
                 return;
             }
@@ -245,7 +218,6 @@
             confetti({ particleCount: 300, spread: 90, origin: { y: 0.6 } });
             document.getElementById('response-box').classList.add('hidden');
             document.getElementById('success-box').classList.remove('hidden');
-            document.getElementById('final-msg').innerText = `I knew you'd make a good choice, your heart is in the right place... ❤️✨`;
         }
 
         function confirmPartner() {
@@ -257,16 +229,12 @@
             const params = new URLSearchParams(window.location.search);
             const q = params.get('q');
             if(q) {
-                try {
-                    pData = JSON.parse(decodeURIComponent(atob(q)));
-                    document.getElementById('creator-box').classList.add('hidden');
-                    document.getElementById('response-box').classList.remove('hidden');
-                    document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
-                    noBtn.style.position = "absolute";
-                    yesBtn.style.position = "absolute";
-                    noBtn.style.left = "20%";
-                    yesBtn.style.left = "60%";
-                } catch(e) { console.error("Link error"); }
+                pData = JSON.parse(decodeURIComponent(atob(q)));
+                document.getElementById('creator-box').classList.add('hidden');
+                document.getElementById('response-box').classList.remove('hidden');
+                document.getElementById('v-header').innerText = `Hey ${pData.v}! ✨`;
+                moveBtn(noBtn, yesBtn);
+                moveBtn(yesBtn, noBtn);
             }
         };
     </script>
